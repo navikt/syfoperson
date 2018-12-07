@@ -19,3 +19,8 @@ funksjonalitet som WS eller databaser.
 ## Tips og triks:
 En kan plukke commits fra kickstarter til prosjektene som arver fra den. Kommandoen er: `git fetch git@github.com:navikt/syfospringboot-kickstarter.git <branch> && git cherry-pick <commit_hash>
 `
+
+## Database
+Appen kjører med en lokal H2 in-memory database. Den spinnes opp som en del av applikasjonen og er 
+også tilgjengelig i tester. Du kan logge inn og kjøre spørringer på:
+`localhost/h2` med jdbc_url: `jdbc:h2:mem:testdb`
