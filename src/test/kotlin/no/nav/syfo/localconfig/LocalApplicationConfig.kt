@@ -6,5 +6,5 @@ import org.springframework.core.env.Environment
 @Configuration
 class LocalApplicationConfig(environment: Environment)/*
             Her kan du ta inn properties som normalt settes av platformen slik at de er tilgjengelige runtime lokalt
-            Eks: System.setProperty("$APPLIKASJONSNAVN$_USERNAME", environment.getProperty("$APPLIKASJONSNAVN$.username"));
+            Eks: System.setProperty("syfoperson_USERNAME", environment.getProperty("syfoperson.username"));
          */

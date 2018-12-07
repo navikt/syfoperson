@@ -1,5 +1,5 @@
-name: $APPLIKASJONSNAVN$
-image: "repo.adeo.no:5443/$APPLIKASJONSNAVN$"
+name: syfoperson
+image: "repo.adeo.no:5443/syfoperson"
 replicas:
   min: 1
   max: 2
@@ -29,7 +29,7 @@ resources:
 fasitResources:
   exposed:
   used:
-  - alias: $APPLIKASJONSNAVN$DB
+  - alias: syfopersonDB
       resourceType: datasource
       propertyMap:
         url: SPRING_DATASOURCE_URL
