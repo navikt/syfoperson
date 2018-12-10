@@ -41,9 +41,6 @@
         <spring-boot.version>2.0.6.RELEASE</spring-boot.version>
         <jose4j.version>0.5.0</jose4j.version>
         <logstash-logback-encoder.version>4.10</logstash-logback-encoder.version>
-        <junit.version>4.12</junit.version>
-        <mockito-all.version>2.15.0</mockito-all.version>
-        <assertj-core.version>3.6.2</assertj-core.version>
         <ojdbc8.version>12.2.0.1</ojdbc8.version>
         <h2.version>1.4.196</h2.version>
         <flyway-core.version>5.0.7</flyway-core.version>
@@ -142,25 +139,7 @@
             <artifactId>flyway-core</artifactId>
             <version>${flyway-core.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>${mockito-all.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>${assertj-core.version}</version>
-            <scope>test</scope>
-        </dependency>
+        
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
