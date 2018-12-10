@@ -45,9 +45,29 @@
         <h2.version>1.4.196</h2.version>
         <flyway-core.version>5.0.7</flyway-core.version>
         <lombok.version>1.16.22</lombok.version>
+        <oidc-spring-support.version>0.2.4</oidc-spring-support.version>
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>no.nav.security</groupId>
+            <artifactId>oidc-spring-support</artifactId>
+            <version>${oidc-spring-support.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.security</groupId>
+            <artifactId>oidc-spring-test</artifactId>
+            <version>${oidc-spring-support.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.security</groupId>
+            <artifactId>oidc-support</artifactId>
+            <version>${oidc-spring-support.version}</version>
+        </dependency>
+
+
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
@@ -139,7 +159,7 @@
             <artifactId>flyway-core</artifactId>
             <version>${flyway-core.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
