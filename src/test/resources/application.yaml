@@ -18,17 +18,13 @@ server:
     context-path: /syfoperson
 
 securitytokenservice.url: "sts.url"
-srvsyfomotebehov:
+srvsyfoperson:
   username: "username"
   password: "password"
-
-no.nav.security.oidc:
-  issuers: selvbetjening
-  issuer:
-    selvbetjening.discoveryurl: http://metadata
-    selvbetjening.accepted_audience: aud-localhost
-    selvbetjening.cookie_name: localhost-idtoken
 
 fasit.environment.name: 'local'
 
 dev: true
+
+
+
