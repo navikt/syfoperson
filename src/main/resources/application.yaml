@@ -1,5 +1,6 @@
 logging.config: classpath:logback-spring.xml
 
+
 management:
   endpoint.prometheus.enabled: true
   endpoints.web:
@@ -24,5 +25,3 @@ spring:
           min-pool-size: 8
   flyway:
     enabled: false
-  datasource:
-    continue-on-error: true
