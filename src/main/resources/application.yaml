@@ -24,3 +24,5 @@ spring:
           min-pool-size: 8
   flyway:
     enabled: false
+  datasource:
+    continue-on-error: true
