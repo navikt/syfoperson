@@ -10,19 +10,19 @@ const val APPLICATION_LIVENESS = "Application is alive!"
 const val APPLICATION_READY = "Application is ready!"
 
 @RestController
-@RequestMapping(value = "/internal")
+@RequestMapping(value = ["/internal"])
 @Unprotected
-open class SelftestController {
+class SelftestController {
 
-    open val isAlive: String
+    val isAlive: String
         @ResponseBody
-        @RequestMapping(value = "/isAlive", produces = [MediaType.TEXT_PLAIN_VALUE])
+        @RequestMapping(value = ["/isAlive"], produces = [MediaType.TEXT_PLAIN_VALUE])
         @Unprotected
         get() = APPLICATION_LIVENESS
 
-    open val isReady: String
+    val isReady: String
         @ResponseBody
-        @RequestMapping(value = "/isReady", produces = [MediaType.TEXT_PLAIN_VALUE])
+        @RequestMapping(value = ["/isReady"], produces = [MediaType.TEXT_PLAIN_VALUE])
         @Unprotected
         get() = APPLICATION_READY
 }
