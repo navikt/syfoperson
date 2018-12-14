@@ -6,6 +6,9 @@ management:
     base-path: /internal
     exposure.include: prometheus
     path-mapping.prometheus: /prometheus
+  health:
+    db:
+      enabled: false
 
 server:
   servlet:
