@@ -1,8 +1,8 @@
 # syfoperson
 
 ## Om syfoperson
-syfoperson er en spring-boot applikasjon skrevet i Kotlin. Den skal hente og lagre persondata på sykmeldte, og
-tilby tjenester som konsumeres av syfooversikt.
+syfoperson er en spring-boot applikasjon skrevet i Kotlin. Den skal hente og lagre persondata på sykmeldte, samt lagre
+data om knytninger mellom veiledere og sykmeldte. Tjeneste som eksponeres skal konsumeres av syfooversikt.
 
 ## Database
 Appen kjører med en lokal H2 in-memory database. Den spinnes opp som en del av applikasjonen og er 
