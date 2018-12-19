@@ -1,5 +1,7 @@
 logging.config: classpath:logback-spring.xml
 
+redisSentinelPort: 26379
+redisMaster: mymaster
 
 management:
   endpoint.prometheus.enabled: true
