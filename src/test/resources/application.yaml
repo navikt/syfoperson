@@ -10,4 +10,21 @@ spring:
   jta.atomikos.datasource:
     max-pool-size: 32
     min-pool-size: 8
+  cache:
+    type: none
+server:
+  port: 8812
+  servlet:
+    context-path: /syfoperson
+
+securitytokenservice.url: "sts.url"
+srvsyfoperson:
+  username: "username"
+  password: "password"
+
+fasit.environment.name: 'local'
+
+dev: true
+
+
 
