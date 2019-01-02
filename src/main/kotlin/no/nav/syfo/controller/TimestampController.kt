@@ -1,12 +1,12 @@
 package no.nav.syfo.controller
 
 import no.nav.syfo.service.TimestampService
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import java.time.LocalDateTime
-import java.time.LocalDateTime.now
 import javax.inject.Inject
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
 
