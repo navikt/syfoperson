@@ -7,11 +7,6 @@ import org.springframework.web.client.RestTemplate
 import java.util.*
 
 @Configuration
-class ApplicationConfig
+class ApplicationConfig {
 
-@Bean
-fun restTemplate(vararg interceptors: ClientHttpRequestInterceptor) : RestTemplate {
-    val template = RestTemplate()
-    template.interceptors = Arrays.asList(*interceptors)
-    return template
 }
