@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 @Service
 class TimestampService {
-    @Cacheable("tsCache")
+    @Cacheable("redisCache")
     fun getTimestamp(): LocalDateTime {
         var localDateTime : LocalDateTime = LocalDateTime.now()
         return localDateTime;

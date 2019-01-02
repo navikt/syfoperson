@@ -15,7 +15,7 @@ import java.time.Duration
 class CacheConfig
 
     private val REDIS_SENTINEL_PORT : Int = System.getProperty("redisSentinelPort").toInt()
-    private val REDIS_SENTINEL_HOST : String = "rfs-" + System.getProperty("redisSentinelHost")
+    private val REDIS_SENTINEL_HOST : String = "rfs-syfoperson"
     private val REDIS_MASTER : String = System.getProperty("redisMaster")
     private val CACHE_NAMES : Set<String> = arrayOf("redisCache").toSet()
     private val ENTRY_TTL : Duration = Duration.ofMillis(60000)
