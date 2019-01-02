@@ -46,28 +46,10 @@
         <ojdbc8.version>12.2.0.1</ojdbc8.version>
         <h2.version>1.4.196</h2.version>
         <flyway-core.version>5.0.7</flyway-core.version>
-        <oidc-spring-support.version>0.2.4</oidc-spring-support.version>
         <cxf.version>3.2.0</cxf.version>
     </properties>
 
     <dependencies>
-
-        <dependency>
-            <groupId>no.nav.security</groupId>
-            <artifactId>oidc-spring-support</artifactId>
-            <version>${oidc-spring-support.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.security</groupId>
-            <artifactId>oidc-spring-test</artifactId>
-            <version>${oidc-spring-support.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.security</groupId>
-            <artifactId>oidc-support</artifactId>
-            <version>${oidc-spring-support.version}</version>
-        </dependency>
 
         <!-- Redis/Caching -->
         <dependency>
@@ -76,6 +58,11 @@
             <version>${spring-boot.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>${javax.ws.rs.version}</version>
+        </dependency>
 
         <!-- CXF -->
         <dependency>
