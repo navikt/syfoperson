@@ -14,31 +14,30 @@ import java.time.Duration
 @EnableCaching
 class CacheConfig {
 
-    private val REDIS_SENTINEL_PORT: Int = 26379
-    private val REDIS_SENTINEL_HOST: String = "rfs-syfoperson"
-    private val REDIS_MASTER: String = "mymaster"
-    private val CACHE_NAMES: Set<String> = arrayOf("redisCache").toSet()
-    private val ENTRY_TTL: Duration = Duration.ofMillis(60000)
+    private val redisSentinelPort: Int = System.getProperty("redisSentinelPort").toInt()
+    private val redisSentinelHost: String = System.getProperty("redisSentinelHost")
+    private val redisMaster: String = System.getProperty("redisMaster")
+    private val cacheNames: Set<String> = arrayOf("redisCache").toSet()
+    private val entryTTL: Duration = Duration.ofMillis(60000)
 
     @Bean
     fun cacheManager(lettuceConnectionFactory: LettuceConnectionFactory): RedisCacheManager {
         val redisCacheConfig: RedisCacheConfiguration = RedisCacheConfiguration
                 .defaultCacheConfig()
-                .entryTtl(ENTRY_TTL)
+                .entryTtl(entryTTL)
         return RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(lettuceConnectionFactory)
                 .cacheDefaults(redisCacheConfig)
-                .initialCacheNames(CACHE_NAMES)
+                .initialCacheNames(cacheNames)
                 .build()
     }
 
     @Bean
     fun lettuceConnectionFactory(): LettuceConnectionFactory {
         return LettuceConnectionFactory(RedisSentinelConfiguration()
-                .master(REDIS_MASTER)
-                .sentinel(RedisNode(REDIS_SENTINEL_HOST, REDIS_SENTINEL_PORT)))
+                .master(redisMaster)
+                .sentinel(RedisNode(redisSentinelHost, redisSentinelPort)))
     }
+
 }
-
-
 
