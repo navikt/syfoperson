@@ -2,6 +2,7 @@ package no.nav.syfo.repository.dao
 
 import no.nav.syfo.controller.domain.VeilederBrukerKnytning
 import no.nav.syfo.repository.DbUtil
+import no.nav.syfo.repository.DbUtil.tilLocalDateTime
 import no.nav.syfo.repository.domain.PVeilederBehandling
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -28,15 +29,16 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
                 ":veileder_behandling_uuid," +
                 ":aktor_id," +
                 ":veileder_ident," +
-                ":ferdig_behandlet" +
+                ":bruker_sist_aksessert" +
                 ")"
 
-        val sqlParametere : MapSqlParameterSource = MapSqlParameterSource()
-                .addValue("veileder_behandling_id", id)
-                .addValue("veileder_behandling_uuid", uuid)
-                .addValue("aktor_id", veilederBrukerKnytning.aktorId)
-                .addValue("veileder_ident", veilederBrukerKnytning.veilederIdent)
-                .addValue("ferdig_behandlet", false)
+        val sqlParametere = mapOf(
+                "veileder_behandling_id" to id,
+                "veileder_behandling_uuid" to uuid,
+                "aktor_id" to veilederBrukerKnytning.aktorId,
+                "veileder_ident" to veilederBrukerKnytning.veilederIdent,
+                "bruker_sist_aksessert" to null
+        )
 
         namedParameterJdbcTemplate.update(lagreSql, sqlParametere)
 
@@ -49,7 +51,7 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
                 rs.getString("veileder_behandling_uuid"),
                 rs.getString("aktor_id"),
                 rs.getString("veileder_ident"),
-                rs.getBoolean("ferdig_behandlet")) }
+                tilLocalDateTime(rs.getTimestamp("bruker_sist_aksessert"))) }
     }
 
 }

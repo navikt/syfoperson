@@ -44,13 +44,13 @@ class VeilederBehandlingDAOTest {
         val lagretUUID = veilederBehandlingListe[0].veilederBehandlingUUID
         val lagretAktorId = veilederBehandlingListe[0].aktorId
         val lagretVeilederIdent = veilederBehandlingListe[0].veilederIdent
-        val lagretFerdigBehandletVerdi = veilederBehandlingListe[0].ferdigBehandlet
+        val lagretBrukerSistAksessertVerdi = veilederBehandlingListe[0].brukerSistAksessert
 
         assertThat(lagretId).isGreaterThan(0)
         assertThat(lagretUUID.length).isEqualTo(36)
         assertThat(lagretAktorId).isEqualTo(AKTOR_ID)
         assertThat(lagretVeilederIdent).isEqualTo(VEILEDER_IDENT)
-        assertThat(lagretFerdigBehandletVerdi).isFalse()
+        assertThat(lagretBrukerSistAksessertVerdi).isNull()
     }
 
     @Test

@@ -12,7 +12,7 @@ CREATE TABLE VEILEDER_BEHANDLING (
   veileder_behandling_uuid VARCHAR(50) UNIQUE NOT NULL,
   aktor_id                 VARCHAR(13)        NOT NULL,
   veileder_ident           VARCHAR(7)         NOT NULL,
-  ferdig_behandlet         NUMBER CHECK (ferdig_behandlet IN (1, 0)),
+  bruker_sist_aksessert    TIMESTAMP,
   CONSTRAINT VEILEDER_BEHANDLING_PK PRIMARY KEY (veileder_behandling_id),
   CONSTRAINT AKTOR_VEILEDER_UNIQUE UNIQUE(aktor_id, veileder_ident)
 );

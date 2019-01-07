@@ -1,9 +1,11 @@
 package no.nav.syfo.repository.domain
 
+import java.time.LocalDateTime
+
 data class PVeilederBehandling(
         var veilederBehandlingId : Long,
         var veilederBehandlingUUID : String,
         var aktorId : String,
         var veilederIdent : String,
-        var ferdigBehandlet : Boolean
+        var brukerSistAksessert : LocalDateTime?
 )
