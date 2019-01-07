@@ -5,5 +5,5 @@ data class PVeilederBehandling(
         var veilederBehandlingUUID : String,
         var aktorId : String,
         var veilederIdent : String,
-        var underBehandling : Boolean
+        var ferdigBehandlet : Boolean
 )

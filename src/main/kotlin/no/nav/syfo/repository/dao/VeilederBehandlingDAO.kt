@@ -28,7 +28,7 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
                 ":veileder_behandling_uuid," +
                 ":aktor_id," +
                 ":veileder_ident," +
-                ":under_behandling" +
+                ":ferdig_behandlet" +
                 ")"
 
         val sqlParametere : MapSqlParameterSource = MapSqlParameterSource()
@@ -36,7 +36,7 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
                 .addValue("veileder_behandling_uuid", uuid)
                 .addValue("aktor_id", veilederBrukerKnytning.aktorId)
                 .addValue("veileder_ident", veilederBrukerKnytning.veilederIdent)
-                .addValue("under_behandling", false)
+                .addValue("ferdig_behandlet", false)
 
         namedParameterJdbcTemplate.update(lagreSql, sqlParametere)
 
@@ -49,7 +49,7 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
                 rs.getString("veileder_behandling_uuid"),
                 rs.getString("aktor_id"),
                 rs.getString("veileder_ident"),
-                rs.getBoolean("under_behandling")) }
+                rs.getBoolean("ferdig_behandlet")) }
     }
 
 }
