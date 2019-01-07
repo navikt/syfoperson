@@ -13,5 +13,6 @@ CREATE TABLE VEILEDER_BEHANDLING (
   aktor_id                 VARCHAR(13)        NOT NULL,
   veileder_ident           VARCHAR(7)         NOT NULL,
   under_behandling         NUMBER CHECK (under_behandling IN (1, 0)),
-  CONSTRAINT VEILEDER_BEHANDLING_PK PRIMARY KEY (veileder_behandling_id)
+  CONSTRAINT VEILEDER_BEHANDLING_PK PRIMARY KEY (veileder_behandling_id),
+  CONSTRAINT AKTOR_VEILEDER_UNIQUE UNIQUE(aktor_id, veileder_ident)
 );

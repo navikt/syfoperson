@@ -1,5 +1,6 @@
 package no.nav.syfo.repository.dao
 
+import no.nav.syfo.controller.domain.VeilederBrukerKnytning
 import no.nav.syfo.repository.DbUtil
 import no.nav.syfo.repository.domain.PVeilederBehandling
 import org.springframework.jdbc.core.JdbcTemplate
@@ -18,7 +19,7 @@ import java.util.*
 class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
     val idSekvensnavn = "VEILEDER_BEHANDLING_ID_SEQ"
 
-    fun lagre(pVeilederBehandling: PVeilederBehandling): Long {
+    fun lagre(veilederBrukerKnytning: VeilederBrukerKnytning): Long {
         val id : Long = DbUtil.nesteSekvensverdi(idSekvensnavn, jdbcTemplate);
         val uuid : String = UUID.randomUUID().toString()
 
@@ -33,9 +34,9 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
         val sqlParametere : MapSqlParameterSource = MapSqlParameterSource()
                 .addValue("veileder_behandling_id", id)
                 .addValue("veileder_behandling_uuid", uuid)
-                .addValue("aktor_id", pVeilederBehandling.aktorId)
-                .addValue("veileder_ident", pVeilederBehandling.veilederIdent)
-                .addValue("under_behandling", pVeilederBehandling.underBehandling)
+                .addValue("aktor_id", veilederBrukerKnytning.aktorId)
+                .addValue("veileder_ident", veilederBrukerKnytning.veilederIdent)
+                .addValue("under_behandling", false)
 
         namedParameterJdbcTemplate.update(lagreSql, sqlParametere)
 
