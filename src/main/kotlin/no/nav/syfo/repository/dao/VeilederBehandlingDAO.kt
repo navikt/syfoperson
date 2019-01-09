@@ -5,7 +5,6 @@ import no.nav.syfo.repository.DbUtil
 import no.nav.syfo.repository.DbUtil.tilLocalDateTime
 import no.nav.syfo.repository.domain.PVeilederBehandling
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.jdbc.core.query
 
@@ -52,6 +51,12 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
                 rs.getString("aktor_id"),
                 rs.getString("veileder_ident"),
                 tilLocalDateTime(rs.getTimestamp("bruker_sist_aksessert"))) }
+    }
+
+    fun slettVeilederBrukerKnytning(veilederBrukerKnytning: VeilederBrukerKnytning): Boolean {
+        val antallRaderSlettet = jdbcTemplate.update("DELETE FROM veileder_behandling WHERE aktor_id = ? AND veileder_ident = ?",
+                veilederBrukerKnytning.aktorId, veilederBrukerKnytning.veilederIdent)
+        return antallRaderSlettet > 0
     }
 
 }
