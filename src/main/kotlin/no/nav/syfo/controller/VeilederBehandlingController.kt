@@ -10,12 +10,7 @@ import javax.inject.Inject
 
 @RestController
 @RequestMapping(value = ["/api/veilederbehandling"])
-class VeilederBehandlingController {
-@Inject constructor(veilederBehandlingService: VeilederBehandlingService) {
-    this.veilederBehandlingService = veilederBehandlingService
-}
-
-    private val veilederBehandlingService: VeilederBehandlingService
+class VeilederBehandlingController @Inject constructor(val veilederBehandlingService: VeilederBehandlingService) {
 
     @ResponseBody
     @ProtectedWithClaims(issuer = INTERN)
