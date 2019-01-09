@@ -1,6 +1,7 @@
 package no.nav.syfo.controller
 
-import no.nav.security.spring.oidc.validation.api.Unprotected
+import no.nav.security.spring.oidc.validation.api.ProtectedWithClaims
+import no.nav.syfo.util.OICDIssuer.INTERN
 import no.nav.syfo.controller.domain.VeilederBrukerKnytning
 import no.nav.syfo.service.VeilederBehandlingService
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
@@ -17,14 +18,14 @@ class VeilederBehandlingController {
     private val veilederBehandlingService: VeilederBehandlingService
 
     @ResponseBody
-    @Unprotected
+    @ProtectedWithClaims(issuer = INTERN)
     @GetMapping(value = ["/veiledere/{veileder}"], produces = [APPLICATION_JSON_VALUE])
     fun hentVeiledersTilknytninger(@PathVariable veileder : String) : List<VeilederBrukerKnytning> {
         return veilederBehandlingService.hentBrukertilknytningerPaaVeileder(veileder)
     }
 
     @ResponseBody
-    @Unprotected
+    @ProtectedWithClaims(issuer = INTERN)
     @PostMapping(consumes = [APPLICATION_JSON_VALUE], produces = [APPLICATION_JSON_VALUE])
     fun lagreVeilederTilknytning(@RequestBody veilederBrukerKnytning: VeilederBrukerKnytning): Long {
         return veilederBehandlingService.lagreKnytningMellomVeilederOgBruker(veilederBrukerKnytning)
