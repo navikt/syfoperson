@@ -19,15 +19,15 @@ class VeilederBehandlingController {
     @ResponseBody
     @Unprotected
     @GetMapping(value = ["/veiledere/{veileder}"], produces = [APPLICATION_JSON_VALUE])
-    fun hentVeiledersTilknytninger(@PathVariable veilederIdent : String) : List<VeilederBrukerKnytning> {
-        return veilederBehandlingService.hentBrukertilknytningerPaaVeileder(veilederIdent)
+    fun hentVeiledersTilknytninger(@PathVariable veileder : String) : List<VeilederBrukerKnytning> {
+        return veilederBehandlingService.hentBrukertilknytningerPaaVeileder(veileder)
     }
 
     @ResponseBody
     @Unprotected
     @PostMapping(consumes = [APPLICATION_JSON_VALUE], produces = [APPLICATION_JSON_VALUE])
     fun lagreVeilederTilknytning(@RequestBody veilederBrukerKnytning: VeilederBrukerKnytning): Long {
-        return veilederBehandlingService.lagreKnytningMellomVeilederOgBruker(veilederBrukerKnytning.veilederIdent, veilederBrukerKnytning.aktorId)
+        return veilederBehandlingService.lagreKnytningMellomVeilederOgBruker(veilederBrukerKnytning)
     }
 
 }

@@ -17,8 +17,8 @@ class VeilederBehandlingService {
         return veilederBehandlingDAO.hentOppgaverPaaVeileder(veilederIdent).map { VeilederBrukerKnytning(it.veilederIdent, it.aktorId) }
     }
 
-    fun lagreKnytningMellomVeilederOgBruker(veilederIdent: String, aktorId: String): Long {
-        return veilederBehandlingDAO.lagre(VeilederBrukerKnytning(veilederIdent, aktorId))
+    fun lagreKnytningMellomVeilederOgBruker(veilederBrukerKnytning: VeilederBrukerKnytning): Long {
+        return veilederBehandlingDAO.lagre(veilederBrukerKnytning)
     }
 
 }
