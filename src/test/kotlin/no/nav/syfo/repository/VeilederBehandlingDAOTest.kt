@@ -30,7 +30,7 @@ class VeilederBehandlingDAOTest {
     private lateinit var veilederBehandlingDAO : VeilederBehandlingDAO
 
     @Before
-    fun cleanup() {
+    fun cleanUp() {
         jdbcTemplate.update("DELETE FROM veileder_behandling")
     }
 

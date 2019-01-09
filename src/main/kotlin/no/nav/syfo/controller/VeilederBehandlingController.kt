@@ -14,13 +14,13 @@ class VeilederBehandlingController {
     this.veilederBehandlingService = veilederBehandlingService
 }
 
-    val veilederBehandlingService: VeilederBehandlingService
+    private val veilederBehandlingService: VeilederBehandlingService
 
     @ResponseBody
     @Unprotected
     @GetMapping(value = ["/veiledere/{veileder}"], produces = [APPLICATION_JSON_VALUE])
-    fun hentVeilederTilknytning(@PathVariable veileder : String) : List<VeilederBrukerKnytning> {
-        return veilederBehandlingService.hentBrukertilknytningerPaaVeileder(veileder)
+    fun hentVeiledersTilknytninger(@PathVariable veilederIdent : String) : List<VeilederBrukerKnytning> {
+        return veilederBehandlingService.hentBrukertilknytningerPaaVeileder(veilederIdent)
     }
 
     @ResponseBody
