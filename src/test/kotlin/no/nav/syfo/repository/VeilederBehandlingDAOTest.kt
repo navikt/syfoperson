@@ -30,13 +30,13 @@ class VeilederBehandlingDAOTest {
     private lateinit var veilederBehandlingDAO : VeilederBehandlingDAO
 
     @Before
-    fun cleanup() {
+    fun cleanUp() {
         jdbcTemplate.update("DELETE FROM veileder_behandling")
     }
 
     @Test
     fun sjekkAtKnytningMellomVeilederOgBrukerLagresRiktig() {
-        val veilederBrukerKnytning = VeilederBrukerKnytning(AKTOR_ID, VEILEDER_IDENT)
+        val veilederBrukerKnytning = VeilederBrukerKnytning(VEILEDER_IDENT, AKTOR_ID)
 
         val lagretId : Long = veilederBehandlingDAO.lagre(veilederBrukerKnytning)
 
@@ -55,8 +55,8 @@ class VeilederBehandlingDAOTest {
 
     @Test
     fun sjekkAtVeilederBrukerKnytningKanHentes() {
-        val veilederBrukerKnytning1 = VeilederBrukerKnytning(AKTOR_ID, VEILEDER_IDENT)
-        val veilederBrukerKnytning2 = VeilederBrukerKnytning(AKTOR_ID_2, VEILEDER_IDENT_2)
+        val veilederBrukerKnytning1 = VeilederBrukerKnytning(VEILEDER_IDENT, AKTOR_ID)
+        val veilederBrukerKnytning2 = VeilederBrukerKnytning(VEILEDER_IDENT_2, AKTOR_ID_2)
 
         veilederBehandlingDAO.lagre(veilederBrukerKnytning1)
         veilederBehandlingDAO.lagre(veilederBrukerKnytning2)
@@ -70,7 +70,7 @@ class VeilederBehandlingDAOTest {
 
     @Test(expected = DuplicateKeyException::class)
     fun sjekkAtVeilederOgBrukerKunKanAssosieresEnGang() {
-        val veilederBrukerKnytning = VeilederBrukerKnytning(AKTOR_ID, VEILEDER_IDENT)
+        val veilederBrukerKnytning = VeilederBrukerKnytning(VEILEDER_IDENT, AKTOR_ID)
 
         veilederBehandlingDAO.lagre(veilederBrukerKnytning)
         veilederBehandlingDAO.lagre(veilederBrukerKnytning)

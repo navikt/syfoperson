@@ -18,6 +18,15 @@ server:
     context-path: /syfoperson
 
 securitytokenservice.url: "sts.url"
+
+no.nav.security.oidc:
+  issuers: intern
+  issuer:
+    intern:
+      discoveryurl: http://metadata
+      accepted_audience: aud-localhost
+      cookie_name: localhost-idtoken
+
 srvsyfoperson:
   username: "username"
   password: "password"
