@@ -21,8 +21,8 @@ class CacheConfig {
     private val entryTTL: Duration = Duration.ofMillis(60000)
 
     @Bean
-    fun cacheManager(lettuceConnectionFactory: LettuceConnectionFactory): RedisCacheManager {
-        val redisCacheConfig: RedisCacheConfiguration = RedisCacheConfiguration
+    fun cacheManager(lettuceConnectionFactory: LettuceConnectionFactory) : RedisCacheManager {
+        val redisCacheConfig = RedisCacheConfiguration
                 .defaultCacheConfig()
                 .entryTtl(entryTTL)
         return RedisCacheManager.RedisCacheManagerBuilder
@@ -33,7 +33,7 @@ class CacheConfig {
     }
 
     @Bean
-    fun lettuceConnectionFactory(): LettuceConnectionFactory {
+    fun lettuceConnectionFactory() : LettuceConnectionFactory {
         return LettuceConnectionFactory(RedisSentinelConfiguration()
                 .master(redisMaster)
                 .sentinel(RedisNode(redisSentinelHost, redisSentinelPort)))

@@ -19,11 +19,11 @@ import java.util.*
 class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
     val idSekvensnavn = "VEILEDER_BEHANDLING_ID_SEQ"
 
-    fun lagre(veilederBrukerKnytning: VeilederBrukerKnytning): Long {
-        val id : Long = DbUtil.nesteSekvensverdi(idSekvensnavn, jdbcTemplate);
-        val uuid : String = UUID.randomUUID().toString()
+    fun lagre(veilederBrukerKnytning: VeilederBrukerKnytning) : Long {
+        val id = DbUtil.nesteSekvensverdi(idSekvensnavn, jdbcTemplate)
+        val uuid = UUID.randomUUID().toString()
 
-        val lagreSql : String = "INSERT INTO veileder_behandling VALUES(" +
+        val lagreSql = "INSERT INTO veileder_behandling VALUES(" +
                 ":veileder_behandling_id," +
                 ":veileder_behandling_uuid," +
                 ":aktor_id," +
@@ -44,8 +44,8 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
         return id
     }
 
-    fun hentOppgaverPaaVeileder(veilederIdent : String) : List<PVeilederBehandling> {
-        return jdbcTemplate.query("SELECT * FROM veileder_behandling WHERE veileder_ident = ?", veilederIdent) { rs, i -> PVeilederBehandling(
+    fun hentOppgaverPaaVeileder(veilederIdent: String) : List<PVeilederBehandling> {
+        return jdbcTemplate.query("SELECT * FROM veileder_behandling WHERE veileder_ident = ?", veilederIdent) { rs, _ -> PVeilederBehandling(
                 rs.getLong("veileder_behandling_id"),
                 rs.getString("veileder_behandling_uuid"),
                 rs.getString("aktor_id"),
@@ -53,7 +53,7 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
                 tilLocalDateTime(rs.getTimestamp("bruker_sist_aksessert"))) }
     }
 
-    fun slettVeilederBrukerKnytning(veilederBrukerKnytning: VeilederBrukerKnytning): Boolean {
+    fun slettVeilederBrukerKnytning(veilederBrukerKnytning: VeilederBrukerKnytning) : Boolean {
         val antallRaderSlettet = jdbcTemplate.update("DELETE FROM veileder_behandling WHERE aktor_id = ? AND veileder_ident = ?",
                 veilederBrukerKnytning.aktorId, veilederBrukerKnytning.veilederIdent)
         return antallRaderSlettet > 0
