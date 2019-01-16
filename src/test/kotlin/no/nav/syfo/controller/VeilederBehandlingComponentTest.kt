@@ -33,7 +33,7 @@ import no.nav.syfo.util.TestUtils.loggUt
 class VeilederBehandlingComponentTest {
 
     @Inject
-    private lateinit var veilederBehandlingDAO : VeilederBehandlingDAO
+    private lateinit var veilederBehandlingDAO: VeilederBehandlingDAO
 
     @Inject
     private lateinit var mockMvc: MockMvc
@@ -90,8 +90,8 @@ class VeilederBehandlingComponentTest {
 
         val typeRef = object : TypeReference<ArrayList<VeilederBrukerKnytningNoArgs>>() {}
 
-        val knytningerPaaVeileder1 : ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraVeileder1Restkall, typeRef)
-        val knytningerPaaVeileder2 : ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraVeileder2Restkall, typeRef)
+        val knytningerPaaVeileder1: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraVeileder1Restkall, typeRef)
+        val knytningerPaaVeileder2: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraVeileder2Restkall, typeRef)
 
         assertThat(knytningerPaaVeileder1).anyMatch { it.equals(tilknytning1) }
         assertThat(knytningerPaaVeileder1).anyMatch { it.equals(tilknytning2) }
@@ -105,7 +105,7 @@ class VeilederBehandlingComponentTest {
         }
     }
 
-    private class VeilederBrukerKnytningNoArgs(var veilederIdent : String = "", var aktorId : String = "") {
+    private class VeilederBrukerKnytningNoArgs(var veilederIdent: String = "", var aktorId: String = "") {
         fun equals(other : VeilederBrukerKnytningNoArgs) : Boolean {
             return veilederIdent == other.veilederIdent && aktorId == other.aktorId
         }

@@ -5,7 +5,7 @@ import no.nav.syfo.controller.domain.VeilederBrukerKnytning
 import no.nav.syfo.repository.dao.VeilederBehandlingDAO
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.assertj.core.api.Assertions.assertThat;
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.dao.DuplicateKeyException
@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner
 import javax.inject.Inject
 
 @DirtiesContext
-@SpringBootTest(classes = arrayOf(LocalApplication::class))
+@SpringBootTest(classes = [LocalApplication::class])
 @RunWith(SpringRunner::class)
 class VeilederBehandlingDAOTest {
     private val AKTOR_ID = "1234567890123"
@@ -24,10 +24,10 @@ class VeilederBehandlingDAOTest {
     private val VEILEDER_IDENT_2 = "Z888888"
 
     @Inject
-    private lateinit var jdbcTemplate : JdbcTemplate
+    private lateinit var jdbcTemplate: JdbcTemplate
 
     @Inject
-    private lateinit var veilederBehandlingDAO : VeilederBehandlingDAO
+    private lateinit var veilederBehandlingDAO: VeilederBehandlingDAO
 
     @Before
     fun cleanUp() {
@@ -38,7 +38,7 @@ class VeilederBehandlingDAOTest {
     fun sjekkAtKnytningMellomVeilederOgBrukerLagresRiktig() {
         val veilederBrukerKnytning = VeilederBrukerKnytning(VEILEDER_IDENT, AKTOR_ID)
 
-        val lagretId : Long = veilederBehandlingDAO.lagre(veilederBrukerKnytning)
+        val lagretId = veilederBehandlingDAO.lagre(veilederBrukerKnytning)
 
         val veilederBehandlingListe = veilederBehandlingDAO.hentOppgaverPaaVeileder(VEILEDER_IDENT)
         val lagretUUID = veilederBehandlingListe[0].veilederBehandlingUUID
