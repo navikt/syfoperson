@@ -17,6 +17,8 @@ server:
   servlet:
     context-path: /syfoperson
 
+no.nav.modig.security.sts.url: "sts.url"
+
 securitytokenservice.url: "sts.url"
 
 no.nav.security.oidc:
@@ -32,6 +34,9 @@ srvsyfoperson:
   password: "password"
 
 fasit.environment.name: 'local'
+
+mockPerson_V3: true
+mockAktoer_V2: true
 
 dev: true
 
