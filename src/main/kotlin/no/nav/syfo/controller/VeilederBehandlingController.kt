@@ -1,7 +1,7 @@
 package no.nav.syfo.controller
 
 import no.nav.security.spring.oidc.validation.api.ProtectedWithClaims
-import no.nav.syfo.util.OICDIssuer.INTERN
+import no.nav.syfo.util.OIDCIssuer.INTERN
 import no.nav.syfo.controller.domain.VeilederBrukerKnytning
 import no.nav.syfo.service.VeilederBehandlingService
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
