@@ -30,7 +30,7 @@ class PersonService @Inject constructor(private val personV3: PersonV3, private 
     }
 
     fun hentNavnFraFnr(fnr: String) : String {
-        if (StringUtils.isBlank(fnr) || !fnr.matches("\\d{13}$".toRegex())) {
+        if (StringUtils.isBlank(fnr) || !fnr.matches("\\d{11}$".toRegex())) {
             throw IllegalArgumentException()
         }
         try {
