@@ -69,8 +69,6 @@ object STSClientConfig {
         stsClient.isEnableAppliesTo = false
         stsClient.isAllowRenewing = false
         stsClient.location = location
-        // For debugging
-        // stsClient.setFeatures(new ArrayList<Feature>(Arrays.asList(new LoggingFeature())));
 
         val properties = HashMap<String, Any>()
         properties[org.apache.cxf.rt.security.SecurityConstants.USERNAME] = username

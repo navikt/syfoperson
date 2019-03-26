@@ -5,17 +5,17 @@ import no.nav.tjeneste.virksomhet.aktoer.v2.HentAktoerIdForIdentPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.aktoer.v2.HentIdentForAktoerIdPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.WSHentAktoerIdForIdentRequest
 import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.WSHentIdentForAktoerIdRequest
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Component
 import java.lang.RuntimeException
+import javax.ws.rs.NotFoundException
 
 @Component
 class AktoerConsumer
 constructor(private val aktoerV2: AktoerV2) : InitializingBean {
 
-    override fun afterPropertiesSet() {
-        instance = this
-    }
+    override fun afterPropertiesSet() { instance = this }
 
     fun hentAktoerIdForFnr(fnr: String): String {
         try {
@@ -23,29 +23,18 @@ constructor(private val aktoerV2: AktoerV2) : InitializingBean {
                     .withIdent(fnr)
             ).aktoerId
         } catch (e: HentAktoerIdForIdentPersonIkkeFunnet) {
-            throw RuntimeException(e)
+            LOG.info("Klarte ikke finne aktorId for fnr")
+            throw NotFoundException()
+        } catch (e: RuntimeException) {
+            LOG.info("Fikk RuntimeException på henting av aktorid for fnr")
+            throw e
         }
-
-    }
-
-    fun hentFnrForAktoerId(aktoerId: String): String {
-        try {
-            return aktoerV2.hentIdentForAktoerId(
-                    WSHentIdentForAktoerIdRequest()
-                            .withAktoerId(aktoerId)
-            ).ident
-        } catch (e: HentIdentForAktoerIdPersonIkkeFunnet) {
-            throw RuntimeException(e)
-        }
-
     }
 
     companion object {
-
         private var instance: AktoerConsumer? = null
+        private val LOG = LoggerFactory.getLogger(AktoerConsumer::class.java)
 
-        fun aktoerConsumer(): AktoerConsumer? {
-            return instance
-        }
+        fun aktoerConsumer(): AktoerConsumer? { return instance }
     }
 }

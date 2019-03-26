@@ -29,8 +29,8 @@ class CORSFilter : Filter {
 
     @Throws(ServletException::class, IOException::class)
     override fun doFilter(request: ServletRequest, response: ServletResponse, chain: FilterChain?) {
-        val httpRequest: HttpServletRequest = request as HttpServletRequest
-        val httpResponse: HttpServletResponse = response as HttpServletResponse
+        val httpRequest = request as HttpServletRequest
+        val httpResponse = response as HttpServletResponse
 
         val reqUri = httpRequest.requestURI
         if (requestUriErIkkeMotFeedEllerInternalEndepunkt(reqUri)) {
@@ -54,8 +54,6 @@ class CORSFilter : Filter {
         return !(uri.contains("/feed") || uri.contains("/internal"))
     }
 
-    private fun erWhitelisted(origin: String?) : Boolean {
-        return origin != null && whitelist.contains(origin)
-    }
+    private fun erWhitelisted(origin: String?) : Boolean { return origin != null && whitelist.contains(origin) }
 
 }
