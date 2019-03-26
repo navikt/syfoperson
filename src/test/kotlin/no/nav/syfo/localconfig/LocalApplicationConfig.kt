@@ -1,7 +1,6 @@
 package no.nav.syfo.localconfig
 
 import no.nav.security.spring.oidc.test.TokenGeneratorConfiguration
-import org.apache.tomcat.jni.Local
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.core.env.Environment

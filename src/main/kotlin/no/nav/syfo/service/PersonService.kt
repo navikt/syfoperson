@@ -1,6 +1,5 @@
 package no.nav.syfo.service
 
-import org.slf4j.LoggerFactory.getLogger
 import no.nav.syfo.consumer.AktoerConsumer
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning
@@ -20,8 +19,6 @@ import javax.ws.rs.NotFoundException
 @Component
 class PersonService @Inject constructor(private val personV3: PersonV3, private val aktoerConsumer: AktoerConsumer): InitializingBean {
     private var instance: PersonService? = null
-    private val KODE6 = "SPSF"
-    private val KODE7 = "SPFO"
 
     companion object {
         private val LOG = LoggerFactory.getLogger(PersonService::class.java)
@@ -29,7 +26,7 @@ class PersonService @Inject constructor(private val personV3: PersonV3, private 
 
     override fun afterPropertiesSet() { instance = this }
 
-    fun personService() : PersonService? { return instance }
+    fun personService() = instance
 
     fun hentNavnFraFnr(fnr: String) : String {
         if (StringUtils.isBlank(fnr) || !fnr.matches("\\d{11}$".toRegex())) throw IllegalArgumentException()

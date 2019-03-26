@@ -15,14 +15,14 @@ import java.lang.IllegalStateException
 import java.util.HashMap
 
 object STSClientConfig {
-    val STS_URL_KEY = "SECURITYTOKENSERVICE_URL"
-    val SERVICEUSER_USERNAME = "SRVSYFOPERSON_USERNAME"
-    val SERVICEUSER_PASSWORD = "SRVSYFOPERSON_PASSWORD"
+    private const val STS_URL_KEY = "SECURITYTOKENSERVICE_URL"
+    private const val SERVICEUSER_USERNAME = "SRVSYFOPERSON_USERNAME"
+    private const val SERVICEUSER_PASSWORD = "SRVSYFOPERSON_PASSWORD"
 
     // Only use no transportbinding on localhost, should use the requestSamlPolicy.xml with transport binding https
     // when in production.
-    private val STS_REQUEST_SAML_POLICY = "classpath:policy/requestSamlPolicy.xml"
-    private val STS_CLIENT_AUTHENTICATION_POLICY = "classpath:policy/untPolicy.xml"
+    private const val STS_REQUEST_SAML_POLICY = "classpath:policy/requestSamlPolicy.xml"
+    private const val STS_CLIENT_AUTHENTICATION_POLICY = "classpath:policy/untPolicy.xml"
 
     fun <T> configureRequestSamlToken(port: T): T {                                                                             
         val client = ClientProxy.getClient(port)
