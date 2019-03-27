@@ -7,7 +7,13 @@ import org.springframework.core.env.Environment
 
 @Configuration
 @Import(TokenGeneratorConfiguration::class)
-class LocalApplicationConfig(environment: Environment)/*
-            Her kan du ta inn properties som normalt settes av platformen slik at de er tilgjengelige runtime lokalt
+class LocalApplicationConfig {
+    fun LocalApplicationConfig(environment: Environment) {
+
+    }
+}
+
+/*
+Her kan du ta inn properties som normalt settes av platformen slik at de er tilgjengelige runtime lokalt
             Eks: System.setProperty("syfoperson_USERNAME", environment.getProperty("syfoperson.username"));
          */
