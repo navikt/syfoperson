@@ -8,7 +8,7 @@ import javax.inject.Inject
 @Service
 class VeilederBehandlingService @Inject constructor(val veilederBehandlingDAO: VeilederBehandlingDAO) {
 
-    fun hentBrukertilknytningerPaaVeileder(veilederIdent: String) = veilederBehandlingDAO.hentOppgaverPaaVeileder(veilederIdent).map { VeilederBrukerKnytning(it.veilederIdent, it.aktorId) }
+    fun hentBrukertilknytningerPaaVeileder(veilederIdent: String) = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(veilederIdent).map { VeilederBrukerKnytning(it.veilederIdent, it.aktorId) }
 
     fun lagreKnytningMellomVeilederOgBruker(veilederBrukerKnytning: VeilederBrukerKnytning) = veilederBehandlingDAO.lagre(veilederBrukerKnytning)
 
