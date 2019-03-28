@@ -40,7 +40,7 @@ class VeilederBehandlingDAOTest {
 
         val lagretId = veilederBehandlingDAO.lagre(veilederBrukerKnytning)
 
-        val veilederBehandlingListe = veilederBehandlingDAO.hentOppgaverPaaVeileder(veilederIdent)
+        val veilederBehandlingListe = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(veilederIdent)
         val lagretUUID = veilederBehandlingListe[0].veilederBehandlingUUID
         val lagretAktorId = veilederBehandlingListe[0].aktorId
         val lagretVeilederIdent = veilederBehandlingListe[0].veilederIdent
@@ -61,8 +61,8 @@ class VeilederBehandlingDAOTest {
         veilederBehandlingDAO.lagre(veilederBrukerKnytning1)
         veilederBehandlingDAO.lagre(veilederBrukerKnytning2)
 
-        val aktorIdLagretPaaVeilederIdent = veilederBehandlingDAO.hentOppgaverPaaVeileder(veilederIdent)[0].aktorId
-        val aktorIdLagretPaaVeilederIdent2 =  veilederBehandlingDAO.hentOppgaverPaaVeileder(veilederIdent2)[0].aktorId
+        val aktorIdLagretPaaVeilederIdent = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(veilederIdent)[0].aktorId
+        val aktorIdLagretPaaVeilederIdent2 =  veilederBehandlingDAO.hentBrukereTilknyttetVeileder(veilederIdent2)[0].aktorId
 
         assertThat(aktorIdLagretPaaVeilederIdent).isEqualTo(aktorId)
         assertThat(aktorIdLagretPaaVeilederIdent2).isEqualTo(aktorId2)

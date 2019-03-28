@@ -44,7 +44,7 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
         return id
     }
 
-    fun hentOppgaverPaaVeileder(veilederIdent: String) : List<PVeilederBehandling> {
+    fun hentBrukereTilknyttetVeileder(veilederIdent: String) : List<PVeilederBehandling> {
         return jdbcTemplate.query("SELECT * FROM veileder_behandling WHERE veileder_ident = ?", veilederIdent) { rs, _ -> PVeilederBehandling(
                 rs.getLong("veileder_behandling_id"),
                 rs.getString("veileder_behandling_uuid"),
