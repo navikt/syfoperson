@@ -10,6 +10,6 @@ class VeilederBehandlingService @Inject constructor(val veilederBehandlingDAO: V
 
     fun hentBrukertilknytningerPaaVeileder(veilederIdent: String) = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(veilederIdent).map { VeilederBrukerKnytning(it.veilederIdent, it.aktorId) }
 
-    fun lagreKnytningMellomVeilederOgBruker(veilederBrukerKnytning: VeilederBrukerKnytning) = veilederBehandlingDAO.lagre(veilederBrukerKnytning)
+    fun lagreKnytningMellomVeilederOgBruker(veilederBrukerKnytninger: List<VeilederBrukerKnytning>) = veilederBrukerKnytninger.map { veilederBehandlingDAO.lagre(it) }
 
 }

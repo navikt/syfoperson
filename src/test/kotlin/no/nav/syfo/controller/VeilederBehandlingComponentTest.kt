@@ -6,6 +6,8 @@ import no.nav.security.oidc.context.OIDCRequestContextHolder
 import no.nav.syfo.LocalApplication
 import no.nav.syfo.controller.domain.VeilederBrukerKnytning
 import no.nav.syfo.repository.dao.VeilederBehandlingDAO
+import no.nav.syfo.util.TestUtils.loggInnSomVeileder
+import no.nav.syfo.util.TestUtils.loggUt
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.After
 import org.junit.Before
@@ -21,13 +23,10 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import javax.inject.Inject
 
-import no.nav.syfo.util.TestUtils.loggInnSomVeileder
-import no.nav.syfo.util.TestUtils.loggUt
-
 
 @RunWith(SpringRunner::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK,
-                classes = [LocalApplication::class])
+        classes = [LocalApplication::class])
 @AutoConfigureMockMvc
 @DirtiesContext
 class VeilederBehandlingComponentTest {
@@ -65,21 +64,21 @@ class VeilederBehandlingComponentTest {
 
     @Test
     fun sjekkAtVeilederBrukerTilknytningerKanLagresOgHentesRiktig() {
-        val jsonLagringsStrenger = arrayOf(
-                ObjectMapper().writeValueAsString(tilknytning1),
-                ObjectMapper().writeValueAsString(tilknytning2),
-                ObjectMapper().writeValueAsString(tilknytning3)
+        val tilknytningListe = listOf(
+                tilknytning1,
+                tilknytning2,
+                tilknytning3
         )
+
+        val jsonLagringsStreng = ObjectMapper().writeValueAsString(tilknytningListe)
 
         val idToken = oidcRequestContextHolder.oidcValidationContext.getToken("intern").idToken
 
-        jsonLagringsStrenger.forEach {
-            mockMvc.perform(MockMvcRequestBuilders.post("/api/veilederbehandling")
-                    .header("Authorization", "Bearer $idToken")
-                    .contentType(APPLICATION_JSON)
-                    .content(it))
-                    .andExpect(MockMvcResultMatchers.status().isOk)
-        }
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/veilederbehandling")
+                .header("Authorization", "Bearer $idToken")
+                .contentType(APPLICATION_JSON)
+                .content(jsonLagringsStreng))
+                .andExpect(MockMvcResultMatchers.status().isOk)
 
         val responsFraVeileder1Restkall = mockMvc.perform(MockMvcRequestBuilders.get("/api/veilederbehandling/veiledere/$veilederIdent1")
                 .header("Authorization", "Bearer $idToken"))
@@ -106,7 +105,7 @@ class VeilederBehandlingComponentTest {
     }
 
     private class VeilederBrukerKnytningNoArgs(var veilederIdent: String = "", var aktorId: String = "") {
-        fun equals(other : VeilederBrukerKnytningNoArgs) : Boolean {
+        fun equals(other: VeilederBrukerKnytningNoArgs): Boolean {
             return veilederIdent == other.veilederIdent && aktorId == other.aktorId
         }
     }
