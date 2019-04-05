@@ -41,6 +41,8 @@ fasitResources:
   used:
   - alias: srvsyfoperson
     resourceType: credential
+  - alias: appdynamics
+    resourceType: applicationproperties
   - alias: securityTokenService
     resourceType: baseurl
   - alias: virksomhet:Person_V3
