@@ -28,7 +28,8 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
                 ":veileder_behandling_uuid," +
                 ":aktor_id," +
                 ":veileder_ident," +
-                ":bruker_sist_aksessert" +
+                ":bruker_sist_aksessert," +
+                ":enhet" +
                 ")"
 
         val sqlParametere = mapOf(
@@ -36,7 +37,8 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
                 "veileder_behandling_uuid" to uuid,
                 "aktor_id" to veilederBrukerKnytning.aktorId,
                 "veileder_ident" to veilederBrukerKnytning.veilederIdent,
-                "bruker_sist_aksessert" to null
+                "bruker_sist_aksessert" to null,
+                "enhet" to veilederBrukerKnytning.enhet
         )
 
         namedParameterJdbcTemplate.update(lagreSql, sqlParametere)
@@ -50,7 +52,19 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
                 rs.getString("veileder_behandling_uuid"),
                 rs.getString("aktor_id"),
                 rs.getString("veileder_ident"),
-                tilLocalDateTime(rs.getTimestamp("bruker_sist_aksessert"))) }
+                tilLocalDateTime(rs.getTimestamp("bruker_sist_aksessert")),
+                rs.getString("enhet")) }
+    }
+
+    fun hentVeilederBrukerKnytningPaaEnhet(enhetId: String) : List<PVeilederBehandling> {
+        return jdbcTemplate.query("SELECT * FROM veileder_behandling WHERE enhet = ?", enhetId) { rs, _ -> PVeilederBehandling(
+                rs.getLong("veileder_behandling_id"),
+                rs.getString("veileder_behandling_uuid"),
+                rs.getString("aktor_id"),
+                rs.getString("veileder_ident"),
+                tilLocalDateTime(rs.getTimestamp("bruker_sist_aksessert")),
+                rs.getString("enhet")
+        )}
     }
 
     fun slettVeilederBrukerKnytning(veilederBrukerKnytning: VeilederBrukerKnytning) : Boolean {
