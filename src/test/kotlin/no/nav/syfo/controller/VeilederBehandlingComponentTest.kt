@@ -40,16 +40,25 @@ class VeilederBehandlingComponentTest {
     @Inject
     private lateinit var oidcRequestContextHolder: OIDCRequestContextHolder
 
-    private val brukerAktorId1 = "1234567890123"
-    private val brukerAktorId2 = "2345678901234"
-    private val brukerAktorId3 = "3456789012345"
+    private val brukerAktorId1 = "aktorId1"
+    private val brukerAktorId2 = "aktorId2"
+    private val brukerAktorId3 = "aktorId3"
 
     private val veilederIdent1 = "Z888888"
     private val veilederIdent2 = "Z999999"
 
-    private val tilknytning1 = VeilederBrukerKnytningNoArgs(veilederIdent1, brukerAktorId1)
-    private val tilknytning2 = VeilederBrukerKnytningNoArgs(veilederIdent1, brukerAktorId2)
-    private val tilknytning3 = VeilederBrukerKnytningNoArgs(veilederIdent2, brukerAktorId3)
+    private val enhet1 = "1234"
+    private val enhet2 = "2345"
+
+    private val tilknytning1 = VeilederBrukerKnytningNoArgs(veilederIdent1, brukerAktorId1, enhet1)
+    private val tilknytning2 = VeilederBrukerKnytningNoArgs(veilederIdent1, brukerAktorId2, enhet1)
+    private val tilknytning3 = VeilederBrukerKnytningNoArgs(veilederIdent2, brukerAktorId3, enhet2)
+
+    private val tilknytningListe = listOf(
+            tilknytning1,
+            tilknytning2,
+            tilknytning3
+    )
 
     @Before
     fun setup() {
@@ -64,12 +73,6 @@ class VeilederBehandlingComponentTest {
 
     @Test
     fun sjekkAtVeilederBrukerTilknytningerKanLagresOgHentesRiktig() {
-        val tilknytningListe = listOf(
-                tilknytning1,
-                tilknytning2,
-                tilknytning3
-        )
-
         val jsonLagringsStreng = ObjectMapper().writeValueAsString(tilknytningListe)
 
         val idToken = oidcRequestContextHolder.oidcValidationContext.getToken("intern").idToken
@@ -97,16 +100,45 @@ class VeilederBehandlingComponentTest {
         assertThat(knytningerPaaVeileder2).anyMatch { it.equals(tilknytning3) }
     }
 
+    @Test
+    fun sjekkAtVeilederBrukerTilknytningerKanLagresOgHentesRiktigPaaEnhet() {
+        val jsonLagringsStreng = ObjectMapper().writeValueAsString(tilknytningListe)
+
+        val idToken = oidcRequestContextHolder.oidcValidationContext.getToken("intern").idToken
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/veilederbehandling")
+                .header("Authorization", "Bearer $idToken")
+                .contentType(APPLICATION_JSON)
+                .content(jsonLagringsStreng))
+                .andExpect(MockMvcResultMatchers.status().isOk)
+
+        val responsFraEnhet1Restkall = mockMvc.perform(MockMvcRequestBuilders.get("/api/veilederbehandling/enheter/$enhet1/veiledere")
+                .header("Authorization", "Bearer $idToken"))
+                .andReturn().response.contentAsString
+        val responsFraEnhet2Restkall = mockMvc.perform(MockMvcRequestBuilders.get("/api/veilederbehandling/enheter/$enhet2/veiledere")
+                .header("Authorization", "Bearer $idToken"))
+                .andReturn().response.contentAsString
+
+        val typeRef = object : TypeReference<ArrayList<VeilederBrukerKnytningNoArgs>>() {}
+
+        val knytningerPaaVeileder1: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraEnhet1Restkall, typeRef)
+        val knytningerPaaVeileder2: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraEnhet2Restkall, typeRef)
+
+        assertThat(knytningerPaaVeileder1).anyMatch { it.equals(tilknytning1) }
+        assertThat(knytningerPaaVeileder1).anyMatch { it.equals(tilknytning2) }
+        assertThat(knytningerPaaVeileder2).anyMatch { it.equals(tilknytning3) }
+    }
+
 
     private fun fjernBrukere() {
         arrayOf(tilknytning1, tilknytning2, tilknytning3).forEach {
-            veilederBehandlingDAO.slettVeilederBrukerKnytning(VeilederBrukerKnytning(it.veilederIdent, it.aktorId))
+            veilederBehandlingDAO.slettVeilederBrukerKnytning(VeilederBrukerKnytning(it.veilederIdent, it.aktorId, it.enhet))
         }
     }
 
-    private class VeilederBrukerKnytningNoArgs(var veilederIdent: String = "", var aktorId: String = "") {
+    private class VeilederBrukerKnytningNoArgs(var veilederIdent: String = "", var aktorId: String = "", var enhet: String = "") {
         fun equals(other: VeilederBrukerKnytningNoArgs): Boolean {
-            return veilederIdent == other.veilederIdent && aktorId == other.aktorId
+            return veilederIdent == other.veilederIdent && aktorId == other.aktorId && enhet == other.enhet
         }
     }
 
