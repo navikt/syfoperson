@@ -6,12 +6,11 @@ import no.nav.security.oidc.context.OIDCRequestContextHolder
 import no.nav.syfo.LocalApplication
 import no.nav.syfo.controller.domain.VeilederBrukerKnytning
 import no.nav.syfo.repository.dao.VeilederBehandlingDAO
+import no.nav.syfo.util.OIDCIssuer.AZURE
 import no.nav.syfo.util.TestUtils.loggInnSomVeileder
 import no.nav.syfo.util.TestUtils.loggUt
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
+import org.junit.*
 import org.junit.runner.RunWith
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -40,29 +39,25 @@ class VeilederBehandlingComponentTest {
     @Inject
     private lateinit var oidcRequestContextHolder: OIDCRequestContextHolder
 
-    private val brukerAktorId1 = "aktorId1"
-    private val brukerAktorId2 = "aktorId2"
-    private val brukerAktorId3 = "aktorId3"
+    private val lagretVeilederIdent1 = "Z999999"
+    private val lagretVeilederIdent2 = "Z888888"
 
-    private val veilederIdent1 = "Z888888"
-    private val veilederIdent2 = "Z999999"
+    private val lagretAktorId1 = "1234567890123"
+    private val lagretAktorId2 = "1234567890124"
+    private val lagretAktorId3 = "1234567890125"
 
-    private val enhet1 = "1234"
-    private val enhet2 = "2345"
-
-    private val tilknytning1 = VeilederBrukerKnytningNoArgs(veilederIdent1, brukerAktorId1, enhet1)
-    private val tilknytning2 = VeilederBrukerKnytningNoArgs(veilederIdent1, brukerAktorId2, enhet1)
-    private val tilknytning3 = VeilederBrukerKnytningNoArgs(veilederIdent2, brukerAktorId3, enhet2)
+    private val lagretEnhet1 = "1234"
+    private val lagretEnhet2 = "2345"
 
     private val tilknytningListe = listOf(
-            tilknytning1,
-            tilknytning2,
-            tilknytning3
+            VeilederBrukerKnytningNoArgs("ident1", "aktorId1", "XXXX"),
+            VeilederBrukerKnytningNoArgs("ident2", "aktorId2", "YYYY"),
+            VeilederBrukerKnytningNoArgs("ident3", "aktorId3", "ZZZZ")
     )
 
     @Before
     fun setup() {
-        loggInnSomVeileder(oidcRequestContextHolder, veilederIdent1)
+        loggInnSomVeileder(oidcRequestContextHolder, lagretVeilederIdent1)
     }
 
     @After
@@ -72,66 +67,62 @@ class VeilederBehandlingComponentTest {
     }
 
     @Test
-    fun sjekkAtVeilederBrukerTilknytningerKanLagresOgHentesRiktig() {
+    fun sjekkAtVeilederBrukerTilknytningerKanLagresRiktig() {
         val jsonLagringsStreng = ObjectMapper().writeValueAsString(tilknytningListe)
 
-        val idToken = oidcRequestContextHolder.oidcValidationContext.getToken("intern").idToken
+        val idToken = oidcRequestContextHolder.oidcValidationContext.getToken(AZURE).idToken
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/veilederbehandling")
                 .header("Authorization", "Bearer $idToken")
                 .contentType(APPLICATION_JSON)
                 .content(jsonLagringsStreng))
                 .andExpect(MockMvcResultMatchers.status().isOk)
+    }
 
-        val responsFraVeileder1Restkall = mockMvc.perform(MockMvcRequestBuilders.get("/api/veilederbehandling/veiledere/$veilederIdent1")
+    @Test
+    fun sjekkAtVeilederBrukerTilknytningerKanLagresOgHentesRiktig() {
+        val idToken = oidcRequestContextHolder.oidcValidationContext.getToken(AZURE).idToken
+
+        val responsFraVeileder1Restkall = mockMvc.perform(MockMvcRequestBuilders.get("/api/veilederbehandling/veiledere/$lagretVeilederIdent1")
                 .header("Authorization", "Bearer $idToken"))
                 .andReturn().response.contentAsString
-        val responsFraVeileder2Restkall = mockMvc.perform(MockMvcRequestBuilders.get("/api/veilederbehandling/veiledere/$veilederIdent2")
+        val responsFraVeileder2Restkall = mockMvc.perform(MockMvcRequestBuilders.get("/api/veilederbehandling/veiledere/$lagretVeilederIdent2")
                 .header("Authorization", "Bearer $idToken"))
                 .andReturn().response.contentAsString
+
 
         val typeRef = object : TypeReference<ArrayList<VeilederBrukerKnytningNoArgs>>() {}
-
         val knytningerPaaVeileder1: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraVeileder1Restkall, typeRef)
         val knytningerPaaVeileder2: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraVeileder2Restkall, typeRef)
 
-        assertThat(knytningerPaaVeileder1).anyMatch { it.equals(tilknytning1) }
-        assertThat(knytningerPaaVeileder1).anyMatch { it.equals(tilknytning2) }
-        assertThat(knytningerPaaVeileder2).anyMatch { it.equals(tilknytning3) }
+        assertThat(knytningerPaaVeileder1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent1, lagretAktorId1, lagretEnhet1)) }
+        assertThat(knytningerPaaVeileder2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId2, lagretEnhet1)) }
+        assertThat(knytningerPaaVeileder2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId3, lagretEnhet2)) }
     }
 
     @Test
     fun sjekkAtVeilederBrukerTilknytningerKanLagresOgHentesRiktigPaaEnhet() {
-        val jsonLagringsStreng = ObjectMapper().writeValueAsString(tilknytningListe)
+        val idToken = oidcRequestContextHolder.oidcValidationContext.getToken(AZURE).idToken
 
-        val idToken = oidcRequestContextHolder.oidcValidationContext.getToken("intern").idToken
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/veilederbehandling")
-                .header("Authorization", "Bearer $idToken")
-                .contentType(APPLICATION_JSON)
-                .content(jsonLagringsStreng))
-                .andExpect(MockMvcResultMatchers.status().isOk)
-
-        val responsFraEnhet1Restkall = mockMvc.perform(MockMvcRequestBuilders.get("/api/veilederbehandling/enheter/$enhet1/veiledere")
+        val responsFraEnhet1Restkall = mockMvc.perform(MockMvcRequestBuilders.get("/api/veilederbehandling/enheter/$lagretEnhet1/veiledere")
                 .header("Authorization", "Bearer $idToken"))
                 .andReturn().response.contentAsString
-        val responsFraEnhet2Restkall = mockMvc.perform(MockMvcRequestBuilders.get("/api/veilederbehandling/enheter/$enhet2/veiledere")
+        val responsFraEnhet2Restkall = mockMvc.perform(MockMvcRequestBuilders.get("/api/veilederbehandling/enheter/$lagretEnhet2/veiledere")
                 .header("Authorization", "Bearer $idToken"))
                 .andReturn().response.contentAsString
 
         val typeRef = object : TypeReference<ArrayList<VeilederBrukerKnytningNoArgs>>() {}
+        val knytningerPaaEnhet1: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraEnhet1Restkall, typeRef)
+        val knytningerPaaEnhet2: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraEnhet2Restkall, typeRef)
 
-        val knytningerPaaVeileder1: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraEnhet1Restkall, typeRef)
-        val knytningerPaaVeileder2: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraEnhet2Restkall, typeRef)
-
-        assertThat(knytningerPaaVeileder1).anyMatch { it.equals(tilknytning1) }
-        assertThat(knytningerPaaVeileder1).anyMatch { it.equals(tilknytning2) }
-        assertThat(knytningerPaaVeileder2).anyMatch { it.equals(tilknytning3) }
+        assertThat(knytningerPaaEnhet1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent1, lagretAktorId1, lagretEnhet1)) }
+        assertThat(knytningerPaaEnhet1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId2, lagretEnhet1)) }
+        assertThat(knytningerPaaEnhet2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId3, lagretEnhet2)) }
     }
 
 
     private fun fjernBrukere() {
-        arrayOf(tilknytning1, tilknytning2, tilknytning3).forEach {
+        tilknytningListe.forEach {
             veilederBehandlingDAO.slettVeilederBrukerKnytning(VeilederBrukerKnytning(it.veilederIdent, it.aktorId, it.enhet))
         }
     }

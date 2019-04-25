@@ -6,7 +6,7 @@ import no.nav.syfo.repository.dao.VeilederBehandlingDAO
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Before
+import org.junit.After
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.jdbc.core.JdbcTemplate
@@ -19,12 +19,18 @@ import javax.inject.Inject
 @RunWith(SpringRunner::class)
 class VeilederBehandlingDAOTest {
     private val aktorId1 = "aktorId1"
-    private val aktorId2 = "aktorId2"
-    private val veilederIdent1 = "Z999999"
-    private val veilederIdent2 = "Z888888"
-    private val veilederIdent3 = "Z777777"
-    private val enhet1 = "1234"
-    private val enhet2 = "2345"
+    private val veilederIdent1 = "ident1"
+    private val enhet1 = "XXXX"
+
+    private val lagretAktorId1 = "1234567890123"
+    private val lagretAktorId2 = "1234567890124"
+    private val lagretAktorId3 = "1234567890125"
+
+    private val lagretVeilederIdent1 = "Z999999"
+    private val lagretVeilederIdent2 = "Z888888"
+
+    private val lagretEnhet1 = "1234"
+    private val lagretEnhet2 = "2345"
 
     @Inject
     private lateinit var jdbcTemplate: JdbcTemplate
@@ -32,9 +38,9 @@ class VeilederBehandlingDAOTest {
     @Inject
     private lateinit var veilederBehandlingDAO: VeilederBehandlingDAO
 
-    @Before
+    @After
     fun cleanUp() {
-        jdbcTemplate.update("DELETE FROM veileder_behandling")
+        jdbcTemplate.update("DELETE FROM veileder_behandling WHERE veileder_behandling_id > 3")
     }
 
     @Test
@@ -47,7 +53,7 @@ class VeilederBehandlingDAOTest {
         val lagretUUID = veilederBehandlingListe[0].veilederBehandlingUUID
         val lagretAktorId = veilederBehandlingListe[0].aktorId
         val lagretVeilederIdent = veilederBehandlingListe[0].veilederIdent
-        val lagretEnhet = veilederBehandlingListe[0].enhet;
+        val lagretEnhet = veilederBehandlingListe[0].enhet
         val lagretBrukerSistAksessertVerdi = veilederBehandlingListe[0].brukerSistAksessert
 
         assertThat(lagretId).isGreaterThan(0)
@@ -60,45 +66,29 @@ class VeilederBehandlingDAOTest {
 
     @Test
     fun sjekkAtVeilederBrukerKnytningKanHentes() {
-        val veilederBrukerKnytning1 = VeilederBrukerKnytning(veilederIdent1, aktorId1, enhet1)
-        val veilederBrukerKnytning2 = VeilederBrukerKnytning(veilederIdent2, aktorId2, enhet1)
+        val aktorIdLagretPaaVeilederIdent1 = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(lagretVeilederIdent1)[0].aktorId
+        val aktorIdLagretPaaVeilederIdent2 = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(lagretVeilederIdent2)[0].aktorId
 
-        veilederBehandlingDAO.lagre(veilederBrukerKnytning1)
-        veilederBehandlingDAO.lagre(veilederBrukerKnytning2)
-
-        val aktorIdLagretPaaVeilederIdent1 = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(veilederIdent1)[0].aktorId
-        val aktorIdLagretPaaVeilederIdent2 = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(veilederIdent2)[0].aktorId
-
-        assertThat(aktorIdLagretPaaVeilederIdent1).isEqualTo(aktorId1)
-        assertThat(aktorIdLagretPaaVeilederIdent2).isEqualTo(aktorId2)
+        assertThat(aktorIdLagretPaaVeilederIdent1).isEqualTo(lagretAktorId1)
+        assertThat(aktorIdLagretPaaVeilederIdent2).isEqualTo(lagretAktorId2)
     }
 
     @Test
     fun sjekkAtVeilederBrukerKnytningKanHentesPaaEnhet() {
-        val veilederBrukerKnytning1 = VeilederBrukerKnytning(veilederIdent1, aktorId1, enhet1)
-        val veilederBrukerKnytning2 = VeilederBrukerKnytning(veilederIdent2, aktorId2, enhet1)
-        val veilederBrukerKnytning3 = VeilederBrukerKnytning(veilederIdent3, aktorId1, enhet2)
+        val aktorId1LagretPaaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet1)[0].aktorId
+        val aktorId2LagretPaaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet1)[1].aktorId
+        val aktorId3LagretPaaEnhet2 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet2)[0].aktorId
 
-        veilederBehandlingDAO.lagre(veilederBrukerKnytning1)
-        veilederBehandlingDAO.lagre(veilederBrukerKnytning2)
-        veilederBehandlingDAO.lagre(veilederBrukerKnytning3)
-
-        val aktorIdLagretPaaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(enhet1)[0].aktorId
-        val aktorIdLagretPaaEnhet2 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(enhet1)[1].aktorId
-        val aktorIdLagretPaaEnhet3 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(enhet2)[0].aktorId
-
-        assertThat(aktorIdLagretPaaEnhet1).isEqualTo(aktorId1)
-        assertThat(aktorIdLagretPaaEnhet2).isEqualTo(aktorId2)
-        assertThat(aktorIdLagretPaaEnhet3).isEqualTo(aktorId1)
+        assertThat(aktorId1LagretPaaEnhet1).isEqualTo(lagretAktorId1)
+        assertThat(aktorId2LagretPaaEnhet1).isEqualTo(lagretAktorId2)
+        assertThat(aktorId3LagretPaaEnhet2).isEqualTo(lagretAktorId3)
     }
 
     @Test(expected = DuplicateKeyException::class)
     fun sjekkAtVeilederOgBrukerKunKanAssosieresEnGang() {
-        val veilederBrukerKnytning = VeilederBrukerKnytning(veilederIdent1, aktorId1, enhet1)
+        val veilederBrukerKnytning = VeilederBrukerKnytning(lagretVeilederIdent1, lagretAktorId1, lagretEnhet1)
 
         veilederBehandlingDAO.lagre(veilederBrukerKnytning)
-        veilederBehandlingDAO.lagre(veilederBrukerKnytning)
-
     }
 
 }

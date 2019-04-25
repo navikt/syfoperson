@@ -5,14 +5,14 @@ import no.nav.security.oidc.context.OIDCRequestContextHolder
 import no.nav.security.oidc.context.OIDCValidationContext
 import no.nav.security.oidc.context.TokenContext
 import no.nav.security.spring.oidc.test.JwtTokenGenerator
-import no.nav.syfo.util.OIDCIssuer.INTERN
+import no.nav.syfo.util.OIDCIssuer.AZURE
 
 
 object TestUtils {
     //OIDC-hack - legg til token og oidcclaims for en testbruker
     fun loggInnSomVeileder(oidcRequestContextHolder: OIDCRequestContextHolder, veilederIdent: String) {
         val jwt = JwtTokenGenerator.createSignedJWT(veilederIdent)
-        val issuer = INTERN
+        val issuer = AZURE
         val tokenContext = TokenContext(issuer, jwt.serialize())
         val oidcClaims = OIDCClaims(jwt)
         val oidcValidationContext = OIDCValidationContext()
