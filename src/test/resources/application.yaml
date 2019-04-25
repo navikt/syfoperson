@@ -22,12 +22,8 @@ no.nav.modig.security.sts.url: "sts.url"
 securitytokenservice.url: "sts.url"
 
 no.nav.security.oidc:
-  issuers: intern,veileder
+  issuers: veileder
   issuer:
-    intern:
-      discoveryurl: http://metadata
-      accepted_audience: aud-localhost
-      cookie_name: localhost-idtoken
     veileder:
       discoveryurl: http://metadata
       accepted_audience: aud-localhost

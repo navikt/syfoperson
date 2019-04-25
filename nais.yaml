@@ -54,10 +54,6 @@ fasitResources:
     propertyMap:
       discoveryUri: NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_DISCOVERYURL
       clientId: NO_NAV_SECURITY_OIDC_ISSUER_VEILEDER_ACCEPTEDAUDIENCE
-  - alias: opam_oidc_discovery
-    resourceType: baseurl
-    propertyMap:
-      url: NO_NAV_SECURITY_OIDC_ISSUER_INTERN_DISCOVERYURL
   - alias: syfopersonDB
     resourceType: datasource
     propertyMap:
