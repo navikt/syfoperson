@@ -8,5 +8,7 @@ data class PVeilederBehandling(
         var aktorId: String,
         var veilederIdent: String,
         var brukerSistAksessert: LocalDateTime?,
-        var enhet: String
+        var enhet: String,
+        var opprettet: LocalDateTime,
+        var sistEndret: LocalDateTime
 )

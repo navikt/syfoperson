@@ -10,8 +10,12 @@ object DbUtil {
         return jdbcTemplate.queryForObject("select $sekvensnavn.nextval from dual") { rs, _ -> rs.getLong(1) }!!
     }
 
-    fun tilLocalDateTime(timestamp: Timestamp?) : LocalDateTime? {
+    fun tilLocalDateTimeNullable(timestamp: Timestamp?) : LocalDateTime? {
         return timestamp?.toLocalDateTime()
+    }
+
+    fun tilLocalDateTime(timestamp: Timestamp) : LocalDateTime {
+        return timestamp.toLocalDateTime()
     }
 
 }
