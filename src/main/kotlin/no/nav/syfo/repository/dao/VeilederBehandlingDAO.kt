@@ -24,11 +24,10 @@ import java.util.*
 class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
     val idSekvensnavn = "VEILEDER_BEHANDLING_ID_SEQ"
 
-
     fun lagre(veilederBrukerKnytning: VeilederBrukerKnytning) : Long {
         val id = DbUtil.nesteSekvensverdi(idSekvensnavn, jdbcTemplate)
         val uuid = UUID.randomUUID().toString()
-        val naavaerendeTidspunkt = Timestamp.valueOf(now())
+        val tidspunkt = Timestamp.valueOf(now())
 
         val lagreSql = "INSERT INTO veileder_behandling VALUES(" +
                 ":veileder_behandling_id," +
@@ -48,8 +47,8 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
                 "veileder_ident" to veilederBrukerKnytning.veilederIdent,
                 "bruker_sist_aksessert" to null,
                 "enhet" to veilederBrukerKnytning.enhet,
-                "opprettet" to naavaerendeTidspunkt,
-                "sist_endret" to naavaerendeTidspunkt
+                "opprettet" to tidspunkt,
+                "sist_endret" to tidspunkt
         )
 
         namedParameterJdbcTemplate.update(lagreSql, sqlParametere)
@@ -85,6 +84,6 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
             )
         }
 
-}
+    }
 
 }
