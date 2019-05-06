@@ -55,6 +55,8 @@ class VeilederBehandlingDAOTest {
         val lagretVeilederIdent = veilederBehandlingListe[0].veilederIdent
         val lagretEnhet = veilederBehandlingListe[0].enhet
         val lagretBrukerSistAksessertVerdi = veilederBehandlingListe[0].brukerSistAksessert
+        val lagretOpprettetVerdi = veilederBehandlingListe[0].opprettet
+        val lagretSistEndretVerdi = veilederBehandlingListe[0].sistEndret
 
         assertThat(lagretId).isGreaterThan(0)
         assertThat(lagretUUID.length).isEqualTo(36)
@@ -62,6 +64,8 @@ class VeilederBehandlingDAOTest {
         assertThat(lagretVeilederIdent).isEqualTo(veilederIdent1)
         assertThat(lagretEnhet).isEqualTo(enhet1)
         assertThat(lagretBrukerSistAksessertVerdi).isNull()
+        assertThat(lagretOpprettetVerdi).isNotNull()
+        assertThat(lagretSistEndretVerdi).isNotNull()
     }
 
     @Test
