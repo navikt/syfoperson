@@ -48,7 +48,7 @@ class VeilederBehandlingDAOTest {
     }
 
     @Test
-    fun sjekkAtKnytningMellomVeilederOgBrukerLagresRiktig() {
+    fun `sjekk At VeilederBrukerKnytning Lagres Riktig`() {
         val veilederBrukerKnytning = VeilederBrukerKnytning(veilederIdent1, aktorId1, enhet1)
 
         val lagretId = veilederBehandlingDAO.lagre(veilederBrukerKnytning)
@@ -73,7 +73,7 @@ class VeilederBehandlingDAOTest {
     }
 
     @Test
-    fun sjekkAtVeilederBrukerKnytningKanHentes() {
+    fun `sjekk At VeilederBrukerKnytning Kan Hentes`() {
         val aktorIdLagretPaaVeilederIdent1 = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(lagretVeilederIdent1)[0].aktorId
         val aktorIdLagretPaaVeilederIdent2 = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(lagretVeilederIdent2)[0].aktorId
 
@@ -82,7 +82,7 @@ class VeilederBehandlingDAOTest {
     }
 
     @Test
-    fun sjekkAtVeilederBrukerKnytningKanHentesPaaEnhet() {
+    fun `sjekk At VeilederBrukerKnytning Kan Hentes Paa Enhet`() {
         val aktorId1LagretPaaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet1)[0].aktorId
         val aktorId2LagretPaaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet1)[1].aktorId
         val aktorId3LagretPaaEnhet2 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet2)[0].aktorId
@@ -93,7 +93,7 @@ class VeilederBehandlingDAOTest {
     }
 
     @Test
-    fun sjekkAtVeilederBrukerKnytningKanOppdatereEnheten() {
+    fun `sjekk At VeilederBrukerKnytning Kan Oppdatere Enheten`() {
         val veilederBrukerKnytning1 = VeilederBrukerKnytning(veilederIdent2, aktorId2, enhet2)
         val veilederBrukerKnytning2 = VeilederBrukerKnytning(veilederIdent2, aktorId2, enhet3)
 

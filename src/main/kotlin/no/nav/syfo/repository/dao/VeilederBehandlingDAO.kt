@@ -26,45 +26,49 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
     val idSekvensnavn = "VEILEDER_BEHANDLING_ID_SEQ"
 
     fun lagre(veilederBrukerKnytning: VeilederBrukerKnytning) : Long {
-        val id = DbUtil.nesteSekvensverdi(idSekvensnavn, jdbcTemplate)
-        val uuid = UUID.randomUUID().toString()
-        val tidspunkt = Timestamp.valueOf(now())
+        var id = oppdaterEnhetDersomKnytningFinnes(veilederBrukerKnytning)
 
-        val lagreSql = "INSERT INTO veileder_behandling VALUES(" +
-                ":veileder_behandling_id," +
-                ":veileder_behandling_uuid," +
-                ":aktor_id," +
-                ":veileder_ident," +
-                ":bruker_sist_aksessert," +
-                ":enhet," +
-                ":opprettet," +
-                ":sist_endret" +
-                ")"
+        if (id == 0L) {
+            id = DbUtil.nesteSekvensverdi(idSekvensnavn, jdbcTemplate)
+            val uuid = UUID.randomUUID().toString()
+            val tidspunkt = Timestamp.valueOf(now())
 
-        val sqlParametere = mapOf(
-                "veileder_behandling_id" to id,
-                "veileder_behandling_uuid" to uuid,
-                "aktor_id" to veilederBrukerKnytning.aktorId,
-                "veileder_ident" to veilederBrukerKnytning.veilederIdent,
-                "bruker_sist_aksessert" to null,
-                "enhet" to veilederBrukerKnytning.enhet,
-                "opprettet" to tidspunkt,
-                "sist_endret" to tidspunkt
-        )
+            val lagreSql = "INSERT INTO veileder_behandling VALUES(" +
+                    ":veileder_behandling_id," +
+                    ":veileder_behandling_uuid," +
+                    ":aktor_id," +
+                    ":veileder_ident," +
+                    ":bruker_sist_aksessert," +
+                    ":enhet," +
+                    ":opprettet," +
+                    ":sist_endret" +
+                    ")"
 
-        try {
+            val sqlParametere = mapOf(
+                    "veileder_behandling_id" to id,
+                    "veileder_behandling_uuid" to uuid,
+                    "aktor_id" to veilederBrukerKnytning.aktorId,
+                    "veileder_ident" to veilederBrukerKnytning.veilederIdent,
+                    "bruker_sist_aksessert" to null,
+                    "enhet" to veilederBrukerKnytning.enhet,
+                    "opprettet" to tidspunkt,
+                    "sist_endret" to tidspunkt
+            )
+
             namedParameterJdbcTemplate.update(lagreSql, sqlParametere)
-        } catch (e: DuplicateKeyException) {
-            return oppdaterEnhetPaaTilknytning(veilederBrukerKnytning)
         }
         return id
     }
 
-    fun oppdaterEnhetPaaTilknytning(veilederBrukerKnytning: VeilederBrukerKnytning) : Long {
-        val id = jdbcTemplate.query("SELECT VEILEDER_BEHANDLING_ID FROM veileder_behandling WHERE aktor_id = ? AND veileder_ident = ?", veilederBrukerKnytning.aktorId, veilederBrukerKnytning.veilederIdent) { rs, _ ->
+    fun oppdaterEnhetDersomKnytningFinnes(veilederBrukerKnytning: VeilederBrukerKnytning) : Long {
+        var id: Long = 0
+        val knytningerPaaVeileder = jdbcTemplate.query("SELECT VEILEDER_BEHANDLING_ID FROM veileder_behandling WHERE aktor_id = ? AND veileder_ident = ?", veilederBrukerKnytning.aktorId, veilederBrukerKnytning.veilederIdent) { rs, _ ->
                 rs.getLong("veileder_behandling_id")
-        }[0]
-        jdbcTemplate.update("UPDATE VEILEDER_BEHANDLING SET ENHET = ? WHERE VEILEDER_BEHANDLING_ID = ?", veilederBrukerKnytning.enhet, id)
+        }
+        if (!knytningerPaaVeileder.isEmpty()) {
+            id = knytningerPaaVeileder[0]
+            jdbcTemplate.update("UPDATE VEILEDER_BEHANDLING SET ENHET = ? WHERE VEILEDER_BEHANDLING_ID = ?", veilederBrukerKnytning.enhet, id)
+        }
         return id
     }
 
