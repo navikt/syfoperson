@@ -76,7 +76,7 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
         return jdbcTemplate.query("SELECT * FROM veileder_behandling WHERE veileder_ident = ?", VeilederBehandlingRowMapper(), veilederIdent)
     }
 
-    fun hentVeilederBrukerKnytningPaaEnhet(enhetId: String) : List<PVeilederBehandling> {
+    fun hentVeilederBrukerKnytningPaEnhet(enhetId: String) : List<PVeilederBehandling> {
         return jdbcTemplate.query("SELECT * FROM veileder_behandling WHERE enhet = ?", VeilederBehandlingRowMapper(), enhetId)
     }
 

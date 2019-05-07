@@ -82,7 +82,7 @@ class VeilederBehandlingDAOTest {
     }
 
     @Test
-    fun `sjekk At VeilederBrukerKnytning Kan Hentes Paa Enhet`() {
+    fun `sjekk At VeilederBrukerKnytning Kan Hentes Pa Enhet`() {
         val aktorId1LagretPaaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet1)[0].aktorId
         val aktorId2LagretPaaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet1)[1].aktorId
         val aktorId3LagretPaaEnhet2 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet2)[0].aktorId
@@ -103,15 +103,15 @@ class VeilederBehandlingDAOTest {
 
         assertThat(lagretId1).isEqualTo(lagretId2)
 
-        val knytningerPaaVeilder = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(veilederIdent2)
+        val knytningerPaVeileder = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(veilederIdent2)
 
-        val aktorIdPaaKnytning = knytningerPaaVeilder[0].aktorId
-        val veilederIdentPaaKnytning = knytningerPaaVeilder[0].veilederIdent
-        val enhetPaaKnytning = knytningerPaaVeilder[0].enhet
+        val aktorIdPaKnytning = knytningerPaVeileder[0].aktorId
+        val veilederIdentPaKnytning = knytningerPaVeileder[0].veilederIdent
+        val enhetPaKnytning = knytningerPaVeileder[0].enhet
 
-        assertThat(aktorIdPaaKnytning).isEqualTo(veilederBrukerKnytning2.aktorId)
-        assertThat(veilederIdentPaaKnytning).isEqualTo(veilederBrukerKnytning2.veilederIdent)
-        assertThat(enhetPaaKnytning).isEqualTo(veilederBrukerKnytning2.enhet)
+        assertThat(aktorIdPaKnytning).isEqualTo(veilederBrukerKnytning2.aktorId)
+        assertThat(veilederIdentPaKnytning).isEqualTo(veilederBrukerKnytning2.veilederIdent)
+        assertThat(enhetPaKnytning).isEqualTo(veilederBrukerKnytning2.enhet)
     }
 
 }
