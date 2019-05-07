@@ -5,6 +5,7 @@ import no.nav.syfo.repository.DbUtil
 import no.nav.syfo.repository.DbUtil.tilLocalDateTime
 import no.nav.syfo.repository.DbUtil.tilLocalDateTimeNullable
 import no.nav.syfo.repository.domain.PVeilederBehandling
+import org.springframework.dao.DuplicateKeyException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -51,8 +52,19 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
                 "sist_endret" to tidspunkt
         )
 
-        namedParameterJdbcTemplate.update(lagreSql, sqlParametere)
+        try {
+            namedParameterJdbcTemplate.update(lagreSql, sqlParametere)
+        } catch (e: DuplicateKeyException) {
+            return oppdaterEnhetPaaTilknytning(veilederBrukerKnytning)
+        }
+        return id
+    }
 
+    fun oppdaterEnhetPaaTilknytning(veilederBrukerKnytning: VeilederBrukerKnytning) : Long {
+        val id = jdbcTemplate.query("SELECT VEILEDER_BEHANDLING_ID FROM veileder_behandling WHERE aktor_id = ? AND veileder_ident = ?", veilederBrukerKnytning.aktorId, veilederBrukerKnytning.veilederIdent) { rs, _ ->
+                rs.getLong("veileder_behandling_id")
+        }[0]
+        jdbcTemplate.update("UPDATE VEILEDER_BEHANDLING SET ENHET = ? WHERE VEILEDER_BEHANDLING_ID = ?", veilederBrukerKnytning.enhet, id)
         return id
     }
 

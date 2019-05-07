@@ -19,8 +19,12 @@ import javax.inject.Inject
 @RunWith(SpringRunner::class)
 class VeilederBehandlingDAOTest {
     private val aktorId1 = "aktorId1"
+    private val aktorId2 = "aktorId2"
     private val veilederIdent1 = "ident1"
+    private val veilederIdent2 = "ident2"
     private val enhet1 = "XXXX"
+    private val enhet2 = "YYYY"
+    private val enhet3 = "ZZZZ"
 
     private val lagretAktorId1 = "1234567890123"
     private val lagretAktorId2 = "1234567890124"
@@ -88,11 +92,26 @@ class VeilederBehandlingDAOTest {
         assertThat(aktorId3LagretPaaEnhet2).isEqualTo(lagretAktorId3)
     }
 
-    @Test(expected = DuplicateKeyException::class)
-    fun sjekkAtVeilederOgBrukerKunKanAssosieresEnGang() {
-        val veilederBrukerKnytning = VeilederBrukerKnytning(lagretVeilederIdent1, lagretAktorId1, lagretEnhet1)
+    @Test
+    fun sjekkAtVeilederBrukerKnytningKanOppdatereEnheten() {
+        val veilederBrukerKnytning1 = VeilederBrukerKnytning(veilederIdent2, aktorId2, enhet2)
+        val veilederBrukerKnytning2 = VeilederBrukerKnytning(veilederIdent2, aktorId2, enhet3)
 
-        veilederBehandlingDAO.lagre(veilederBrukerKnytning)
+        val lagretId1 = veilederBehandlingDAO.lagre(veilederBrukerKnytning1)
+
+        val lagretId2 = veilederBehandlingDAO.lagre(veilederBrukerKnytning2)
+
+        assertThat(lagretId1).isEqualTo(lagretId2)
+
+        val knytningerPaaVeilder = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(veilederIdent2)
+
+        val aktorIdPaaKnytning = knytningerPaaVeilder[0].aktorId
+        val veilederIdentPaaKnytning = knytningerPaaVeilder[0].veilederIdent
+        val enhetPaaKnytning = knytningerPaaVeilder[0].enhet
+
+        assertThat(aktorIdPaaKnytning).isEqualTo(veilederBrukerKnytning2.aktorId)
+        assertThat(veilederIdentPaaKnytning).isEqualTo(veilederBrukerKnytning2.veilederIdent)
+        assertThat(enhetPaaKnytning).isEqualTo(veilederBrukerKnytning2.enhet)
     }
 
 }
