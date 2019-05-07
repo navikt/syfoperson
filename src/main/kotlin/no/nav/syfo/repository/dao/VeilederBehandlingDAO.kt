@@ -23,36 +23,52 @@ import java.util.*
 @Transactional
 class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val namedParameterJdbcTemplate: NamedParameterJdbcTemplate) {
     val idSekvensnavn = "VEILEDER_BEHANDLING_ID_SEQ"
+    val KNYTNING_IKKE_FUNNET = 0L
 
     fun lagre(veilederBrukerKnytning: VeilederBrukerKnytning) : Long {
-        val id = DbUtil.nesteSekvensverdi(idSekvensnavn, jdbcTemplate)
-        val uuid = UUID.randomUUID().toString()
-        val tidspunkt = Timestamp.valueOf(now())
+        var id = oppdaterEnhetDersomKnytningFinnes(veilederBrukerKnytning)
 
-        val lagreSql = "INSERT INTO veileder_behandling VALUES(" +
-                ":veileder_behandling_id," +
-                ":veileder_behandling_uuid," +
-                ":aktor_id," +
-                ":veileder_ident," +
-                ":bruker_sist_aksessert," +
-                ":enhet," +
-                ":opprettet," +
-                ":sist_endret" +
-                ")"
+        if (id == KNYTNING_IKKE_FUNNET) {
+            id = DbUtil.nesteSekvensverdi(idSekvensnavn, jdbcTemplate)
+            val uuid = UUID.randomUUID().toString()
+            val tidspunkt = Timestamp.valueOf(now())
 
-        val sqlParametere = mapOf(
-                "veileder_behandling_id" to id,
-                "veileder_behandling_uuid" to uuid,
-                "aktor_id" to veilederBrukerKnytning.aktorId,
-                "veileder_ident" to veilederBrukerKnytning.veilederIdent,
-                "bruker_sist_aksessert" to null,
-                "enhet" to veilederBrukerKnytning.enhet,
-                "opprettet" to tidspunkt,
-                "sist_endret" to tidspunkt
-        )
+            val lagreSql = "INSERT INTO veileder_behandling VALUES(" +
+                    ":veileder_behandling_id," +
+                    ":veileder_behandling_uuid," +
+                    ":aktor_id," +
+                    ":veileder_ident," +
+                    ":bruker_sist_aksessert," +
+                    ":enhet," +
+                    ":opprettet," +
+                    ":sist_endret" +
+                    ")"
 
-        namedParameterJdbcTemplate.update(lagreSql, sqlParametere)
+            val sqlParametere = mapOf(
+                    "veileder_behandling_id" to id,
+                    "veileder_behandling_uuid" to uuid,
+                    "aktor_id" to veilederBrukerKnytning.aktorId,
+                    "veileder_ident" to veilederBrukerKnytning.veilederIdent,
+                    "bruker_sist_aksessert" to null,
+                    "enhet" to veilederBrukerKnytning.enhet,
+                    "opprettet" to tidspunkt,
+                    "sist_endret" to tidspunkt
+            )
 
+            namedParameterJdbcTemplate.update(lagreSql, sqlParametere)
+        }
+        return id
+    }
+
+    fun oppdaterEnhetDersomKnytningFinnes(veilederBrukerKnytning: VeilederBrukerKnytning) : Long {
+        var id = KNYTNING_IKKE_FUNNET
+        val knytningerPaVeileder = jdbcTemplate.query("SELECT VEILEDER_BEHANDLING_ID FROM veileder_behandling WHERE aktor_id = ? AND veileder_ident = ?", veilederBrukerKnytning.aktorId, veilederBrukerKnytning.veilederIdent) { rs, _ ->
+                rs.getLong("veileder_behandling_id")
+        }
+        if (!knytningerPaVeileder.isEmpty()) {
+            id = knytningerPaVeileder[0]
+            jdbcTemplate.update("UPDATE VEILEDER_BEHANDLING SET ENHET = ? WHERE VEILEDER_BEHANDLING_ID = ?", veilederBrukerKnytning.enhet, id)
+        }
         return id
     }
 
@@ -60,7 +76,7 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
         return jdbcTemplate.query("SELECT * FROM veileder_behandling WHERE veileder_ident = ?", VeilederBehandlingRowMapper(), veilederIdent)
     }
 
-    fun hentVeilederBrukerKnytningPaaEnhet(enhetId: String) : List<PVeilederBehandling> {
+    fun hentVeilederBrukerKnytningPaEnhet(enhetId: String) : List<PVeilederBehandling> {
         return jdbcTemplate.query("SELECT * FROM veileder_behandling WHERE enhet = ?", VeilederBehandlingRowMapper(), enhetId)
     }
 

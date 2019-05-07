@@ -16,14 +16,14 @@ class VeilederBehandlingController @Inject constructor(val veilederBehandlingSer
     @ProtectedWithClaims(issuer = AZURE)
     @GetMapping(value = ["/veiledere/{veileder}"], produces = [APPLICATION_JSON_VALUE])
     fun hentVeiledersTilknytninger(@PathVariable veileder: String) : List<VeilederBrukerKnytning> {
-        return veilederBehandlingService.hentBrukertilknytningerPaaVeileder(veileder)
+        return veilederBehandlingService.hentBrukertilknytningerPaVeileder(veileder)
     }
 
     @ResponseBody
     @ProtectedWithClaims(issuer = AZURE)
     @GetMapping(value = ["/enheter/{enhet}/veiledere"], produces = [APPLICATION_JSON_VALUE])
-    fun hentVeilederTilknytningerPaaEnhet(@PathVariable enhet: String) : List<VeilederBrukerKnytning> {
-        return veilederBehandlingService.hentBrukertilknytningerPaaEnhet(enhet)
+    fun hentVeilederTilknytningerPaEnhet(@PathVariable enhet: String) : List<VeilederBrukerKnytning> {
+        return veilederBehandlingService.hentBrukertilknytningerPaEnhet(enhet)
     }
 
     @ResponseBody
