@@ -83,9 +83,9 @@ class VeilederBehandlingDAOTest {
 
     @Test
     fun `sjekk At VeilederBrukerKnytning Kan Hentes Pa Enhet`() {
-        val aktorId1LagretPaaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet1)[0].aktorId
-        val aktorId2LagretPaaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet1)[1].aktorId
-        val aktorId3LagretPaaEnhet2 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet2)[0].aktorId
+        val aktorId1LagretPaaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaEnhet(lagretEnhet1)[0].aktorId
+        val aktorId2LagretPaaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaEnhet(lagretEnhet1)[1].aktorId
+        val aktorId3LagretPaaEnhet2 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaEnhet(lagretEnhet2)[0].aktorId
 
         assertThat(aktorId1LagretPaaEnhet1).isEqualTo(lagretAktorId1)
         assertThat(aktorId2LagretPaaEnhet1).isEqualTo(lagretAktorId2)
