@@ -19,8 +19,12 @@ import javax.inject.Inject
 @RunWith(SpringRunner::class)
 class VeilederBehandlingDAOTest {
     private val aktorId1 = "aktorId1"
+    private val aktorId2 = "aktorId2"
     private val veilederIdent1 = "ident1"
+    private val veilederIdent2 = "ident2"
     private val enhet1 = "XXXX"
+    private val enhet2 = "YYYY"
+    private val enhet3 = "ZZZZ"
 
     private val lagretAktorId1 = "1234567890123"
     private val lagretAktorId2 = "1234567890124"
@@ -44,7 +48,7 @@ class VeilederBehandlingDAOTest {
     }
 
     @Test
-    fun sjekkAtKnytningMellomVeilederOgBrukerLagresRiktig() {
+    fun `sjekk At VeilederBrukerKnytning Lagres Riktig`() {
         val veilederBrukerKnytning = VeilederBrukerKnytning(veilederIdent1, aktorId1, enhet1)
 
         val lagretId = veilederBehandlingDAO.lagre(veilederBrukerKnytning)
@@ -69,30 +73,45 @@ class VeilederBehandlingDAOTest {
     }
 
     @Test
-    fun sjekkAtVeilederBrukerKnytningKanHentes() {
-        val aktorIdLagretPaaVeilederIdent1 = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(lagretVeilederIdent1)[0].aktorId
-        val aktorIdLagretPaaVeilederIdent2 = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(lagretVeilederIdent2)[0].aktorId
+    fun `sjekk At VeilederBrukerKnytning Kan Hentes`() {
+        val aktorIdLagretPaVeilederIdent1 = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(lagretVeilederIdent1)[0].aktorId
+        val aktorIdLagretPaVeilederIdent2 = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(lagretVeilederIdent2)[0].aktorId
 
-        assertThat(aktorIdLagretPaaVeilederIdent1).isEqualTo(lagretAktorId1)
-        assertThat(aktorIdLagretPaaVeilederIdent2).isEqualTo(lagretAktorId2)
+        assertThat(aktorIdLagretPaVeilederIdent1).isEqualTo(lagretAktorId1)
+        assertThat(aktorIdLagretPaVeilederIdent2).isEqualTo(lagretAktorId2)
     }
 
     @Test
-    fun sjekkAtVeilederBrukerKnytningKanHentesPaaEnhet() {
-        val aktorId1LagretPaaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet1)[0].aktorId
-        val aktorId2LagretPaaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet1)[1].aktorId
-        val aktorId3LagretPaaEnhet2 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(lagretEnhet2)[0].aktorId
+    fun `sjekk At VeilederBrukerKnytning Kan Hentes Pa Enhet`() {
+        val aktorId1LagretPaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaEnhet(lagretEnhet1)[0].aktorId
+        val aktorId2LagretPaEnhet1 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaEnhet(lagretEnhet1)[1].aktorId
+        val aktorId3LagretPaEnhet2 = veilederBehandlingDAO.hentVeilederBrukerKnytningPaEnhet(lagretEnhet2)[0].aktorId
 
-        assertThat(aktorId1LagretPaaEnhet1).isEqualTo(lagretAktorId1)
-        assertThat(aktorId2LagretPaaEnhet1).isEqualTo(lagretAktorId2)
-        assertThat(aktorId3LagretPaaEnhet2).isEqualTo(lagretAktorId3)
+        assertThat(aktorId1LagretPaEnhet1).isEqualTo(lagretAktorId1)
+        assertThat(aktorId2LagretPaEnhet1).isEqualTo(lagretAktorId2)
+        assertThat(aktorId3LagretPaEnhet2).isEqualTo(lagretAktorId3)
     }
 
-    @Test(expected = DuplicateKeyException::class)
-    fun sjekkAtVeilederOgBrukerKunKanAssosieresEnGang() {
-        val veilederBrukerKnytning = VeilederBrukerKnytning(lagretVeilederIdent1, lagretAktorId1, lagretEnhet1)
+    @Test
+    fun `sjekk At VeilederBrukerKnytning Kan Oppdatere Enheten`() {
+        val veilederBrukerKnytning1 = VeilederBrukerKnytning(veilederIdent2, aktorId2, enhet2)
+        val veilederBrukerKnytning2 = VeilederBrukerKnytning(veilederIdent2, aktorId2, enhet3)
 
-        veilederBehandlingDAO.lagre(veilederBrukerKnytning)
+        val lagretId1 = veilederBehandlingDAO.lagre(veilederBrukerKnytning1)
+
+        val lagretId2 = veilederBehandlingDAO.lagre(veilederBrukerKnytning2)
+
+        assertThat(lagretId1).isEqualTo(lagretId2)
+
+        val knytningerPaVeileder = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(veilederIdent2)
+
+        val aktorIdPaKnytning = knytningerPaVeileder[0].aktorId
+        val veilederIdentPaKnytning = knytningerPaVeileder[0].veilederIdent
+        val enhetPaKnytning = knytningerPaVeileder[0].enhet
+
+        assertThat(aktorIdPaKnytning).isEqualTo(veilederBrukerKnytning2.aktorId)
+        assertThat(veilederIdentPaKnytning).isEqualTo(veilederBrukerKnytning2.veilederIdent)
+        assertThat(enhetPaKnytning).isEqualTo(veilederBrukerKnytning2.enhet)
     }
 
 }

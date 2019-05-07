@@ -8,9 +8,9 @@ import javax.inject.Inject
 @Service
 class VeilederBehandlingService @Inject constructor(val veilederBehandlingDAO: VeilederBehandlingDAO) {
 
-    fun hentBrukertilknytningerPaaVeileder(veilederIdent: String) = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(veilederIdent).map { VeilederBrukerKnytning(it.veilederIdent, it.aktorId, it.enhet) }
+    fun hentBrukertilknytningerPaVeileder(veilederIdent: String) = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(veilederIdent).map { VeilederBrukerKnytning(it.veilederIdent, it.aktorId, it.enhet) }
 
-    fun hentBrukertilknytningerPaaEnhet(enhetId: String) = veilederBehandlingDAO.hentVeilederBrukerKnytningPaaEnhet(enhetId).map { VeilederBrukerKnytning(it.veilederIdent, it.aktorId, it.enhet) }
+    fun hentBrukertilknytningerPaEnhet(enhetId: String) = veilederBehandlingDAO.hentVeilederBrukerKnytningPaEnhet(enhetId).map { VeilederBrukerKnytning(it.veilederIdent, it.aktorId, it.enhet) }
 
     fun lagreKnytningMellomVeilederOgBruker(veilederBrukerKnytninger: List<VeilederBrukerKnytning>) = veilederBrukerKnytninger.map { veilederBehandlingDAO.lagre(it) }
 
