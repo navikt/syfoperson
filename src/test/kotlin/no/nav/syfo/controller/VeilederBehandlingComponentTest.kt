@@ -67,7 +67,7 @@ class VeilederBehandlingComponentTest {
     }
 
     @Test
-    fun sjekkAtVeilederBrukerTilknytningerKanLagresRiktig() {
+    fun `Sjekk at VeilederBrukerTilknytning-er kan lagres riktig`() {
         val jsonLagringsStreng = ObjectMapper().writeValueAsString(tilknytningListe)
 
         val idToken = oidcRequestContextHolder.oidcValidationContext.getToken(AZURE).idToken
@@ -80,7 +80,7 @@ class VeilederBehandlingComponentTest {
     }
 
     @Test
-    fun sjekkAtVeilederBrukerTilknytningerKanLagresOgHentesRiktig() {
+    fun `Sjekk at VeilederBrukerTilknytning-er kan lagres og hentes riktig`() {
         val idToken = oidcRequestContextHolder.oidcValidationContext.getToken(AZURE).idToken
 
         val responsFraVeileder1Restkall = mockMvc.perform(MockMvcRequestBuilders.get("/api/veilederbehandling/veiledere/$lagretVeilederIdent1")
@@ -92,16 +92,16 @@ class VeilederBehandlingComponentTest {
 
 
         val typeRef = object : TypeReference<ArrayList<VeilederBrukerKnytningNoArgs>>() {}
-        val knytningerPaaVeileder1: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraVeileder1Restkall, typeRef)
-        val knytningerPaaVeileder2: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraVeileder2Restkall, typeRef)
+        val knytningerPaVeileder1: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraVeileder1Restkall, typeRef)
+        val knytningerPaVeileder2: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraVeileder2Restkall, typeRef)
 
-        assertThat(knytningerPaaVeileder1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent1, lagretAktorId1, lagretEnhet1)) }
-        assertThat(knytningerPaaVeileder2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId2, lagretEnhet1)) }
-        assertThat(knytningerPaaVeileder2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId3, lagretEnhet2)) }
+        assertThat(knytningerPaVeileder1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent1, lagretAktorId1, lagretEnhet1)) }
+        assertThat(knytningerPaVeileder2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId2, lagretEnhet1)) }
+        assertThat(knytningerPaVeileder2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId3, lagretEnhet2)) }
     }
 
     @Test
-    fun sjekkAtVeilederBrukerTilknytningerKanLagresOgHentesRiktigPaaEnhet() {
+    fun `Sjekk at VeilederBrukerTilknytning-er kan lagres og hentes riktig pa enhet`() {
         val idToken = oidcRequestContextHolder.oidcValidationContext.getToken(AZURE).idToken
 
         val responsFraEnhet1Restkall = mockMvc.perform(MockMvcRequestBuilders.get("/api/veilederbehandling/enheter/$lagretEnhet1/veiledere")
@@ -112,12 +112,12 @@ class VeilederBehandlingComponentTest {
                 .andReturn().response.contentAsString
 
         val typeRef = object : TypeReference<ArrayList<VeilederBrukerKnytningNoArgs>>() {}
-        val knytningerPaaEnhet1: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraEnhet1Restkall, typeRef)
-        val knytningerPaaEnhet2: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraEnhet2Restkall, typeRef)
+        val knytningerPaEnhet1: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraEnhet1Restkall, typeRef)
+        val knytningerPaEnhet2: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraEnhet2Restkall, typeRef)
 
-        assertThat(knytningerPaaEnhet1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent1, lagretAktorId1, lagretEnhet1)) }
-        assertThat(knytningerPaaEnhet1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId2, lagretEnhet1)) }
-        assertThat(knytningerPaaEnhet2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId3, lagretEnhet2)) }
+        assertThat(knytningerPaEnhet1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent1, lagretAktorId1, lagretEnhet1)) }
+        assertThat(knytningerPaEnhet1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId2, lagretEnhet1)) }
+        assertThat(knytningerPaEnhet2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId3, lagretEnhet2)) }
     }
 
 
