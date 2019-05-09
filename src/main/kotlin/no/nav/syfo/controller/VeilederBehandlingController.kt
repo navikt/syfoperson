@@ -10,24 +10,22 @@ import javax.inject.Inject
 
 @RestController
 @RequestMapping(value = ["/api/veilederbehandling"])
+@ProtectedWithClaims(issuer = AZURE)
 class VeilederBehandlingController @Inject constructor(val veilederBehandlingService: VeilederBehandlingService) {
 
     @ResponseBody
-    @ProtectedWithClaims(issuer = AZURE)
     @GetMapping(value = ["/veiledere/{veileder}"], produces = [APPLICATION_JSON_VALUE])
     fun hentVeiledersTilknytninger(@PathVariable veileder: String) : List<VeilederBrukerKnytning> {
         return veilederBehandlingService.hentBrukertilknytningerPaVeileder(veileder)
     }
 
     @ResponseBody
-    @ProtectedWithClaims(issuer = AZURE)
     @GetMapping(value = ["/enheter/{enhet}/veiledere"], produces = [APPLICATION_JSON_VALUE])
     fun hentVeilederTilknytningerPaEnhet(@PathVariable enhet: String) : List<VeilederBrukerKnytning> {
         return veilederBehandlingService.hentBrukertilknytningerPaEnhet(enhet)
     }
 
     @ResponseBody
-    @ProtectedWithClaims(issuer = AZURE)
     @PostMapping(value = ["/registrer"], produces = [APPLICATION_JSON_VALUE])
     fun lagreVeilederTilknytning(@RequestBody veilederBrukerKnytninger: List<VeilederBrukerKnytning>) : List<Long> {
         return veilederBehandlingService.lagreKnytningMellomVeilederOgBruker(veilederBrukerKnytninger)
