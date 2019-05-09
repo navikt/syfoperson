@@ -11,10 +11,10 @@ import javax.inject.Inject
 
 @RestController
 @RequestMapping(value = ["/api/person"])
+@ProtectedWithClaims(issuer = AZURE)
 class PersonController @Inject constructor(val personService: PersonService) {
 
     @ResponseBody
-    @ProtectedWithClaims(issuer = AZURE)
     @PostMapping(value = ["/navn"], produces = [APPLICATION_JSON_VALUE])
     fun hentNavnPaBrukere(@RequestBody brukerFnrListe: List<Fnr>) : List<FnrMedNavn> {
         return brukerFnrListe.map { FnrMedNavn(it.fnr, personService.hentNavnFraFnr(it.fnr)) }
