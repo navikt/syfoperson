@@ -21,7 +21,7 @@ constructor(private val aktoerV2: AktoerV2) : InitializingBean {
                     .withIdent(fnr)
             ).aktoerId
         } catch (e: HentAktoerIdForIdentPersonIkkeFunnet) {
-            LOG.info("Klarte ikke finne aktorId for fnr")
+            LOG.info("Klarte ikke finne aktorid for fnr")
             throw NotFoundException()
         } catch (e: RuntimeException) {
             LOG.info("Fikk RuntimeException på henting av aktorid for fnr")

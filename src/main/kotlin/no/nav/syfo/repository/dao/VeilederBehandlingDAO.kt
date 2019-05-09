@@ -36,7 +36,7 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
             val lagreSql = "INSERT INTO veileder_behandling VALUES(" +
                     ":veileder_behandling_id," +
                     ":veileder_behandling_uuid," +
-                    ":aktor_id," +
+                    ":fnr," +
                     ":veileder_ident," +
                     ":bruker_sist_aksessert," +
                     ":enhet," +
@@ -47,7 +47,7 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
             val sqlParametere = mapOf(
                     "veileder_behandling_id" to id,
                     "veileder_behandling_uuid" to uuid,
-                    "aktor_id" to veilederBrukerKnytning.aktorId,
+                    "fnr" to veilederBrukerKnytning.fnr,
                     "veileder_ident" to veilederBrukerKnytning.veilederIdent,
                     "bruker_sist_aksessert" to null,
                     "enhet" to veilederBrukerKnytning.enhet,
@@ -62,7 +62,7 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
 
     fun oppdaterEnhetDersomKnytningFinnes(veilederBrukerKnytning: VeilederBrukerKnytning) : Long {
         var id = KNYTNING_IKKE_FUNNET
-        val knytningerPaVeileder = jdbcTemplate.query("SELECT VEILEDER_BEHANDLING_ID FROM veileder_behandling WHERE aktor_id = ? AND veileder_ident = ?", veilederBrukerKnytning.aktorId, veilederBrukerKnytning.veilederIdent) { rs, _ ->
+        val knytningerPaVeileder = jdbcTemplate.query("SELECT VEILEDER_BEHANDLING_ID FROM veileder_behandling WHERE fnr = ? AND veileder_ident = ?", veilederBrukerKnytning.fnr, veilederBrukerKnytning.veilederIdent) { rs, _ ->
                 rs.getLong("veileder_behandling_id")
         }
         if (!knytningerPaVeileder.isEmpty()) {
@@ -81,8 +81,8 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
     }
 
     fun slettVeilederBrukerKnytning(veilederBrukerKnytning: VeilederBrukerKnytning) : Boolean {
-        val antallRaderSlettet = jdbcTemplate.update("DELETE FROM veileder_behandling WHERE aktor_id = ? AND veileder_ident = ?",
-                veilederBrukerKnytning.aktorId, veilederBrukerKnytning.veilederIdent)
+        val antallRaderSlettet = jdbcTemplate.update("DELETE FROM veileder_behandling WHERE fnr = ? AND veileder_ident = ?",
+                veilederBrukerKnytning.fnr, veilederBrukerKnytning.veilederIdent)
         return antallRaderSlettet > 0
     }
 
@@ -91,7 +91,7 @@ class VeilederBehandlingDAO(private val jdbcTemplate: JdbcTemplate, private val 
             return PVeilederBehandling(
                     rs.getLong("veileder_behandling_id"),
                     rs.getString("veileder_behandling_uuid"),
-                    rs.getString("aktor_id"),
+                    rs.getString("fnr"),
                     rs.getString("veileder_ident"),
                     tilLocalDateTimeNullable(rs.getTimestamp("bruker_sist_aksessert")),
                     rs.getString("enhet"),
