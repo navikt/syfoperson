@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 import javax.inject.Inject
 
 @Service
-class VeilederBehandlingService @Inject constructor(val veilederBehandlingDAO: VeilederBehandlingDAO, val aktoerConsumer: AktoerConsumer) {
+class VeilederBehandlingService @Inject constructor(val veilederBehandlingDAO: VeilederBehandlingDAO) {
 
     fun hentBrukertilknytningerPaVeileder(veilederIdent: String) = veilederBehandlingDAO.hentBrukereTilknyttetVeileder(veilederIdent).map { VeilederBrukerKnytning(it.veilederIdent, it.fnr, it.enhet) }
 
