@@ -14,7 +14,7 @@ class AktoerMock : AktoerV2 {
     }
 
     override fun hentAktoerIdForIdent(p0: WSHentAktoerIdForIdentRequest?): WSHentAktoerIdForIdentResponse {
-        return WSHentAktoerIdForIdentResponse().withAktoerId("12345678910123")
+        return WSHentAktoerIdForIdentResponse().withAktoerId("1234567891013")
     }
 
     override fun hentIdentForAktoerId(p0: WSHentIdentForAktoerIdRequest?): WSHentIdentForAktoerIdResponse {

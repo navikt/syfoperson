@@ -42,17 +42,17 @@ class VeilederBehandlingComponentTest {
     private val lagretVeilederIdent1 = "Z999999"
     private val lagretVeilederIdent2 = "Z888888"
 
-    private val lagretAktorId1 = "1234567890123"
-    private val lagretAktorId2 = "1234567890124"
-    private val lagretAktorId3 = "1234567890125"
+    private val lagretFnr1 = "12345678901"
+    private val lagretFnr2 = "12345678902"
+    private val lagretFnr3 = "12345678903"
 
     private val lagretEnhet1 = "1234"
     private val lagretEnhet2 = "2345"
 
     private val tilknytningListe = listOf(
-            VeilederBrukerKnytningNoArgs("ident1", "aktorId1", "XXXX"),
-            VeilederBrukerKnytningNoArgs("ident2", "aktorId2", "YYYY"),
-            VeilederBrukerKnytningNoArgs("ident3", "aktorId3", "ZZZZ")
+            VeilederBrukerKnytningNoArgs("ident1", "fnr1", "XXXX"),
+            VeilederBrukerKnytningNoArgs("ident2", "fnr2", "YYYY"),
+            VeilederBrukerKnytningNoArgs("ident3", "fnr3", "ZZZZ")
     )
 
     @Before
@@ -95,9 +95,9 @@ class VeilederBehandlingComponentTest {
         val knytningerPaVeileder1: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraVeileder1Restkall, typeRef)
         val knytningerPaVeileder2: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraVeileder2Restkall, typeRef)
 
-        assertThat(knytningerPaVeileder1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent1, lagretAktorId1, lagretEnhet1)) }
-        assertThat(knytningerPaVeileder2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId2, lagretEnhet1)) }
-        assertThat(knytningerPaVeileder2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId3, lagretEnhet2)) }
+        assertThat(knytningerPaVeileder1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent1, lagretFnr1, lagretEnhet1)) }
+        assertThat(knytningerPaVeileder2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretFnr2, lagretEnhet1)) }
+        assertThat(knytningerPaVeileder2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretFnr3, lagretEnhet2)) }
     }
 
     @Test
@@ -115,21 +115,21 @@ class VeilederBehandlingComponentTest {
         val knytningerPaEnhet1: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraEnhet1Restkall, typeRef)
         val knytningerPaEnhet2: ArrayList<VeilederBrukerKnytningNoArgs> = ObjectMapper().readValue(responsFraEnhet2Restkall, typeRef)
 
-        assertThat(knytningerPaEnhet1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent1, lagretAktorId1, lagretEnhet1)) }
-        assertThat(knytningerPaEnhet1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId2, lagretEnhet1)) }
-        assertThat(knytningerPaEnhet2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretAktorId3, lagretEnhet2)) }
+        assertThat(knytningerPaEnhet1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent1, lagretFnr1, lagretEnhet1)) }
+        assertThat(knytningerPaEnhet1).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretFnr2, lagretEnhet1)) }
+        assertThat(knytningerPaEnhet2).anyMatch { it.equals(VeilederBrukerKnytningNoArgs(lagretVeilederIdent2, lagretFnr3, lagretEnhet2)) }
     }
 
 
     private fun fjernBrukere() {
         tilknytningListe.forEach {
-            veilederBehandlingDAO.slettVeilederBrukerKnytning(VeilederBrukerKnytning(it.veilederIdent, it.aktorId, it.enhet))
+            veilederBehandlingDAO.slettVeilederBrukerKnytning(VeilederBrukerKnytning(it.veilederIdent, it.fnr, it.enhet))
         }
     }
 
-    private class VeilederBrukerKnytningNoArgs(var veilederIdent: String = "", var aktorId: String = "", var enhet: String = "") {
+    private class VeilederBrukerKnytningNoArgs(var veilederIdent: String = "", var fnr: String = "", var enhet: String = "") {
         fun equals(other: VeilederBrukerKnytningNoArgs): Boolean {
-            return veilederIdent == other.veilederIdent && aktorId == other.aktorId && enhet == other.enhet
+            return veilederIdent == other.veilederIdent && fnr == other.fnr && enhet == other.enhet
         }
     }
 
