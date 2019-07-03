@@ -24,8 +24,15 @@ srvsyfoperson:
 
 fasit.environment.name: 'local'
 
+virksomhet:
+  person.v3.endpointurl: "personv3.url"
+  egenansatt.v1.endpointurl: "egenansattv1.url"
+
 mockPerson_V3: true
 mockAktoer_V2: true
+mockEgenAnsatt_V1: true
+
+tilgangskontrollapi.url: "https://tilgangskontroll.nais.no"
 
 dev: true
 
