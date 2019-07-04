@@ -45,10 +45,14 @@ fasitResources:
     resourceType: applicationproperties
   - alias: securityTokenService
     resourceType: baseurl
+  - alias: virksomhet:EgenAnsatt_v1
+    resourceType: webserviceendpoint
   - alias: virksomhet:Person_V3
     resourceType: webserviceendpoint
   - alias: Aktoer_v2
     resourceType: webserviceendpoint
+  - alias: tilgangskontrollapi
+    resourceType: restservice
   - alias: loginservice_oidc
     resourceType: azureoidc
     propertyMap:
