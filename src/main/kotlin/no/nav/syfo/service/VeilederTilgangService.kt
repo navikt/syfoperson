@@ -52,7 +52,7 @@ class VeilederTilgangService @Inject constructor(
 
     companion object {
 
-        private val LOG = LoggerFactory.getLogger(PersonService::class.java)
+        private val LOG = LoggerFactory.getLogger(VeilederTilgangService::class.java)
         const val FNR = "fnr"
         const val TILGANG_TIL_BRUKER_VIA_AZURE_PATH = "/bruker"
         private const val FNR_PLACEHOLDER = "{$FNR}"

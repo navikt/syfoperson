@@ -1,6 +1,5 @@
 package no.nav.syfo.config.cache
 
-import no.nav.syfo.service.PersonService
 import org.slf4j.LoggerFactory
 import org.springframework.cache.Cache
 import org.springframework.cache.interceptor.CacheErrorHandler
