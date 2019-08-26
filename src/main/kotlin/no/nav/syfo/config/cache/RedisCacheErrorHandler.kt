@@ -11,7 +11,7 @@ import java.lang.RuntimeException
 class RedisCacheErrorHandler : CacheErrorHandler {
 
     companion object {
-        private val LOG = LoggerFactory.getLogger(PersonService::class.java)
+        private val LOG = LoggerFactory.getLogger(RedisCacheErrorHandler::class.java)
     }
 
     override fun handleCacheGetError(@NonNull exception: RuntimeException, @NonNull cache: Cache, @NonNull o: Any) {
