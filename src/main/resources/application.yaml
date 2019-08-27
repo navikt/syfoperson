@@ -18,3 +18,9 @@ management:
 server:
   servlet:
     context-path: /syfoperson
+
+spring:
+  cache.type: redis
+    redis:
+      host: redis-syfoperson.default.svc.nais.local
+      port: 6379

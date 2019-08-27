@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils
 import org.apache.commons.lang3.text.WordUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
 import java.util.Optional.ofNullable
 import javax.inject.Inject
@@ -33,6 +34,7 @@ class PersonService @Inject constructor(private val personV3: PersonV3, private 
     private val KODE6 = "SPSF"
     private val KODE7 = "SPFO"
 
+    @Cacheable("fnr-til-navn")
     fun hentNavnFraFnr(fnr: String): String {
         if (StringUtils.isBlank(fnr) || !fnr.matches("\\d{11}$".toRegex())) throw IllegalArgumentException()
         try {
