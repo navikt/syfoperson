@@ -6,6 +6,7 @@ import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.WSHentAktoerIdForIdentRequ
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Component
+import org.springframework.cache.annotation.Cacheable
 import java.lang.RuntimeException
 import javax.ws.rs.NotFoundException
 
@@ -15,6 +16,7 @@ constructor(private val aktoerV2: AktoerV2) : InitializingBean {
 
     override fun afterPropertiesSet() { instance = this }
 
+    @Cacheable(cacheNames = ["aktorByFnr"])
     fun hentAktoerIdForFnr(fnr: String): String {
         try {
             return aktoerV2.hentAktoerIdForIdent(WSHentAktoerIdForIdentRequest()
