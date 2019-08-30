@@ -6,14 +6,6 @@ replicas:
   max: 2
   cpuThresholdPercentage: 90
 port: 8080
-redis:
-  enabled: true
-  limits:
-    cpu: 100m
-    memory: 128Mi
-  requests:
-    cpu: 100m
-    memory: 128Mi
 healthcheck:
   liveness:
     path: /syfoperson/internal/isAlive
