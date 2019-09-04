@@ -4,13 +4,11 @@ import org.springframework.cache.annotation.EnableCaching
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.client.ClientHttpRequestInterceptor
-import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.springframework.web.client.RestTemplate
 import java.util.Arrays.asList
 
 @Configuration
 @EnableCaching
-@EnableTransactionManagement
 class ApplicationConfig {
     @Bean
     fun restTemplate(vararg interceptors: ClientHttpRequestInterceptor): RestTemplate {
