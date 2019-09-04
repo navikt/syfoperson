@@ -5,18 +5,19 @@ import no.nav.tjeneste.virksomhet.aktoer.v2.HentAktoerIdForIdentPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.WSHentAktoerIdForIdentRequest
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
-import org.springframework.stereotype.Component
 import org.springframework.cache.annotation.Cacheable
-import java.lang.RuntimeException
+import org.springframework.stereotype.Component
 import javax.ws.rs.NotFoundException
 
 @Component
 class AktoerConsumer
 constructor(private val aktoerV2: AktoerV2) : InitializingBean {
 
-    override fun afterPropertiesSet() { instance = this }
+    override fun afterPropertiesSet() {
+        instance = this
+    }
 
-    @Cacheable(cacheNames = ["aktorByFnr"])
+    @Cacheable(cacheNames = ["aktorByFnr"], key = "#fnr", condition = "#fnr != null")
     fun hentAktoerIdForFnr(fnr: String): String {
         try {
             return aktoerV2.hentAktoerIdForIdent(WSHentAktoerIdForIdentRequest()
@@ -35,6 +36,8 @@ constructor(private val aktoerV2: AktoerV2) : InitializingBean {
         private var instance: AktoerConsumer? = null
         private val LOG = LoggerFactory.getLogger(AktoerConsumer::class.java)
 
-        fun aktoerConsumer(): AktoerConsumer? { return instance }
+        fun aktoerConsumer(): AktoerConsumer? {
+            return instance
+        }
     }
 }
