@@ -20,7 +20,7 @@ class PersonController @Inject constructor(
     @ResponseBody
     @PostMapping(value = ["/navn"], produces = [APPLICATION_JSON_VALUE])
     fun hentNavnPaBrukere(@RequestBody brukerFnrListe: List<Fnr>): List<FnrMedNavn> {
-        return brukerFnrListe.map { FnrMedNavn(it.fnr, personService.hentNavnFraFnr(it.fnr)) }
+        return brukerFnrListe.map { FnrMedNavn(it.fnr, personService.hentNavnFraPerson(personService.hentPersonFraFnr(it.fnr))) }
     }
 
     @PostMapping(value = ["/info"], produces = [APPLICATION_JSON_VALUE])
@@ -28,10 +28,11 @@ class PersonController @Inject constructor(
         brukerFnrListe.filter { veilederTilgangService.sjekkVeiledersTilgangTilPersonViaAzure(it.fnr) }
 
         return brukerFnrListe.map {
+            val person = personService.hentPersonFraFnr(it.fnr)
             PersonInfo(
                     it.fnr,
-                    personService.hentNavnFraFnr(it.fnr),
-                    skjermingskodeService.hentBrukersSkjermingskode(it.fnr)
+                    personService.hentNavnFraPerson(person),
+                    skjermingskodeService.hentBrukersSkjermingskode(person, it.fnr)
             )
         }
     }

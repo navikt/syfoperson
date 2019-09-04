@@ -5,8 +5,8 @@ import no.nav.tjeneste.pip.egen.ansatt.v1.EgenAnsattV1
 import no.nav.tjeneste.pip.egen.ansatt.v1.WSHentErEgenAnsattEllerIFamilieMedEgenAnsattRequest
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Component
-
 import javax.inject.Inject
 
 @Component
@@ -22,6 +22,7 @@ class EgenAnsattConsumer @Inject constructor(private val egenAnsattV1: EgenAnsat
         return instance
     }
 
+    @Cacheable(cacheNames = ["egenAnsattByFnr"], key = "#fnr", condition = "#fnr != null")
     fun erEgenAnsatt(fnr: String): Boolean {
         try {
             return egenAnsattV1.hentErEgenAnsattEllerIFamilieMedEgenAnsatt(WSHentErEgenAnsattEllerIFamilieMedEgenAnsattRequest()
