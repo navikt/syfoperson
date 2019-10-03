@@ -1,27 +1,27 @@
 package no.nav.syfo.config.consumer
 
-import no.nav.syfo.consumer.util.ws.LogErrorHandler
-import no.nav.syfo.consumer.util.ws.STSClientConfig
-import no.nav.syfo.consumer.util.ws.WsClient
+import no.nav.syfo.config.EnvironmentUtil.getEnvVar
+import no.nav.syfo.ws.util.*
 import no.nav.tjeneste.virksomhet.aktoer.v2.AktoerV2
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Primary
-import java.util.Collections.singletonList
+import org.springframework.context.annotation.*
 
 @Configuration
 class AktoerConfig {
 
+    private val serviceUrl = getEnvVar("AKTOER_V2", "http://eksempel.no/ws/AktoerV2")
+
     @SuppressWarnings("unchecked")
     @Bean
-    @ConditionalOnProperty(value = "mockAktoer_V2", havingValue = "false", matchIfMissing = true)
+    @ConditionalOnProperty(value = [MOCK_KEY], havingValue = "false", matchIfMissing = true)
     @Primary
-    fun aktoerV2(@Value("\${aktoer.v2.endpointurl}") serviceUrl: String) : AktoerV2 {
-        val port: AktoerV2 = WsClient<AktoerV2>().createPort(serviceUrl, AktoerV2::class.java, singletonList(LogErrorHandler()))
+    fun aktoerV2(): AktoerV2 {
+        val port = WsClient<AktoerV2>().createPort(serviceUrl, AktoerV2::class.java, listOf(LogErrorHandler()))
         STSClientConfig.configureRequestSamlToken(port)
         return port
     }
 
+    companion object {
+        const val MOCK_KEY = "aktoer.withmock"
+    }
 }

@@ -45,15 +45,17 @@ class CORSFilter : Filter {
         chain?.doFilter(request, httpResponse)
     }
 
-    override fun init(filterConfig: FilterConfig?) { }
+    override fun init(filterConfig: FilterConfig?) {}
 
 
-    override fun destroy() { }
+    override fun destroy() {}
 
-    private fun requestUriErIkkeMotFeedEllerInternalEndepunkt(uri: String) : Boolean{
+    private fun requestUriErIkkeMotFeedEllerInternalEndepunkt(uri: String): Boolean {
         return !(uri.contains("/feed") || uri.contains("/internal"))
     }
 
-    private fun erWhitelisted(origin: String?) : Boolean { return origin != null && whitelist.contains(origin) }
+    private fun erWhitelisted(origin: String?): Boolean {
+        return origin != null && whitelist.contains(origin)
+    }
 
 }

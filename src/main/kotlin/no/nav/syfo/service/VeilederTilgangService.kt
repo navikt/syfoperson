@@ -1,8 +1,8 @@
 package no.nav.syfo.service
 
+import no.nav.syfo.config.EnvironmentUtil
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
@@ -14,7 +14,6 @@ import javax.inject.Inject
 
 @Service
 class VeilederTilgangService @Inject constructor(
-        @Value("\${tilgangskontrollapi.url}") tilgangskontrollUrl: String,
         val template: RestTemplate
 ) : InitializingBean {
     private var instance: VeilederTilgangService? = null
@@ -23,20 +22,22 @@ class VeilederTilgangService @Inject constructor(
         instance = this
     }
 
+    private val tilgangskontrollUrl = EnvironmentUtil.getEnvVar("TILGANGSKONTROLLAPI_URL", "http://eksempel.no/tilgangskontroll")
+
     private val tilgangTilBrukerViaAzureUriTemplate: UriComponentsBuilder
 
     init {
         tilgangTilBrukerViaAzureUriTemplate = fromHttpUrl(tilgangskontrollUrl)
-                .path(TILGANG_TIL_BRUKER_VIA_AZURE_PATH)
+                .path(ACCESS_TO_USER_WITH_AZURE_PATH)
                 .queryParam(FNR, FNR_PLACEHOLDER)
     }
 
-    fun sjekkVeiledersTilgangTilPersonViaAzure(fnr: String): Boolean {
+    fun hasVeilederAccessToPersonWithAzure(fnr: String): Boolean {
         val tilgangTilBrukerViaAzureUriMedFnr = tilgangTilBrukerViaAzureUriTemplate.build(singletonMap<String, String>(FNR, fnr))
-        return kallUriMedTemplate(tilgangTilBrukerViaAzureUriMedFnr)
+        return callUriWithTemplate(tilgangTilBrukerViaAzureUriMedFnr)
     }
 
-    private fun kallUriMedTemplate(uri: URI): Boolean {
+    private fun callUriWithTemplate(uri: URI): Boolean {
         return try {
             template.getForObject(uri, Any::class.java)
             true
@@ -54,7 +55,7 @@ class VeilederTilgangService @Inject constructor(
 
         private val LOG = LoggerFactory.getLogger(VeilederTilgangService::class.java)
         const val FNR = "fnr"
-        const val TILGANG_TIL_BRUKER_VIA_AZURE_PATH = "/bruker"
+        const val ACCESS_TO_USER_WITH_AZURE_PATH = "/bruker"
         private const val FNR_PLACEHOLDER = "{$FNR}"
     }
 
