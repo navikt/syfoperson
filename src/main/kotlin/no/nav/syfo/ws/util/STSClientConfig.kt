@@ -1,5 +1,6 @@
-package no.nav.syfo.consumer.util.ws
+package no.nav.syfo.ws.util
 
+import no.nav.syfo.config.EnvironmentUtil.getEnvVar
 import org.apache.cxf.Bus
 import org.apache.cxf.binding.soap.Soap12
 import org.apache.cxf.binding.soap.SoapMessage
@@ -10,45 +11,39 @@ import org.apache.cxf.ws.policy.PolicyEngine
 import org.apache.cxf.ws.policy.attachment.reference.RemoteReferenceResolver
 import org.apache.cxf.ws.security.trust.STSClient
 import org.apache.neethi.Policy
-import java.lang.IllegalStateException
-
-import java.util.HashMap
+import java.util.*
 
 object STSClientConfig {
-    private const val STS_URL_KEY = "SECURITYTOKENSERVICE_URL"
-    private const val SERVICEUSER_USERNAME = "SRVSYFOPERSON_USERNAME"
-    private const val SERVICEUSER_PASSWORD = "SRVSYFOPERSON_PASSWORD"
 
     // Only use no transportbinding on localhost, should use the requestSamlPolicy.xml with transport binding https
     // when in production.
     private const val STS_REQUEST_SAML_POLICY = "classpath:policy/requestSamlPolicy.xml"
     private const val STS_CLIENT_AUTHENTICATION_POLICY = "classpath:policy/untPolicy.xml"
 
-    fun <T> configureRequestSamlToken(port: T): T {                                                                             
+    fun <T> configureRequestSamlToken(port: T): T {
         val client = ClientProxy.getClient(port)
         // do not have onbehalfof token so cache token in endpoint
         configureStsRequestSamlToken(client, true)
         return port
     }
 
-    private fun configureStsRequestSamlToken(client: Client, cacheTokenInEndpoint: Boolean) {                                  
-        // TODO: remove custom client when STS is updated to support the cxf client
+    private fun configureStsRequestSamlToken(client: Client, cacheTokenInEndpoint: Boolean) {
         val stsClient = createCustomSTSClient(client.bus)
         configureStsWithPolicyForClient(stsClient, client, STS_REQUEST_SAML_POLICY, cacheTokenInEndpoint)
-    }                                                                                                                           
+    }
 
-    private fun configureStsWithPolicyForClient(stsClient: STSClient, client: Client, policyReference: String,                 
-                                                 cacheTokenInEndpoint: Boolean) {
-        val location = requireProperty(STS_URL_KEY)
-        val username = requireProperty(SERVICEUSER_USERNAME)
-        val password = requireProperty(SERVICEUSER_PASSWORD)
+    private fun configureStsWithPolicyForClient(stsClient: STSClient, client: Client, policyReference: String,
+                                                cacheTokenInEndpoint: Boolean) {
+        val location = getEnvVar("SECURITYTOKENSERVICE_URL")
+        val username = getEnvVar("srv_username")
+        val password = getEnvVar("srv_password")
 
         configureSTSClient(stsClient, location, username, password)
 
         client.requestContext[org.apache.cxf.rt.security.SecurityConstants.STS_CLIENT] = stsClient
         client.requestContext[org.apache.cxf.rt.security.SecurityConstants.CACHE_ISSUED_TOKEN_IN_ENDPOINT] = cacheTokenInEndpoint
         setEndpointPolicyReference(client, policyReference)
-    }                                                                                                                           
+    }
 
     /**
      * Creating custom STS client because the STS on Datapower requires KeyType as a child to RequestSecurityToken and
@@ -59,19 +54,20 @@ object STSClientConfig {
      * @param bus
      * @return
      */
-    private fun createCustomSTSClient(bus: Bus): STSClient {                                                                   
+    private fun createCustomSTSClient(bus: Bus): STSClient {
         return STSClientWSTrust13and14(bus)
-    }                                                                                                                           
+    }
 
-    private fun configureSTSClient(stsClient: STSClient, location: String, username: String,                                   
-                                    password: String): STSClient {
-
+    private fun configureSTSClient(stsClient: STSClient, location: String, username: String,
+                                   password: String): STSClient {
         stsClient.isEnableAppliesTo = false
         stsClient.isAllowRenewing = false
         stsClient.location = location
 
         val properties = HashMap<String, Any>()
+
         properties[org.apache.cxf.rt.security.SecurityConstants.USERNAME] = username
+
         properties[org.apache.cxf.rt.security.SecurityConstants.PASSWORD] = password
 
         stsClient.properties = properties
@@ -79,20 +75,11 @@ object STSClientConfig {
         // used for the STS client to authenticate itself to the STS provider.
         stsClient.setPolicy(STS_CLIENT_AUTHENTICATION_POLICY)
         return stsClient
-    }                                                                                                                           
-
-    private fun setEndpointPolicyReference(client: Client, uri: String) {                                                      
-        val policy = resolvePolicyReference(client, uri)
-        setClientEndpointPolicy(client, policy)
-    }                                                                                                                           
-
-    private fun requireProperty(key: String): String {
-        val property = System.getenv(key)
-        return property ?: systemProperty(key)
     }
 
-    private fun systemProperty(key: String): String {
-        return System.getProperty(key) ?: throw IllegalStateException("Required property $key not available.")
+    private fun setEndpointPolicyReference(client: Client, uri: String) {
+        val policy = resolvePolicyReference(client, uri)
+        setClientEndpointPolicy(client, policy)
     }
 
     private fun resolvePolicyReference(client: Client, uri: String): Policy {

@@ -4,10 +4,10 @@ import no.nav.syfo.consumer.EgenAnsattConsumer
 import no.nav.syfo.controller.domain.Skjermingskode
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Person
 import org.springframework.beans.factory.InitializingBean
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import javax.inject.Inject
 
-@Component
+@Service
 class SkjermingskodeService @Inject constructor(
         private val egenAnsattConsumer: EgenAnsattConsumer,
         private val personService: PersonService
@@ -21,6 +21,6 @@ class SkjermingskodeService @Inject constructor(
     fun hentBrukersSkjermingskode(person: Person, fnr: String): Skjermingskode {
         if (personService.erBrukerDiskresjonsmerket(person))
             return Skjermingskode.DISKRESJONSMERKET
-        return if (egenAnsattConsumer.erEgenAnsatt(fnr)) Skjermingskode.EGEN_ANSATT else Skjermingskode.INGEN
+        return if (egenAnsattConsumer.isEgenAnsatt(fnr)) Skjermingskode.EGEN_ANSATT else Skjermingskode.INGEN
     }
 }

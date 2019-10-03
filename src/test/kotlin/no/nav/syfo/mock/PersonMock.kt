@@ -1,16 +1,14 @@
 package no.nav.syfo.mock
 
+import no.nav.syfo.config.consumer.PersonConfig
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.NorskIdent
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Person
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Personnavn
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.*
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.*
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.stereotype.Service
 
 @Service
-@ConditionalOnProperty(value = "mockPerson_V3", havingValue = "true")
+@ConditionalOnProperty(value = [PersonConfig.MOCK_KEY], havingValue = "true")
 class PersonMock : PersonV3 {
 
     override fun ping() {

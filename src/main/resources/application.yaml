@@ -2,8 +2,8 @@ no.nav.security.oidc:
   issuers: veileder
   issuer:
     veileder:
-      discoveryurl: <SETTES FRA FASIT>
-      accepted_audience: <SETTES FRA FASIT>
+      discoveryurl: <syfonais>
+      accepted_audience: <syfonais>
       cookie_name: isso-idtoken
 
 logging.config: classpath:logback-spring.xml

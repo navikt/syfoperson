@@ -6,10 +6,10 @@ import no.nav.tjeneste.virksomhet.aktoer.v2.meldinger.WSHentAktoerIdForIdentRequ
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.cache.annotation.Cacheable
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import javax.ws.rs.NotFoundException
 
-@Component
+@Service
 class AktoerConsumer
 constructor(private val aktoerV2: AktoerV2) : InitializingBean {
 
@@ -18,7 +18,7 @@ constructor(private val aktoerV2: AktoerV2) : InitializingBean {
     }
 
     @Cacheable(cacheNames = ["aktorByFnr"], key = "#fnr", condition = "#fnr != null")
-    fun hentAktoerIdForFnr(fnr: String): String {
+    fun getAktorIdForFnr(fnr: String): String {
         try {
             return aktoerV2.hentAktoerIdForIdent(WSHentAktoerIdForIdentRequest()
                     .withIdent(fnr)

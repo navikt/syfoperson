@@ -4,9 +4,10 @@ import no.nav.security.spring.oidc.validation.api.EnableOIDCTokenValidation
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
-@EnableOIDCTokenValidation(ignore=["org.springframework"])
+@EnableOIDCTokenValidation
 @SpringBootApplication
 class LocalApplication
-    fun main(args: Array<String>) {
-        runApplication<LocalApplication>(*args)
-    }
+
+fun main(args: Array<String>) {
+    runApplication<LocalApplication>(*args)
+}

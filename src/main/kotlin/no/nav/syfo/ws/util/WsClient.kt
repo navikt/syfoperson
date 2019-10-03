@@ -1,15 +1,13 @@
-package no.nav.syfo.consumer.util.ws
+package no.nav.syfo.ws.util
 
 import org.apache.cxf.frontend.ClientProxy
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean
 import org.apache.cxf.message.Message
 import org.apache.cxf.phase.PhaseInterceptor
 import org.apache.cxf.ws.addressing.WSAddressingFeature
-
+import java.util.*
 import javax.xml.ws.BindingProvider
 import javax.xml.ws.handler.Handler
-import java.util.Arrays
-import java.util.Objects
 
 class WsClient<T> {
 
@@ -21,8 +19,7 @@ class WsClient<T> {
         val port = jaxWsProxyFactoryBean.create() as T
         (port as BindingProvider).binding.handlerChain = handlers
         val client = ClientProxy.getClient(port)
-        Arrays.stream(interceptors).forEach{ client.outInterceptors.add(it) }
+        Arrays.stream(interceptors).forEach { client.outInterceptors.add(it) }
         return port
     }
-
 }

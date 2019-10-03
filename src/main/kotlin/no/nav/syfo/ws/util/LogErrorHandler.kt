@@ -1,19 +1,21 @@
-package no.nav.syfo.consumer.util.ws
+package no.nav.syfo.ws.util
 
 import org.apache.cxf.interceptor.Fault
 import org.apache.cxf.jaxws.handler.soap.SOAPMessageContextImpl
 import org.apache.cxf.message.Message
 import org.apache.cxf.service.Service
 import org.apache.cxf.service.model.OperationInfo
-
+import org.slf4j.LoggerFactory.getLogger
 import javax.xml.namespace.QName
 import javax.xml.ws.handler.MessageContext
 import javax.xml.ws.handler.soap.SOAPHandler
 import javax.xml.ws.handler.soap.SOAPMessageContext
 
-import org.slf4j.LoggerFactory.getLogger
-
 class LogErrorHandler : SOAPHandler<SOAPMessageContext> {
+
+    companion object {
+        private val LOG = getLogger(LogErrorHandler::class.java)
+    }
 
     override fun getHeaders(): Set<QName>? {
         return null
@@ -59,8 +61,4 @@ class LogErrorHandler : SOAPHandler<SOAPMessageContext> {
     }
 
     override fun close(context: MessageContext) {}
-
-    companion object {
-        private val LOG = getLogger(LogErrorHandler::class.java)
-    }
 }

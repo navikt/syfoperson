@@ -10,13 +10,13 @@ import org.apache.commons.lang3.text.WordUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.cache.annotation.Cacheable
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import java.util.Optional.ofNullable
 import javax.inject.Inject
 import javax.ws.rs.ForbiddenException
 import javax.ws.rs.NotFoundException
 
-@Component
+@Service
 class PersonService @Inject constructor(
         private val personV3: PersonV3,
         private val aktoerConsumer: AktoerConsumer
@@ -42,7 +42,7 @@ class PersonService @Inject constructor(
         try {
             return personV3.hentPerson(HentPersonRequest()
                     .withAktoer(AktoerId()
-                            .withAktoerId(aktoerConsumer.hentAktoerIdForFnr(fnr))))
+                            .withAktoerId(aktoerConsumer.getAktorIdForFnr(fnr))))
                     .person
         } catch (e: HentPersonSikkerhetsbegrensning) {
             LOG.info("Fikk sikkerhetsbegrensing mot TPS på henting av person")
