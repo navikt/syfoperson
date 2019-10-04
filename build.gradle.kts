@@ -12,15 +12,20 @@ val egenAnsattV1Version = "1.0.1"
 val personV3Version = "3.4.1"
 val cxfVersion = "3.3.3"
 val jaxWsApiVersion = "2.3.1"
+val jaxRsApiVersion = "2.0.1"
 val javaxAnnotationApiVersion = "1.3.2"
 val jaxbApiVersion = "2.4.0-b180830.0359"
 val jaxbRuntimeVersion = "2.4.0-b180830.0438"
 val javaxActivationVersion = "1.1.1"
 val jaxwsToolsVersion = "2.3.1"
 val oidcSpringSupportVersion = "0.2.4"
-val oidcSpringSupportTestVersion = "0.2.4"
 val tokenSupportVersion = "1.0.1"
 val prometheusVersion = "1.0.6"
+val logstashVersion = "4.10"
+val slf4jVersion = "1.7.25"
+val commonsLangVersion = "3.5"
+val javaxInjectVersion = "1"
+val kotlinLibVersion = "1.2.71"
 
 
 plugins {
@@ -55,8 +60,8 @@ repositories {
 }
 
 dependencies {
-    implementation("no.nav.security:oidc-support:0.2.4")
-    implementation("no.nav.security:oidc-spring-support:0.2.4")
+    implementation("no.nav.security:oidc-support:$oidcSpringSupportVersion")
+    implementation("no.nav.security:oidc-spring-support:$oidcSpringSupportVersion")
     implementation("javax.xml.ws:jaxws-api:$jaxWsApiVersion")
     implementation("javax.annotation:javax.annotation-api:$javaxAnnotationApiVersion")
     implementation("javax.xml.bind:jaxb-api:$jaxbApiVersion")
@@ -80,18 +85,18 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-logging:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-cache:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
-    implementation("io.micrometer:micrometer-registry-prometheus:1.0.6")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.2.71")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.2.71")
-    implementation("net.logstash.logback:logstash-logback-encoder:4.10")
-    implementation("org.slf4j:slf4j-api:1.7.25")
-    implementation("javax.ws.rs:javax.ws.rs-api:2.0.1")
-    implementation("javax.inject:javax.inject:1")
-    implementation("org.apache.commons:commons-lang3:3.5")
+    implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinLibVersion")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinLibVersion")
+    implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
+    implementation("org.slf4j:slf4j-api:$slf4jVersion")
+    implementation("javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion")
+    implementation("javax.inject:javax.inject:$javaxInjectVersion")
+    implementation("org.apache.commons:commons-lang3:$commonsLangVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
 
     testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-    testCompile("no.nav.security:oidc-spring-test:$oidcSpringSupportTestVersion")
+    testCompile("no.nav.security:oidc-spring-test:$oidcSpringSupportVersion")
 }
 
 tasks {
