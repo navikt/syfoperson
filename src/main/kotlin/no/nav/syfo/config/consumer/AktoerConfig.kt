@@ -1,6 +1,6 @@
 package no.nav.syfo.config.consumer
 
-import no.nav.syfo.config.EnvironmentUtil.getEnvVar
+import no.nav.syfo.util.EnvironmentUtil.getEnvVar
 import no.nav.syfo.ws.util.*
 import no.nav.tjeneste.virksomhet.aktoer.v2.AktoerV2
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty

@@ -1,4 +1,4 @@
-package no.nav.syfo.config
+package no.nav.syfo.util
 
 object EnvironmentUtil {
 

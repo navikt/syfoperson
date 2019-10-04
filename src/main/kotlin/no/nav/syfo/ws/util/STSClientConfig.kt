@@ -1,6 +1,6 @@
 package no.nav.syfo.ws.util
 
-import no.nav.syfo.config.EnvironmentUtil.getEnvVar
+import no.nav.syfo.util.EnvironmentUtil.getEnvVar
 import org.apache.cxf.Bus
 import org.apache.cxf.binding.soap.Soap12
 import org.apache.cxf.binding.soap.SoapMessage

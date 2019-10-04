@@ -1,6 +1,6 @@
 package no.nav.syfo.service
 
-import no.nav.syfo.config.EnvironmentUtil
+import no.nav.syfo.util.EnvironmentUtil
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Service

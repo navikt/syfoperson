@@ -1,6 +1,6 @@
 package no.nav.syfo.config.consumer
 
-import no.nav.syfo.config.EnvironmentUtil.getEnvVar
+import no.nav.syfo.util.EnvironmentUtil.getEnvVar
 import no.nav.syfo.ws.util.LogErrorHandler
 import no.nav.syfo.ws.util.STSClientConfig
 import no.nav.syfo.ws.util.WsClient
