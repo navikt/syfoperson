@@ -11,13 +11,7 @@ val aktorV2Version = "1.0"
 val egenAnsattV1Version = "1.0.1"
 val personV3Version = "3.4.1"
 val cxfVersion = "3.3.3"
-val jaxWsApiVersion = "2.3.1"
 val jaxRsApiVersion = "2.0.1"
-val javaxAnnotationApiVersion = "1.3.2"
-val jaxbApiVersion = "2.4.0-b180830.0359"
-val jaxbRuntimeVersion = "2.4.0-b180830.0438"
-val javaxActivationVersion = "1.1.1"
-val jaxwsToolsVersion = "2.3.1"
 val oidcSpringSupportVersion = "0.2.4"
 val tokenSupportVersion = "1.0.1"
 val prometheusVersion = "1.0.6"
@@ -62,29 +56,24 @@ repositories {
 dependencies {
     implementation("no.nav.security:oidc-support:$oidcSpringSupportVersion")
     implementation("no.nav.security:oidc-spring-support:$oidcSpringSupportVersion")
-    implementation("javax.xml.ws:jaxws-api:$jaxWsApiVersion")
-    implementation("javax.annotation:javax.annotation-api:$javaxAnnotationApiVersion")
-    implementation("javax.xml.bind:jaxb-api:$jaxbApiVersion")
-    implementation("org.glassfish.jaxb:jaxb-runtime:$jaxbRuntimeVersion")
-    implementation("javax.activation:activation:$javaxActivationVersion")
-    implementation("com.sun.xml.ws:jaxws-tools:$jaxwsToolsVersion") {
-        exclude(group = "com.sun.xml.ws", module = "policy")
-    }
+
+    implementation("no.nav.syfo.tjenester:aktoer-v2:$aktorV2Version")
+    implementation("no.nav.syfo.tjenester:egenAnsatt-v1-tjenestespesifikasjon:$egenAnsattV1Version")
+    implementation("no.nav.tjenester:nav-person-v3-tjenestespesifikasjon:$personV3Version")
+
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-ws-security:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-ws-policy:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-transports-http:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion")
 
-    implementation("no.nav.syfo.tjenester:aktoer-v2:$aktorV2Version")
-    implementation("no.nav.syfo.tjenester:egenAnsatt-v1-tjenestespesifikasjon:$egenAnsattV1Version")
-    implementation("no.nav.tjenester:nav-person-v3-tjenestespesifikasjon:$personV3Version")
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-jersey:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-logging:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-cache:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
+
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinLibVersion")
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinLibVersion")
