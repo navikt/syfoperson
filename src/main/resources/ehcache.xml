@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ehcache>
-    <defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false"/>
-    <cache name="aktorByFnr" maxElementsInMemory="5000" overflowToDisk="false" eternal="false" timeToLiveSeconds="43200" />
-    <cache name="personByFnr" maxElementsInMemory="5000" overflowToDisk="false" eternal="false" timeToLiveSeconds="43200" />
-    <cache name="egenAnsattByFnr" maxElementsInMemory="5000" overflowToDisk="false" eternal="false" timeToLiveSeconds="3600" />
+    <defaultCache eternal="true" maxElementsInMemory="1000" overflowToDisk="false"/>
+    <cache name="aktorByFnr" maxElementsInMemory="10000" overflowToDisk="false" eternal="false" timeToLiveSeconds="43200" />
+    <cache name="personByFnr" maxElementsInMemory="10000" overflowToDisk="false" eternal="false" timeToLiveSeconds="43200" />
+    <cache name="egenAnsattByFnr" maxElementsInMemory="10000" overflowToDisk="false" eternal="false" timeToLiveSeconds="3600" />
 </ehcache>
