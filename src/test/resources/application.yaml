@@ -22,6 +22,9 @@ srvsyfoperson:
   username: "username"
   password: "password"
 
+srv.username: "username"
+srv.password: "password"
+
 fasit.environment.name: 'local'
 
 virksomhet:
@@ -33,3 +36,5 @@ egenansatt.withmock: true
 person.withmock: true
 
 tilgangskontrollapi.url: "https://tilgangskontroll.nais.no"
+security.token.service.rest.url: "https://sts.nais.no"
+pdl.url: "https://pdl.nais.no"
