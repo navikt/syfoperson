@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @Service
 class VeilederTilgangService @Inject constructor(
-        val template: RestTemplate
+        val interceptorRestTemplate: RestTemplate
 ) : InitializingBean {
     private var instance: VeilederTilgangService? = null
 
@@ -39,7 +39,7 @@ class VeilederTilgangService @Inject constructor(
 
     private fun callUriWithTemplate(uri: URI): Boolean {
         return try {
-            template.getForObject(uri, Any::class.java)
+            interceptorRestTemplate.getForObject(uri, Any::class.java)
             true
         } catch (e: HttpClientErrorException) {
             if (e.rawStatusCode == 403) {

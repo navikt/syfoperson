@@ -4,6 +4,8 @@ import no.nav.security.spring.oidc.validation.api.EnableOIDCTokenValidation
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
+const val CALL_ID = "Nav-Callid"
+
 @SpringBootApplication
 @EnableOIDCTokenValidation
 class Application

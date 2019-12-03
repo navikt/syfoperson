@@ -20,6 +20,7 @@ val slf4jVersion = "1.7.25"
 val commonsLangVersion = "3.5"
 val javaxInjectVersion = "1"
 val kotlinLibVersion = "1.2.71"
+val jacksonVersion = "2.9.8"
 
 
 plugins {
@@ -83,6 +84,8 @@ dependencies {
     implementation("javax.inject:javax.inject:$javaxInjectVersion")
     implementation("org.apache.commons:commons-lang3:$commonsLangVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
+
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 
     testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
     testCompile("no.nav.security:oidc-spring-test:$oidcSpringSupportVersion")

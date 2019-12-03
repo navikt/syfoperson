@@ -1,6 +1,6 @@
 package no.nav.syfo.service
 
-import no.nav.syfo.consumer.AktoerConsumer
+import no.nav.syfo.consumer.AktorRestConsumer
 import no.nav.tjeneste.virksomhet.person.v3.binding.*
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.AktoerId
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Person
@@ -19,7 +19,7 @@ import javax.ws.rs.NotFoundException
 @Service
 class PersonService @Inject constructor(
         private val personV3: PersonV3,
-        private val aktoerConsumer: AktoerConsumer
+        private val aktoerRestConsumer: AktorRestConsumer
 ) : InitializingBean {
     private var instance: PersonService? = null
 
@@ -42,7 +42,7 @@ class PersonService @Inject constructor(
         try {
             return personV3.hentPerson(HentPersonRequest()
                     .withAktoer(AktoerId()
-                            .withAktoerId(aktoerConsumer.getAktorIdForFnr(fnr))))
+                            .withAktoerId(aktoerRestConsumer.getAktorId(fnr))))
                     .person
         } catch (e: HentPersonSikkerhetsbegrensning) {
             LOG.info("Fikk sikkerhetsbegrensing mot TPS på henting av person")
