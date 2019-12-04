@@ -4,9 +4,9 @@ import no.nav.syfo.controller.domain.Fnr
 import no.nav.syfo.metric.Metric
 import no.nav.syfo.sts.StsConsumer
 import no.nav.syfo.util.*
-import org.apache.commons.text.WordUtils
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.*
 import org.springframework.http.HttpHeaders.AUTHORIZATION
@@ -21,12 +21,8 @@ class PdlConsumer(
         private val stsConsumer: StsConsumer,
         private val restTemplate: RestTemplate
 ) {
-    fun personName(fnr: Fnr): String? {
-        val person = person(fnr)
-        return getNameFromPerson(person)
-    }
-
-    fun person(fnr: Fnr): PdlPersonResponse {
+    @Cacheable(cacheNames = ["personByFnr"], key = "#fnr", condition = "#fnr != null")
+    fun person(fnr: Fnr): PdlHentPerson? {
         metric.countEvent("call_pdl")
 
         val query = this::class.java.getResource("/pdl/hentPerson.graphql").readText().replace("[\n\r]", "")
@@ -39,7 +35,7 @@ class PdlConsumer(
                     object : ParameterizedTypeReference<PdlPersonResponse>() {}
             )
             metric.countEvent("call_pdl_success")
-            return pdlPerson.body!!
+            return pdlPerson.body!!.data
         } catch (exception: RestClientException) {
             metric.countEvent("call_pdl_fail")
             LOG.error("Error from PDL with request-url: $pdlUrl", exception)
@@ -55,23 +51,6 @@ class PdlConsumer(
         headers.set(AUTHORIZATION, bearerHeader(stsToken))
         headers.set(NAV_CONSUMER_TOKEN_HEADER, bearerHeader(stsToken))
         return HttpEntity(request, headers)
-    }
-
-    private fun getNameFromPerson(person: PdlPersonResponse): String? {
-        val name = person.data?.hentPerson?.navn?.get(0)
-        name?.let {
-            val firstName = name.fornavn
-            val middleName = name.mellomnavn
-            val surName = name.etternavn
-
-            val fullName = if (middleName.isNullOrBlank()) {
-                "$firstName $surName"
-            } else {
-                "$firstName $middleName $surName"
-            }
-            return WordUtils.capitalize(fullName.toLowerCase(), '-', ' ')
-        }
-        return null
     }
 
     companion object {
