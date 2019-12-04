@@ -42,7 +42,7 @@ class PersonController @Inject constructor(
             val person = personService.hentPersonFraFnr(it.fnr)
             PersonInfo(
                     it.fnr,
-                    personService.hentNavnFraPerson(person),
+                    pdlConsumer.personName(it) ?: "",
                     skjermingskodeService.hentBrukersSkjermingskode(person, it.fnr)
             )
         }
