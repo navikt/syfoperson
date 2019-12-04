@@ -18,8 +18,10 @@ val prometheusVersion = "1.0.6"
 val logstashVersion = "4.10"
 val slf4jVersion = "1.7.25"
 val commonsLangVersion = "3.5"
+val commonsTextVersion = "1.8"
 val javaxInjectVersion = "1"
 val kotlinLibVersion = "1.2.71"
+val kotlinJacksonVersion = "2.9.8"
 
 
 plugins {
@@ -54,6 +56,10 @@ repositories {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinLibVersion")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinLibVersion")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$kotlinJacksonVersion")
+
     implementation("no.nav.security:oidc-support:$oidcSpringSupportVersion")
     implementation("no.nav.security:oidc-spring-support:$oidcSpringSupportVersion")
 
@@ -75,13 +81,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
 
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinLibVersion")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinLibVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
     implementation("javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion")
     implementation("javax.inject:javax.inject:$javaxInjectVersion")
     implementation("org.apache.commons:commons-lang3:$commonsLangVersion")
+    implementation("org.apache.commons:commons-text:$commonsTextVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
 
     testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
