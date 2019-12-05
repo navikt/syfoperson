@@ -7,9 +7,7 @@ group = "no.nav.syfo"
 version = "1.0.0"
 
 val springBootVersion = "2.1.8.RELEASE"
-val aktorV2Version = "1.0"
 val egenAnsattV1Version = "1.0.1"
-val personV3Version = "3.4.1"
 val cxfVersion = "3.3.3"
 val jaxRsApiVersion = "2.0.1"
 val oidcSpringSupportVersion = "0.2.4"
@@ -63,9 +61,7 @@ dependencies {
     implementation("no.nav.security:oidc-support:$oidcSpringSupportVersion")
     implementation("no.nav.security:oidc-spring-support:$oidcSpringSupportVersion")
 
-    implementation("no.nav.syfo.tjenester:aktoer-v2:$aktorV2Version")
     implementation("no.nav.syfo.tjenester:egenAnsatt-v1-tjenestespesifikasjon:$egenAnsattV1Version")
-    implementation("no.nav.tjenester:nav-person-v3-tjenestespesifikasjon:$personV3Version")
 
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-ws-security:$cxfVersion")
