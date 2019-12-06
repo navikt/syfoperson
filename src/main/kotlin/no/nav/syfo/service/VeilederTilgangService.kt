@@ -1,11 +1,11 @@
 package no.nav.syfo.service
 
+import no.nav.syfo.metric.Metric
 import no.nav.syfo.util.EnvironmentUtil
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.stereotype.Service
-import org.springframework.web.client.HttpClientErrorException
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.*
 import org.springframework.web.util.UriComponentsBuilder
 import org.springframework.web.util.UriComponentsBuilder.fromHttpUrl
 import java.net.URI
@@ -14,6 +14,7 @@ import javax.inject.Inject
 
 @Service
 class VeilederTilgangService @Inject constructor(
+        val metric: Metric,
         val template: RestTemplate
 ) : InitializingBean {
     private var instance: VeilederTilgangService? = null
@@ -45,9 +46,14 @@ class VeilederTilgangService @Inject constructor(
             if (e.rawStatusCode == 403) {
                 false
             } else {
-                LOG.error("HttpClientErrorException mot uri {}", uri, e)
+                LOG.error("HttpClientErrorException mot tilgangskontroll", e)
+                metric.countEvent("call_tilgangskontroll_denied")
                 return false
             }
+        } catch (e: HttpServerErrorException) {
+            LOG.error("HttpServerErrorException mot tilgangskontroll", uri, e)
+            metric.countEvent("call_tilgangskontroll_fail")
+            return false
         }
     }
 
