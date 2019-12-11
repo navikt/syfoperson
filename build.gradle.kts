@@ -81,8 +81,6 @@ dependencies {
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
     implementation("javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion")
     implementation("javax.inject:javax.inject:$javaxInjectVersion")
-    implementation("org.apache.commons:commons-lang3:$commonsLangVersion")
-    implementation("org.apache.commons:commons-text:$commonsTextVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
 
     testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
