@@ -1,6 +1,6 @@
 package no.nav.syfo.pdl
 
-import org.apache.commons.text.WordUtils
+import no.nav.syfo.util.lowerCapitalize
 
 data class PdlPersonResponse(
         val errors: List<PdlError>?,
@@ -55,18 +55,19 @@ fun PdlHentPerson.isKode6Or7(): Boolean {
 }
 
 fun PdlHentPerson.getName(): String? {
-    val name = this.hentPerson?.navn?.get(0)
-    name?.let {
-        val firstName = name.fornavn
-        val middleName = name.mellomnavn
-        val surName = name.etternavn
+    val nameList = this.hentPerson?.navn
+    if (nameList.isNullOrEmpty()) {
+        return null
+    }
+    nameList[0].let {
+        val firstName = it.fornavn.lowerCapitalize()
+        val middleName = it.mellomnavn
+        val surName = it.etternavn.lowerCapitalize()
 
-        val fullName = if (middleName.isNullOrBlank()) {
+        return if (middleName.isNullOrBlank()) {
             "$firstName $surName"
         } else {
-            "$firstName $middleName $surName"
+            "$firstName ${middleName.lowerCapitalize()} $surName"
         }
-        return WordUtils.capitalize(fullName.toLowerCase(), '-', ' ')
     }
-    return null
 }
