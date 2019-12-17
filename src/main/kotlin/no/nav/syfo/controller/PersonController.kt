@@ -1,10 +1,10 @@
 package no.nav.syfo.controller
 
 import no.nav.security.spring.oidc.validation.api.ProtectedWithClaims
+import no.nav.syfo.consumer.EgenAnsattConsumer
 import no.nav.syfo.controller.domain.*
 import no.nav.syfo.oidc.OIDCIssuer.AZURE
-import no.nav.syfo.pdl.PdlConsumer
-import no.nav.syfo.pdl.getName
+import no.nav.syfo.pdl.*
 import no.nav.syfo.service.SkjermingskodeService
 import no.nav.syfo.service.VeilederTilgangService
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
@@ -15,20 +15,11 @@ import javax.inject.Inject
 @RequestMapping(value = ["/api/person"])
 @ProtectedWithClaims(issuer = AZURE)
 class PersonController @Inject constructor(
+        val egenAnsattConsumer: EgenAnsattConsumer,
         val pdlConsumer: PdlConsumer,
         val skjermingskodeService: SkjermingskodeService,
         val veilederTilgangService: VeilederTilgangService
 ) {
-
-    @ResponseBody
-    @GetMapping(value = ["/navn/{fnr}"], produces = [APPLICATION_JSON_VALUE])
-    fun getName(@PathVariable fnr: Fnr): FnrMedNavn {
-        return FnrMedNavn(
-                fnr.fnr,
-                pdlConsumer.person(fnr)?.getName() ?: ""
-        )
-    }
-
     @PostMapping(value = ["/info"], produces = [APPLICATION_JSON_VALUE])
     fun getPersoninfoForPersons(@RequestBody brukerFnrListe: List<Fnr>): List<PersonInfo> {
         brukerFnrListe.filter { veilederTilgangService.hasVeilederAccessToPersonWithAzure(it.fnr) }
@@ -41,5 +32,26 @@ class PersonController @Inject constructor(
                     skjermingskodeService.hentBrukersSkjermingskode(person, it.fnr)
             )
         }
+    }
+
+    @ResponseBody
+    @GetMapping(value = ["/navn/{fnr}"], produces = [APPLICATION_JSON_VALUE])
+    fun getName(@PathVariable fnr: Fnr): FnrMedNavn {
+        return FnrMedNavn(
+                fnr.fnr,
+                pdlConsumer.person(fnr)?.getName() ?: ""
+        )
+    }
+
+    @ResponseBody
+    @GetMapping(value = ["/egenansatt/{fnr}"], produces = [APPLICATION_JSON_VALUE])
+    fun isEgenAnsatt(@PathVariable fnr: Fnr): Boolean {
+        return egenAnsattConsumer.isEgenAnsatt(fnr.fnr)
+    }
+
+    @ResponseBody
+    @GetMapping(value = ["/diskresjonskode/{fnr}"], produces = [APPLICATION_JSON_VALUE])
+    fun getDiskresjonskode(@PathVariable fnr: Fnr): String {
+        return pdlConsumer.person(fnr)?.getDiskresjonskode() ?: ""
     }
 }

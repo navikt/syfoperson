@@ -49,6 +49,22 @@ enum class Gradering {
     UGRADERT
 }
 
+
+fun PdlHentPerson.getDiskresjonskode(): String {
+    val gradering: Gradering = this.hentPerson?.adressebeskyttelse?.get(0)?.gradering ?: Gradering.UGRADERT
+    return when {
+        gradering === Gradering.STRENGT_FORTROLIG -> {
+            "6"
+        }
+        gradering === Gradering.FORTROLIG -> {
+            "7"
+        }
+        else -> {
+            ""
+        }
+    }
+}
+
 fun PdlHentPerson.isKode6Or7(): Boolean {
     val gradering: Gradering = this.hentPerson?.adressebeskyttelse?.get(0)?.gradering ?: Gradering.UGRADERT
     return gradering != Gradering.UGRADERT
