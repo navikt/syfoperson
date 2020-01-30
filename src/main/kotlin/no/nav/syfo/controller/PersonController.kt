@@ -28,7 +28,6 @@ class PersonController @Inject constructor(
             val person = pdlConsumer.person(it)
             PersonInfo(
                     it.fnr,
-                    person?.getName() ?: "",
                     skjermingskodeService.hentBrukersSkjermingskode(person, it.fnr)
             )
         }
