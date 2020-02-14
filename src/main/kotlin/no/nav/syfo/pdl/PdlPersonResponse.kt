@@ -1,6 +1,7 @@
 package no.nav.syfo.pdl
 
 import no.nav.syfo.util.lowerCapitalize
+import java.io.Serializable
 
 data class PdlPersonResponse(
         val errors: List<PdlError>?,
@@ -26,24 +27,24 @@ data class PdlErrorExtension(
 
 data class PdlHentPerson(
         val hentPerson: PdlPerson?
-)
+) : Serializable
 
 data class PdlPerson(
         val navn: List<PdlPersonNavn>,
         val adressebeskyttelse: List<Adressebeskyttelse>?
-)
+) : Serializable
 
 data class PdlPersonNavn(
         val fornavn: String,
         val mellomnavn: String?,
         val etternavn: String
-)
+) : Serializable
 
 data class Adressebeskyttelse(
         val gradering: Gradering
-)
+) : Serializable
 
-enum class Gradering {
+enum class Gradering : Serializable {
     STRENGT_FORTROLIG,
     FORTROLIG,
     UGRADERT
