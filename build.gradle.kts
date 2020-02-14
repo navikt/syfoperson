@@ -73,7 +73,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-jersey:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-logging:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-cache:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
 
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")

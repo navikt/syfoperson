@@ -1,3 +1,9 @@
+spring:
+  cache.type: redis
+  redis:
+    host: syfoperson-redis
+    port: 6379
+
 no.nav.security.oidc:
   issuers: veileder
   issuer:
