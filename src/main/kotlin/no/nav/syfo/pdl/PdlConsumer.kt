@@ -1,5 +1,6 @@
 package no.nav.syfo.pdl
 
+import no.nav.syfo.cache.CacheConfig.Companion.PERSONBYFNR
 import no.nav.syfo.controller.domain.Fnr
 import no.nav.syfo.metric.Metric
 import no.nav.syfo.sts.StsConsumer
@@ -21,7 +22,7 @@ class PdlConsumer(
         private val stsConsumer: StsConsumer,
         private val restTemplate: RestTemplate
 ) {
-    @Cacheable(cacheNames = ["personByFnr"], key = "#fnr", condition = "#fnr != null")
+    @Cacheable(cacheNames = [PERSONBYFNR], key = "#fnr", condition = "#fnr != null")
     fun person(fnr: Fnr): PdlHentPerson? {
         metric.countEvent("call_pdl")
 
