@@ -1,9 +1,8 @@
 package no.nav.syfo.localconfig
 
 import no.nav.security.spring.oidc.test.TokenGeneratorConfiguration
-import org.springframework.context.annotation.*
-import org.springframework.http.client.ClientHttpRequestInterceptor
-import org.springframework.web.client.RestTemplate
+import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Import
 
 @Configuration
 @Import(TokenGeneratorConfiguration::class)
