@@ -1,6 +1,6 @@
 package no.nav.syfo.controller
 
-import no.nav.security.spring.oidc.validation.api.ProtectedWithClaims
+import no.nav.security.oidc.api.ProtectedWithClaims
 import no.nav.syfo.consumer.EgenAnsattConsumer
 import no.nav.syfo.controller.domain.*
 import no.nav.syfo.oidc.OIDCIssuer.AZURE
