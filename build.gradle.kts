@@ -18,7 +18,7 @@ val slf4jVersion = "1.7.25"
 val commonsLangVersion = "3.5"
 val commonsTextVersion = "1.8"
 val javaxInjectVersion = "1"
-val kotlinLibVersion = "1.2.71"
+val kotlinLibVersion = "1.3.60"
 val kotlinJacksonVersion = "2.9.8"
 
 
