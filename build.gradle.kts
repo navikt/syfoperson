@@ -83,8 +83,8 @@ dependencies {
     implementation("javax.inject:javax.inject:$javaxInjectVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
 
-    testCompile("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-    testCompile("no.nav.security:oidc-spring-test:$oidcSpringSupportVersion")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+    testImplementation("no.nav.security:oidc-spring-test:$oidcSpringSupportVersion")
 }
 
 tasks {
