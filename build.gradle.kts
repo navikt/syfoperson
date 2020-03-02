@@ -10,7 +10,7 @@ val springBootVersion = "2.1.8.RELEASE"
 val egenAnsattV1Version = "1.0.1"
 val cxfVersion = "3.3.3"
 val jaxRsApiVersion = "2.0.1"
-val oidcSpringSupportVersion = "0.2.4"
+val oidcSupportVersion = "0.2.18"
 val tokenSupportVersion = "1.0.1"
 val prometheusVersion = "1.0.6"
 val logstashVersion = "4.10"
@@ -58,8 +58,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinLibVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$kotlinJacksonVersion")
 
-    implementation("no.nav.security:oidc-support:$oidcSpringSupportVersion")
-    implementation("no.nav.security:oidc-spring-support:$oidcSpringSupportVersion")
+    implementation("no.nav.security:oidc-spring-support:$oidcSupportVersion")
 
     implementation("no.nav.syfo.tjenester:egenAnsatt-v1-tjenestespesifikasjon:$egenAnsattV1Version")
 
@@ -82,9 +81,9 @@ dependencies {
     implementation("javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion")
     implementation("javax.inject:javax.inject:$javaxInjectVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
-
+    
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-    testImplementation("no.nav.security:oidc-spring-test:$oidcSpringSupportVersion")
+    testImplementation("no.nav.security:oidc-test-support:$oidcSupportVersion")
 }
 
 tasks {
