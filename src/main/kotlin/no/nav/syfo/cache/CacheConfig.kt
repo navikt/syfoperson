@@ -21,7 +21,6 @@ class CacheConfig {
                 .defaultCacheConfig()
                 .entryTtl(Duration.ofHours(12L))
 
-        cacheConfigurations[PERSONBYFNR] = defaultConfig
         cacheConfigurations[EGNEANSATTBYFNR] = RedisCacheConfiguration
                 .defaultCacheConfig()
                 .entryTtl(Duration.ofHours(1L))
@@ -33,7 +32,6 @@ class CacheConfig {
     }
 
     companion object {
-        const val PERSONBYFNR = "personByFnr"
         const val EGNEANSATTBYFNR = "egenAnsattByFnr"
     }
 }
