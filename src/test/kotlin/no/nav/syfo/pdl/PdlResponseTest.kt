@@ -56,6 +56,16 @@ class PdlResponseTest {
     }
 
     @Test
+    fun isKode6Or7WithGraderingStrengtFortroligUtland() {
+        val pdlPersonResponse = generatePdlHentPerson(
+                null,
+                Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG_UTLAND)
+        ).copy()
+        val result = pdlPersonResponse.isKode6Or7()
+        assertThat(result).isTrue()
+    }
+
+    @Test
     fun isNotKode6Or7WithGraderingUgradert() {
         val pdlPersonResponse = generatePdlHentPerson(
                 null,
