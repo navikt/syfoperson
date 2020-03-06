@@ -7,6 +7,7 @@ group = "no.nav.syfo"
 version = "1.0.0"
 
 val springBootVersion = "2.1.8.RELEASE"
+val springRetryVersion = "1.2.4.RELEASE"
 val egenAnsattV1Version = "1.0.1"
 val cxfVersion = "3.3.3"
 val jaxRsApiVersion = "2.0.1"
@@ -74,6 +75,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-logging:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter-aop:$springBootVersion")
+
+    implementation("org.springframework.retry:spring-retry:$springRetryVersion")
 
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
@@ -81,7 +85,7 @@ dependencies {
     implementation("javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion")
     implementation("javax.inject:javax.inject:$javaxInjectVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
-    
+
     testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
     testImplementation("no.nav.security:oidc-test-support:$oidcSupportVersion")
 }
