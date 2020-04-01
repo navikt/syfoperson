@@ -5,7 +5,9 @@ syfoperson er en spring-boot applikasjon skrevet i Kotlin. Den skal hente og lag
 
 
 ### Pipeline
-https://jenkins-digisyfo.adeo.no/job/digisyfo/job/syfoperson/
+Pipeline er på Github Action.
+Commits til Master-branch deployes automatisk til dev-fss og prod-fss.
+Commits til ikke-master-branch bygges uten automatisk deploy.
 
 ### Cache
 
