@@ -8,7 +8,6 @@ version = "1.0.0"
 
 val springBootVersion = "2.1.8.RELEASE"
 val springRetryVersion = "1.2.4.RELEASE"
-val egenAnsattV1Version = "1.0.1"
 val cxfVersion = "3.3.3"
 val jaxRsApiVersion = "2.0.1"
 val oidcSupportVersion = "0.2.18"
@@ -21,6 +20,7 @@ val commonsTextVersion = "1.8"
 val javaxInjectVersion = "1"
 val kotlinLibVersion = "1.3.60"
 val kotlinJacksonVersion = "2.9.8"
+val tjenestespesifikasjonerVersion = "1.2019.09.25-00.21-49b69f0625e0"
 
 
 plugins {
@@ -49,9 +49,9 @@ allOpen {
 repositories {
     mavenCentral()
     jcenter()
-    maven(url = "https://repo.adeo.no/repository/maven-releases/")
     maven(url = "https://dl.bintray.com/kotlin/kotlinx/")
     maven(url = "http://packages.confluent.io/maven/")
+    maven(url = "https://repo1.maven.org/maven2/")
 }
 
 dependencies {
@@ -61,7 +61,7 @@ dependencies {
 
     implementation("no.nav.security:oidc-spring-support:$oidcSupportVersion")
 
-    implementation("no.nav.syfo.tjenester:egenAnsatt-v1-tjenestespesifikasjon:$egenAnsattV1Version")
+    implementation("no.nav.tjenestespesifikasjoner:egenansatt-v1-tjenestespesifikasjon:$tjenestespesifikasjonerVersion")
 
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-ws-security:$cxfVersion")
