@@ -10,6 +10,7 @@ val springBootVersion = "2.1.8.RELEASE"
 val springRetryVersion = "1.2.4.RELEASE"
 val cxfVersion = "3.3.3"
 val jaxRsApiVersion = "2.0.1"
+val nimbusSDKVersion = "7.0.3"
 val oidcSupportVersion = "0.2.18"
 val tokenSupportVersion = "1.0.1"
 val prometheusVersion = "1.0.6"
@@ -59,6 +60,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinLibVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$kotlinJacksonVersion")
 
+    implementation("com.nimbusds:oauth2-oidc-sdk:$nimbusSDKVersion")
     implementation("no.nav.security:oidc-spring-support:$oidcSupportVersion")
 
     implementation("no.nav.tjenestespesifikasjoner:egenansatt-v1-tjenestespesifikasjon:$tjenestespesifikasjonerVersion")
