@@ -10,6 +10,7 @@ val springBootVersion = "2.1.8.RELEASE"
 val springRetryVersion = "1.2.4.RELEASE"
 val cxfVersion = "3.3.3"
 val jaxRsApiVersion = "2.0.1"
+val jaxRiVersion = "2.3.2"
 val nimbusSDKVersion = "7.0.3"
 val oidcSupportVersion = "0.2.18"
 val tokenSupportVersion = "1.0.1"
@@ -18,6 +19,7 @@ val logstashVersion = "4.10"
 val slf4jVersion = "1.7.25"
 val commonsLangVersion = "3.5"
 val commonsTextVersion = "1.8"
+val javaxActivationVersion = "1.2.0"
 val javaxInjectVersion = "1"
 val kotlinLibVersion = "1.3.60"
 val kotlinJacksonVersion = "2.9.8"
@@ -65,6 +67,9 @@ dependencies {
 
     implementation("no.nav.tjenestespesifikasjoner:egenansatt-v1-tjenestespesifikasjon:$tjenestespesifikasjonerVersion")
 
+    implementation("com.sun.xml.ws:jaxws-ri:$jaxRiVersion")
+    implementation("com.sun.activation:javax.activation:$javaxActivationVersion")
+
     implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-ws-security:$cxfVersion")
     implementation("org.apache.cxf:cxf-rt-ws-policy:$cxfVersion")
@@ -92,6 +97,11 @@ dependencies {
     testImplementation("no.nav.security:oidc-test-support:$oidcSupportVersion")
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
 tasks {
     withType<Jar> {
         manifest.attributes["Main-Class"] = "no.nav.syfo.ApplicationKt"
@@ -116,10 +126,10 @@ tasks {
     }
 
     named<KotlinCompile>("compileKotlin") {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "11"
     }
 
     named<KotlinCompile>("compileTestKotlin") {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "11"
     }
 }
