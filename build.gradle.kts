@@ -7,8 +7,6 @@ group = "no.nav.syfo"
 version = "1.0.0"
 
 val springBootVersion = "2.1.8.RELEASE"
-val springRetryVersion = "1.2.4.RELEASE"
-val cxfVersion = "3.3.3"
 val jaxRsApiVersion = "2.0.1"
 val jaxRiVersion = "2.3.2"
 val nimbusSDKVersion = "7.0.3"
@@ -23,8 +21,6 @@ val javaxActivationVersion = "1.2.0"
 val javaxInjectVersion = "1"
 val kotlinLibVersion = "1.3.60"
 val kotlinJacksonVersion = "2.9.8"
-val tjenestespesifikasjonerVersion = "1.2019.09.25-00.21-49b69f0625e0"
-
 
 plugins {
     kotlin("jvm") version "1.3.31"
@@ -65,16 +61,8 @@ dependencies {
     implementation("com.nimbusds:oauth2-oidc-sdk:$nimbusSDKVersion")
     implementation("no.nav.security:oidc-spring-support:$oidcSupportVersion")
 
-    implementation("no.nav.tjenestespesifikasjoner:egenansatt-v1-tjenestespesifikasjon:$tjenestespesifikasjonerVersion")
-
     implementation("com.sun.xml.ws:jaxws-ri:$jaxRiVersion")
     implementation("com.sun.activation:javax.activation:$javaxActivationVersion")
-
-    implementation("org.apache.cxf:cxf-rt-features-logging:$cxfVersion")
-    implementation("org.apache.cxf:cxf-rt-ws-security:$cxfVersion")
-    implementation("org.apache.cxf:cxf-rt-ws-policy:$cxfVersion")
-    implementation("org.apache.cxf:cxf-rt-transports-http:$cxfVersion")
-    implementation("org.apache.cxf:cxf-rt-frontend-jaxws:$cxfVersion")
 
     implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
@@ -83,8 +71,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
     implementation("org.springframework.boot:spring-boot-starter-aop:$springBootVersion")
-
-    implementation("org.springframework.retry:spring-retry:$springRetryVersion")
 
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")

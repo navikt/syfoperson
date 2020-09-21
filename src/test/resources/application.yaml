@@ -27,11 +27,6 @@ srv.password: "password"
 
 fasit.environment.name: 'local'
 
-virksomhet:
-  egenansatt.v1.endpointurl: "egenansattv1.url"
-
-egenansatt.withmock: true
-
 tilgangskontrollapi.url: "https://tilgangskontroll.nais.no"
 security.token.service.rest.url: "https://sts.nais.no"
 pdl.url: "https://pdl.nais.no"
