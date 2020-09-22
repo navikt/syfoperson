@@ -1,12 +1,12 @@
 package no.nav.syfo.controller
 
 import no.nav.security.oidc.api.ProtectedWithClaims
-import no.nav.syfo.consumer.EgenAnsattConsumer
 import no.nav.syfo.controller.domain.*
 import no.nav.syfo.oidc.OIDCIssuer.AZURE
 import no.nav.syfo.pdl.*
 import no.nav.syfo.service.SkjermingskodeService
 import no.nav.syfo.service.VeilederTilgangService
+import no.nav.syfo.skjermedepersoner.SkjermedePersonerPipConsumer
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.web.bind.annotation.*
 import javax.inject.Inject
@@ -15,9 +15,9 @@ import javax.inject.Inject
 @RequestMapping(value = ["/api/person"])
 @ProtectedWithClaims(issuer = AZURE)
 class PersonController @Inject constructor(
-        val egenAnsattConsumer: EgenAnsattConsumer,
         val pdlConsumer: PdlConsumer,
         val skjermingskodeService: SkjermingskodeService,
+        val skjermedePersonerPipConsumer: SkjermedePersonerPipConsumer,
         val veilederTilgangService: VeilederTilgangService
 ) {
     @PostMapping(value = ["/info"], produces = [APPLICATION_JSON_VALUE])
@@ -45,7 +45,7 @@ class PersonController @Inject constructor(
     @ResponseBody
     @GetMapping(value = ["/egenansatt/{fnr}"], produces = [APPLICATION_JSON_VALUE])
     fun isEgenAnsatt(@PathVariable fnr: Fnr): Boolean {
-        return egenAnsattConsumer.isEgenAnsatt(fnr.fnr)
+        return skjermedePersonerPipConsumer.erSkjermet(fnr.fnr)
     }
 
     @ResponseBody
