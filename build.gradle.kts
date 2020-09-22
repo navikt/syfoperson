@@ -7,7 +7,6 @@ group = "no.nav.syfo"
 version = "1.0.0"
 
 val springBootVersion = "2.1.8.RELEASE"
-val jaxRsApiVersion = "2.0.1"
 val jaxRiVersion = "2.3.2"
 val nimbusSDKVersion = "7.0.3"
 val oidcSupportVersion = "0.2.18"
@@ -26,17 +25,6 @@ plugins {
     kotlin("jvm") version "1.3.31"
     id("com.github.johnrengelman.shadow") version "4.0.3"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.3.50"
-}
-
-buildscript {
-    dependencies {
-        classpath("javax.xml.bind:jaxb-api:2.4.0-b180830.0359")
-        classpath("org.glassfish.jaxb:jaxb-runtime:2.4.0-b180830.0438")
-        classpath("com.sun.activation:javax.activation:1.2.0")
-        classpath("com.sun.xml.ws:jaxws-tools:2.3.1") {
-            exclude(group = "com.sun.xml.ws", module = "policy")
-        }
-    }
 }
 
 allOpen {
@@ -75,7 +63,6 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
-    implementation("javax.ws.rs:javax.ws.rs-api:$jaxRsApiVersion")
     implementation("javax.inject:javax.inject:$javaxInjectVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
 
