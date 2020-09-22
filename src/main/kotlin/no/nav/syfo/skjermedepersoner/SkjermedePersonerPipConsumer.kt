@@ -16,7 +16,7 @@ class SkjermedePersonerPipConsumer @Inject constructor(
     private val metric: Metric,
     private val restTemplate: RestTemplate
 ) {
-    @Cacheable(cacheNames = [EGNEANSATTBYFNR], key = "#fnr", condition = "#fnr != null")
+    @Cacheable(cacheNames = [EGNEANSATTBYFNR], key = "#personIdent", condition = "#personIdent != null")
     fun erSkjermet(personIdent: String): Boolean {
         try {
             val response = restTemplate.exchange(
