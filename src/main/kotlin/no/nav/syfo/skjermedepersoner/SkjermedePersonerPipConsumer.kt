@@ -16,8 +16,6 @@ class SkjermedePersonerPipConsumer @Inject constructor(
     private val metric: Metric,
     private val restTemplate: RestTemplate
 ) {
-    private val log = LoggerFactory.getLogger(SkjermedePersonerPipConsumer::class.java)
-
     @Cacheable(cacheNames = [EGNEANSATTBYFNR], key = "#fnr", condition = "#fnr != null")
     fun erSkjermet(personIdent: String): Boolean {
         try {
@@ -33,7 +31,7 @@ class SkjermedePersonerPipConsumer @Inject constructor(
         } catch (e: RestClientResponseException) {
             metric.countEvent("call_skjermede_person_pip_fail")
             val message = "Call to get response from Skjermede Person failed with status: ${e.rawStatusCode} and message: ${e.responseBodyAsString}"
-            log.error(message)
+            LOG.error(message)
             throw e
         }
     }
@@ -48,5 +46,9 @@ class SkjermedePersonerPipConsumer @Inject constructor(
         headers[NAV_CONSUMER_ID_HEADER] = APP_CONSUMER_ID
         headers[NAV_CALL_ID_HEADER] = createCallId()
         return HttpEntity(headers)
+    }
+
+    companion object {
+        private val LOG = LoggerFactory.getLogger(SkjermedePersonerPipConsumer::class.java)
     }
 }
