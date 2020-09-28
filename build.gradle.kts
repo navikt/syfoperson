@@ -17,7 +17,6 @@ val commonsLangVersion = "3.5"
 val commonsTextVersion = "1.8"
 val javaxActivationVersion = "1.2.0"
 val javaxInjectVersion = "1"
-val kotlinLibVersion = "1.3.60"
 val kotlinJacksonVersion = "2.9.8"
 
 plugins {
@@ -42,8 +41,9 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinLibVersion")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinLibVersion")
+    implementation(kotlin("stdlib"))
+    implementation(kotlin("reflect"))
+
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$kotlinJacksonVersion")
 
     implementation("com.nimbusds:oauth2-oidc-sdk:$nimbusSDKVersion")
