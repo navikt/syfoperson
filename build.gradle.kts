@@ -6,7 +6,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav.syfo"
 version = "1.0.0"
 
-val springBootVersion = "2.1.8.RELEASE"
 val jaxRiVersion = "2.3.2"
 val nimbusSDKVersion = "7.0.3"
 val oidcSupportVersion = "0.2.18"
@@ -25,6 +24,8 @@ plugins {
     kotlin("jvm") version "1.3.31"
     id("com.github.johnrengelman.shadow") version "4.0.3"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.3.50"
+    id("org.springframework.boot") version "2.1.8.RELEASE"
+    id("io.spring.dependency-management") version "1.0.9.RELEASE"
 }
 
 allOpen {
@@ -52,13 +53,13 @@ dependencies {
     implementation("com.sun.xml.ws:jaxws-ri:$jaxRiVersion")
     implementation("com.sun.activation:javax.activation:$javaxActivationVersion")
 
-    implementation("org.springframework.boot:spring-boot-starter-web:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-jersey:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-logging:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-data-redis:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion")
-    implementation("org.springframework.boot:spring-boot-starter-aop:$springBootVersion")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-jersey")
+    implementation("org.springframework.boot:spring-boot-starter-logging")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+    implementation("org.springframework.boot:spring-boot-starter-jetty")
+    implementation("org.springframework.boot:spring-boot-starter-aop")
 
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
@@ -66,7 +67,7 @@ dependencies {
     implementation("javax.inject:javax.inject:$javaxInjectVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
 
-    testImplementation("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("no.nav.security:oidc-test-support:$oidcSupportVersion")
 }
 
