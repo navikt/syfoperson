@@ -20,7 +20,7 @@ val javaxInjectVersion = "1"
 val kotlinJacksonVersion = "2.9.8"
 
 plugins {
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.4.10"
     id("com.github.johnrengelman.shadow") version "4.0.3"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.3.50"
     id("org.springframework.boot") version "2.3.4.RELEASE"
