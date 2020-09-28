@@ -10,7 +10,7 @@ val jaxRiVersion = "2.3.2"
 val nimbusSDKVersion = "7.0.3"
 val oidcSupportVersion = "0.2.18"
 val tokenSupportVersion = "1.0.1"
-val prometheusVersion = "1.0.6"
+val prometheusVersion = "1.5.5"
 val logstashVersion = "4.10"
 val slf4jVersion = "1.7.25"
 val commonsLangVersion = "3.5"
@@ -23,7 +23,7 @@ plugins {
     kotlin("jvm") version "1.3.72"
     id("com.github.johnrengelman.shadow") version "4.0.3"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.3.50"
-    id("org.springframework.boot") version "2.2.10.RELEASE"
+    id("org.springframework.boot") version "2.3.4.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
 }
 
