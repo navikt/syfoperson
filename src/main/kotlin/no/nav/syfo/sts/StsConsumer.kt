@@ -14,11 +14,11 @@ import java.time.LocalDateTime
 
 @Service
 class StsConsumer(
-        private val metric: Metric,
-        @Value("\${security.token.service.rest.url}") private val baseUrl: String,
-        @Value("\${srv.username}") private val username: String,
-        @Value("\${srv.password}") private val password: String,
-        private val template: RestTemplate
+    private val metric: Metric,
+    @Value("\${security.token.service.rest.url}") private val baseUrl: String,
+    @Value("\${srv.username}") private val username: String,
+    @Value("\${srv.password}") private val password: String,
+    private val template: RestTemplate
 ) {
     private val getStsTokenUriTemplate: UriComponentsBuilder = fromHttpUrl(getStsTokenUrl())
 
@@ -33,10 +33,10 @@ class StsConsumer(
 
             try {
                 val response = template.exchange<StsToken>(
-                        stsTokenUri,
-                        HttpMethod.GET,
-                        request,
-                        object : ParameterizedTypeReference<StsToken>() {}
+                    stsTokenUri,
+                    HttpMethod.GET,
+                    request,
+                    object : ParameterizedTypeReference<StsToken>() {}
                 )
                 cachedOidcToken = response.body
                 metric.countEvent(METRIC_CALL_STS_SUCCESS)
@@ -68,9 +68,9 @@ class StsConsumer(
 }
 
 data class StsToken(
-        val access_token: String,
-        val token_type: String,
-        val expires_in: Int
+    val access_token: String,
+    val token_type: String,
+    val expires_in: Int
 ) {
     val expirationTime: LocalDateTime = LocalDateTime.now().plusSeconds(expires_in - 10L)
 

@@ -25,12 +25,12 @@ class ControllerExceptionHandler @Inject constructor(private val metric: Metric)
     private val notFoundMsg = "Fant ikke ressurs"
 
     @ExceptionHandler(
-            Exception::class,
-            ConstraintViolationException::class,
-            ForbiddenException::class,
-            IllegalArgumentException::class,
-            JwtTokenUnauthorizedException::class,
-            NotFoundException::class
+        Exception::class,
+        ConstraintViolationException::class,
+        ForbiddenException::class,
+        IllegalArgumentException::class,
+        JwtTokenUnauthorizedException::class,
+        NotFoundException::class
     )
     fun handleException(ex: Exception, request: WebRequest): ResponseEntity<ApiError> {
         val headers = HttpHeaders()
@@ -50,32 +50,32 @@ class ControllerExceptionHandler @Inject constructor(private val metric: Metric)
     }
 
     private fun handleConstraintViolationException(
-            ex: ConstraintViolationException,
-            headers: HttpHeaders,
-            request: WebRequest
+        ex: ConstraintViolationException,
+        headers: HttpHeaders,
+        request: WebRequest
     ): ResponseEntity<ApiError> {
         return handleExceptionInternal(
-                ex,
-                ApiError(HttpStatus.BAD_REQUEST.value(), basRequestMsg),
-                headers,
-                HttpStatus.BAD_REQUEST,
-                request
+            ex,
+            ApiError(HttpStatus.BAD_REQUEST.value(), basRequestMsg),
+            headers,
+            HttpStatus.BAD_REQUEST,
+            request
         )
     }
 
     private fun handleForbiddenException(
-            ex: ForbiddenException,
-            headers: HttpHeaders,
-            request: WebRequest
+        ex: ForbiddenException,
+        headers: HttpHeaders,
+        request: WebRequest
     ): ResponseEntity<ApiError> {
         val status = HttpStatus.FORBIDDEN
         return handleExceptionInternal(ex, ApiError(status.value(), forbiddenMsg), headers, status, request)
     }
 
     private fun handleIllegalArgumentException(
-            ex: IllegalArgumentException,
-            headers: HttpHeaders,
-            request: WebRequest
+        ex: IllegalArgumentException,
+        headers: HttpHeaders,
+        request: WebRequest
     ): ResponseEntity<ApiError> {
         val status = HttpStatus.BAD_REQUEST
         return handleExceptionInternal(ex, ApiError(status.value(), basRequestMsg), headers, status, request)
@@ -91,20 +91,20 @@ class ControllerExceptionHandler @Inject constructor(private val metric: Metric)
     }
 
     private fun handleNotFoundException(
-            ex: NotFoundException,
-            headers: HttpHeaders,
-            request: WebRequest
+        ex: NotFoundException,
+        headers: HttpHeaders,
+        request: WebRequest
     ): ResponseEntity<ApiError> {
         val status = HttpStatus.NOT_FOUND
         return handleExceptionInternal(ex, ApiError(status.value(), notFoundMsg), headers, status, request)
     }
 
     private fun handleExceptionInternal(
-            ex: Exception,
-            body: ApiError,
-            headers: HttpHeaders,
-            status: HttpStatus,
-            request: WebRequest
+        ex: Exception,
+        body: ApiError,
+        headers: HttpHeaders,
+        status: HttpStatus,
+        request: WebRequest
     ): ResponseEntity<ApiError> {
         metric.tellHttpKall(status.value())
 

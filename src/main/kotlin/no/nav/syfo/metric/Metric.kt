@@ -10,18 +10,20 @@ class Metric @Inject constructor(private val registry: MeterRegistry) {
 
     fun countEvent(name: String) {
         registry.counter(
-                addPrefix(name),
-                Tags.of("type", "info")
+            addPrefix(name),
+            Tags.of("type", "info")
         ).increment()
     }
 
     fun tellHttpKall(kode: Int) {
         registry.counter(
-                addPrefix("httpstatus"),
-                Tags.of(
-                        "type", "info",
-                        "kode", kode.toString()
-                )
+            addPrefix("httpstatus"),
+            Tags.of(
+                "type",
+                "info",
+                "kode",
+                kode.toString()
+            )
         ).increment()
     }
 

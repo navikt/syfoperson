@@ -15,10 +15,10 @@ import javax.inject.Inject
 @RequestMapping(value = ["/api/person"])
 @ProtectedWithClaims(issuer = AZURE)
 class PersonController @Inject constructor(
-        val pdlConsumer: PdlConsumer,
-        val skjermingskodeService: SkjermingskodeService,
-        val skjermedePersonerPipConsumer: SkjermedePersonerPipConsumer,
-        val veilederTilgangService: VeilederTilgangService
+    val pdlConsumer: PdlConsumer,
+    val skjermingskodeService: SkjermingskodeService,
+    val skjermedePersonerPipConsumer: SkjermedePersonerPipConsumer,
+    val veilederTilgangService: VeilederTilgangService
 ) {
     @PostMapping(value = ["/info"], produces = [APPLICATION_JSON_VALUE])
     fun getPersoninfoForPersons(@RequestBody brukerFnrListe: List<Fnr>): List<PersonInfo> {
@@ -27,8 +27,8 @@ class PersonController @Inject constructor(
         return brukerFnrListe.map {
             val person = pdlConsumer.person(it)
             PersonInfo(
-                    it.fnr,
-                    skjermingskodeService.hentBrukersSkjermingskode(person, it.fnr)
+                it.fnr,
+                skjermingskodeService.hentBrukersSkjermingskode(person, it.fnr)
             )
         }
     }
@@ -37,8 +37,8 @@ class PersonController @Inject constructor(
     @GetMapping(value = ["/navn/{fnr}"], produces = [APPLICATION_JSON_VALUE])
     fun getName(@PathVariable fnr: Fnr): FnrMedNavn {
         return FnrMedNavn(
-                fnr.fnr,
-                pdlConsumer.person(fnr)?.getName() ?: ""
+            fnr.fnr,
+            pdlConsumer.person(fnr)?.getName() ?: ""
         )
     }
 

@@ -14,17 +14,17 @@ import javax.servlet.http.HttpServletResponse
 class CORSFilter : Filter {
 
     private val whitelist = arrayListOf(
-            "https://syfooversikt.nais.adeo.no",
-            "https://syfooversikt.nais.preprod.local",
-            "https://syfooversikt-q1.nais.preprod.local",
-            "https://modiasyfofront.nais.adeo.no",
-            "https://modiasyfofront.nais.preprod.local",
-            "https://modiasyfofront-q1.nais.preprod.local",
-            "https://fastlegefront.nais.adeo.no",
-            "https://fastlegefront.nais.preprod.local",
-            "https://fastlegefront-q1.nais.preprod.local",
-            "https://app.adeo.no",
-            "https://app-q1.adeo.no"
+        "https://syfooversikt.nais.adeo.no",
+        "https://syfooversikt.nais.preprod.local",
+        "https://syfooversikt-q1.nais.preprod.local",
+        "https://modiasyfofront.nais.adeo.no",
+        "https://modiasyfofront.nais.preprod.local",
+        "https://modiasyfofront-q1.nais.preprod.local",
+        "https://fastlegefront.nais.adeo.no",
+        "https://fastlegefront.nais.preprod.local",
+        "https://fastlegefront-q1.nais.preprod.local",
+        "https://app.adeo.no",
+        "https://app-q1.adeo.no"
     )
 
     @Throws(ServletException::class, IOException::class)
@@ -47,7 +47,6 @@ class CORSFilter : Filter {
 
     override fun init(filterConfig: FilterConfig?) {}
 
-
     override fun destroy() {}
 
     private fun requestUriErIkkeMotFeedEllerInternalEndepunkt(uri: String): Boolean {
@@ -57,5 +56,4 @@ class CORSFilter : Filter {
     private fun erWhitelisted(origin: String?): Boolean {
         return origin != null && whitelist.contains(origin)
     }
-
 }

@@ -18,17 +18,17 @@ class CacheConfig {
     fun cacheManager(redisConnectionFactory: RedisConnectionFactory): CacheManager {
         val cacheConfigurations: MutableMap<String, RedisCacheConfiguration> = HashMap()
         val defaultConfig = RedisCacheConfiguration
-                .defaultCacheConfig()
-                .entryTtl(Duration.ofHours(12L))
+            .defaultCacheConfig()
+            .entryTtl(Duration.ofHours(12L))
 
         cacheConfigurations[EGNEANSATTBYFNR] = RedisCacheConfiguration
-                .defaultCacheConfig()
-                .entryTtl(Duration.ofHours(1L))
+            .defaultCacheConfig()
+            .entryTtl(Duration.ofHours(1L))
 
         return RedisCacheManager.builder(redisConnectionFactory)
-                .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig())
-                .withInitialCacheConfigurations(cacheConfigurations)
-                .build()
+            .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig())
+            .withInitialCacheConfigurations(cacheConfigurations)
+            .build()
     }
 
     companion object {

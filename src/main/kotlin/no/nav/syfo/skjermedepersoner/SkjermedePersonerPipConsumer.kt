@@ -37,7 +37,7 @@ class SkjermedePersonerPipConsumer @Inject constructor(
     }
 
     private fun getSkjermedePersonerPipUrl(personIdent: String): String {
-        return "http://skjermede-personer-pip/skjermet?personident=${personIdent}"
+        return "http://skjermede-personer-pip/skjermet?personident=$personIdent"
     }
 
     private fun entity(): HttpEntity<String> {

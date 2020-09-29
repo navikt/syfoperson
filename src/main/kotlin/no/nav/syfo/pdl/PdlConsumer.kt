@@ -15,10 +15,10 @@ import org.springframework.web.client.RestTemplate
 
 @Service
 class PdlConsumer(
-        private val metric: Metric,
-        @Value("\${pdl.url}") private val pdlUrl: String,
-        private val stsConsumer: StsConsumer,
-        private val restTemplate: RestTemplate
+    private val metric: Metric,
+    @Value("\${pdl.url}") private val pdlUrl: String,
+    private val stsConsumer: StsConsumer,
+    private val restTemplate: RestTemplate
 ) {
     fun person(fnr: Fnr): PdlHentPerson? {
         metric.countEvent("call_pdl")
@@ -27,10 +27,10 @@ class PdlConsumer(
         val entity = createRequestEntity(PdlRequest(query, Variables(fnr.fnr)))
         try {
             val pdlPerson = restTemplate.exchange<PdlPersonResponse>(
-                    pdlUrl,
-                    HttpMethod.POST,
-                    entity,
-                    object : ParameterizedTypeReference<PdlPersonResponse>() {}
+                pdlUrl,
+                HttpMethod.POST,
+                entity,
+                object : ParameterizedTypeReference<PdlPersonResponse>() {}
             )
             metric.countEvent("call_pdl_success")
             return pdlPerson.body!!.data

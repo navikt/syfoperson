@@ -14,8 +14,8 @@ import javax.inject.Inject
 
 @Service
 class VeilederTilgangService @Inject constructor(
-        val metric: Metric,
-        val template: RestTemplate
+    val metric: Metric,
+    val template: RestTemplate
 ) : InitializingBean {
     private var instance: VeilederTilgangService? = null
 
@@ -29,8 +29,8 @@ class VeilederTilgangService @Inject constructor(
 
     init {
         tilgangTilBrukerViaAzureUriTemplate = fromHttpUrl(tilgangskontrollUrl)
-                .path(ACCESS_TO_USER_WITH_AZURE_PATH)
-                .queryParam(FNR, FNR_PLACEHOLDER)
+            .path(ACCESS_TO_USER_WITH_AZURE_PATH)
+            .queryParam(FNR, FNR_PLACEHOLDER)
     }
 
     fun hasVeilederAccessToPersonWithAzure(fnr: String): Boolean {
@@ -64,5 +64,4 @@ class VeilederTilgangService @Inject constructor(
         const val ACCESS_TO_USER_WITH_AZURE_PATH = "/bruker"
         private const val FNR_PLACEHOLDER = "{$FNR}"
     }
-
 }
