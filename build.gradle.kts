@@ -12,9 +12,7 @@ val prometheusVersion = "1.5.5"
 val logstashVersion = "4.10"
 val slf4jVersion = "1.7.25"
 val commonsLangVersion = "3.5"
-val commonsTextVersion = "1.8"
 val javaxActivationVersion = "1.2.0"
-val javaxInjectVersion = "1"
 val kotlinJacksonVersion = "2.9.8"
 
 plugins {
@@ -58,7 +56,6 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
-    implementation("javax.inject:javax.inject:$javaxInjectVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("no.nav.security:token-validation-test-support:$tokenValidationSpringSupportVersion")
