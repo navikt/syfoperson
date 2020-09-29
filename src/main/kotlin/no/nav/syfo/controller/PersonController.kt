@@ -1,6 +1,6 @@
 package no.nav.syfo.controller
 
-import no.nav.security.oidc.api.ProtectedWithClaims
+import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.syfo.controller.domain.*
 import no.nav.syfo.oidc.OIDCIssuer.AZURE
 import no.nav.syfo.pdl.*

@@ -4,12 +4,12 @@ spring:
     host: syfoperson-redis
     port: 6379
 
-no.nav.security.oidc:
+no.nav.security.jwt:
   issuers: veileder
   issuer:
     veileder:
-      discoveryurl: <syfonais>
-      accepted_audience: <syfonais>
+      discoveryurl: <nais-manifest>
+      accepted_audience: <nais-manifest>
       cookie_name: isso-idtoken
 
 logging.config: classpath:logback-spring.xml
