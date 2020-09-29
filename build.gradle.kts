@@ -64,11 +64,6 @@ dependencies {
     testImplementation("no.nav.security:token-validation-test-support:$tokenValidationSpringSupportVersion")
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
-
 tasks {
     withType<Jar> {
         manifest.attributes["Main-Class"] = "no.nav.syfo.ApplicationKt"
