@@ -7,9 +7,7 @@ group = "no.nav.syfo"
 version = "1.0.0"
 
 val jaxRiVersion = "2.3.2"
-val nimbusSDKVersion = "7.0.3"
-val oidcSupportVersion = "0.2.18"
-val tokenSupportVersion = "1.0.1"
+val tokenValidationSpringSupportVersion = "1.3.0"
 val prometheusVersion = "1.5.5"
 val logstashVersion = "4.10"
 val slf4jVersion = "1.7.25"
@@ -43,9 +41,6 @@ dependencies {
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$kotlinJacksonVersion")
 
-    implementation("com.nimbusds:oauth2-oidc-sdk:$nimbusSDKVersion")
-    implementation("no.nav.security:oidc-spring-support:$oidcSupportVersion")
-
     implementation("com.sun.xml.ws:jaxws-ri:$jaxRiVersion")
     implementation("com.sun.activation:javax.activation:$javaxActivationVersion")
 
@@ -57,13 +52,15 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-jetty")
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
+    implementation("no.nav.security:token-validation-spring:$tokenValidationSpringSupportVersion")
+
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
     implementation("org.slf4j:slf4j-api:$slf4jVersion")
     implementation("javax.inject:javax.inject:$javaxInjectVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("no.nav.security:oidc-test-support:$oidcSupportVersion")
+    testImplementation("no.nav.security:token-validation-test-support:$tokenValidationSpringSupportVersion")
 }
 
 java {

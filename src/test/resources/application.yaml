@@ -10,7 +10,7 @@ no.nav.modig.security.sts.url: "sts.url"
 
 securitytokenservice.url: "sts.url"
 
-no.nav.security.oidc:
+no.nav.security.jwt:
   issuers: veileder
   issuer:
     veileder:
