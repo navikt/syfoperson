@@ -87,11 +87,7 @@ tasks {
         mergeServiceFiles()
     }
 
-    named<KotlinCompile>("compileKotlin") {
-        kotlinOptions.jvmTarget = "11"
-    }
-
-    named<KotlinCompile>("compileTestKotlin") {
+    withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "11"
     }
 }
