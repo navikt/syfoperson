@@ -11,7 +11,6 @@ val tokenValidationSpringSupportVersion = "1.3.0"
 val prometheusVersion = "1.5.5"
 val logstashVersion = "4.10"
 val slf4jVersion = "1.7.25"
-val commonsLangVersion = "3.5"
 val javaxActivationVersion = "1.2.0"
 val kotlinJacksonVersion = "2.11.2"
 
