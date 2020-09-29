@@ -13,7 +13,7 @@ val logstashVersion = "4.10"
 val slf4jVersion = "1.7.25"
 val commonsLangVersion = "3.5"
 val javaxActivationVersion = "1.2.0"
-val kotlinJacksonVersion = "2.9.8"
+val kotlinJacksonVersion = "2.11.2"
 
 plugins {
     kotlin("jvm") version "1.4.10"
