@@ -56,7 +56,5 @@ spec:
       value: https://pdl-api.nais.preprod.local/graphql
     - name: SECURITY_TOKEN_SERVICE_REST_URL
       value: https://security-token-service.nais.preprod.local
-    - name: SYFOBEHANDLENDEENHET_URL
-      value: https://syfobehandlendeenhet.nais.preprod.local
     - name: TILGANGSKONTROLLAPI_URL
       value: https://syfo-tilgangskontroll.nais.preprod.local/syfo-tilgangskontroll/api/tilgang
