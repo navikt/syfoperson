@@ -1,6 +1,6 @@
 package no.nav.syfo.testhelper
 
-import no.nav.syfo.pdl.*
+import no.nav.syfo.consumer.pdl.*
 
 fun generatePdlPersonNavn(): PdlPersonNavn {
     return PdlPersonNavn(
