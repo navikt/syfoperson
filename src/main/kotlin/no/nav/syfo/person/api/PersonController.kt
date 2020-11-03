@@ -53,4 +53,18 @@ class PersonController @Inject constructor(
     fun getDiskresjonskode(@PathVariable fnr: Fnr): String {
         return pdlConsumer.person(fnr)?.getDiskresjonskode() ?: ""
     }
+
+    @ResponseBody
+    @GetMapping(value = ["/adresse/{fnr}"], produces = [APPLICATION_JSON_VALUE])
+    fun getAdresse(@PathVariable fnr: Fnr): PersonAdresseReponse {
+        veilederTilgangConsumer.throwExceptionIfDeniedAccess(fnr)
+
+        val person = pdlConsumer.person(fnr)
+        return PersonAdresseReponse(
+            navn = person?.getName() ?: "",
+            bostedsadresse = person?.bostedsadresse(),
+            kontaktadresse = person?.kontaktadresse(),
+            oppholdsadresse = person?.oppholdsadresse()
+        )
+    }
 }

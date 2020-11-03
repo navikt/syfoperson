@@ -35,7 +35,10 @@ data class PdlHentPerson(
 
 data class PdlPerson(
     val navn: List<PdlPersonNavn>,
-    val adressebeskyttelse: List<Adressebeskyttelse>?
+    val adressebeskyttelse: List<Adressebeskyttelse>?,
+    val bostedsadresse: List<Bostedsadresse>?,
+    val kontaktadresse: List<Kontaktadresse>?,
+    val oppholdsadresse: List<Oppholdsadresse>?,
 ) : Serializable
 
 data class PdlPersonNavn(
@@ -110,4 +113,28 @@ fun PdlHentPerson.getName(): String? {
             "$firstName ${middleName.lowerCapitalize()} $surName"
         }
     }
+}
+
+fun PdlHentPerson.bostedsadresse(): Bostedsadresse? {
+    val bostedsadresse = this.hentPerson?.bostedsadresse
+    if (bostedsadresse.isNullOrEmpty()) {
+        return null
+    }
+    return bostedsadresse.first()
+}
+
+fun PdlHentPerson.kontaktadresse(): Kontaktadresse? {
+    val kontaktadresse = this.hentPerson?.kontaktadresse
+    if (kontaktadresse.isNullOrEmpty()) {
+        return null
+    }
+    return kontaktadresse.first()
+}
+
+fun PdlHentPerson.oppholdsadresse(): Oppholdsadresse? {
+    val oppholdsadresse = this.hentPerson?.oppholdsadresse
+    if (oppholdsadresse.isNullOrEmpty()) {
+        return null
+    }
+    return oppholdsadresse.first()
 }

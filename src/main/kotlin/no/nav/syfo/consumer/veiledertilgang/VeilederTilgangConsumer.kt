@@ -1,6 +1,7 @@
 package no.nav.syfo.consumer.veiledertilgang
 
 import no.nav.syfo.metric.Metric
+import no.nav.syfo.person.api.domain.Fnr
 import no.nav.syfo.util.EnvironmentUtil
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.InitializingBean
@@ -11,6 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder.fromHttpUrl
 import java.net.URI
 import java.util.Collections.singletonMap
 import javax.inject.Inject
+import javax.ws.rs.ForbiddenException
 
 @Service
 class VeilederTilgangConsumer @Inject constructor(
@@ -31,6 +33,13 @@ class VeilederTilgangConsumer @Inject constructor(
         tilgangTilBrukerViaAzureUriTemplate = fromHttpUrl(tilgangskontrollUrl)
             .path(ACCESS_TO_USER_WITH_AZURE_PATH)
             .queryParam(FNR, FNR_PLACEHOLDER)
+    }
+
+    fun throwExceptionIfDeniedAccess(fnr: Fnr) {
+        val hasAccess = hasVeilederAccessToPersonWithAzure(fnr.fnr)
+        if (!hasAccess) {
+            throw ForbiddenException()
+        }
     }
 
     fun hasVeilederAccessToPersonWithAzure(fnr: String): Boolean {
