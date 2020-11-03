@@ -6,7 +6,6 @@ import no.nav.syfo.consumer.sts.StsConsumer
 import no.nav.syfo.util.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.*
 import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.stereotype.Service
@@ -26,11 +25,11 @@ class PdlConsumer(
         val query = this::class.java.getResource("/pdl/hentPerson.graphql").readText().replace("[\n\r]", "")
         val entity = createRequestEntity(PdlRequest(query, Variables(fnr.fnr)))
         try {
-            val pdlPerson = restTemplate.exchange<PdlPersonResponse>(
+            val pdlPerson = restTemplate.exchange(
                 pdlUrl,
                 HttpMethod.POST,
                 entity,
-                object : ParameterizedTypeReference<PdlPersonResponse>() {}
+                PdlPersonResponse::class.java
             )
             metric.countEvent("call_pdl_success")
             return pdlPerson.body!!.data
