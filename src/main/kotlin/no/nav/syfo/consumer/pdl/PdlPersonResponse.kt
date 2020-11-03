@@ -15,6 +15,10 @@ data class PdlError(
     val extensions: PdlErrorExtension
 )
 
+fun PdlError.errorMessage(): String {
+    return "${this.message} with code: ${extensions.code} and classification: ${extensions.classification}"
+}
+
 data class PdlErrorLocation(
     val line: Int?,
     val column: Int?
