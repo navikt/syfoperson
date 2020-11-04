@@ -16,6 +16,45 @@ fun generateAdressebeskyttelse(): Adressebeskyttelse {
     )
 }
 
+fun generateBostedsadress(): Bostedsadresse {
+    return Bostedsadresse(
+        angittFlyttedato = null,
+        gyldigFraOgMed = null,
+        gyldigTilOgMed = null,
+        coAdressenavn = null,
+        vegadresse = null,
+        matrikkeladresse = null,
+        utenlandskAdresse = null,
+        ukjentBosted = null
+    )
+}
+
+fun generateKontaktadressee(): Kontaktadresse {
+    return Kontaktadresse(
+        gyldigFraOgMed = null,
+        gyldigTilOgMed = null,
+        type = KontaktadresseType.Innland,
+        coAdressenavn = null,
+        postboksadresse = null,
+        vegadresse = null,
+        postadresseIFrittFormat = null,
+        utenlandskAdresse = null,
+        utenlandskAdresseIFrittFormat = null
+    )
+}
+
+fun generateOppholdsadresse(): Oppholdsadresse {
+    return Oppholdsadresse(
+        gyldigFraOgMed = null,
+        gyldigTilOgMed = null,
+        coAdressenavn = null,
+        utenlandskAdresse = null,
+        vegadresse = null,
+        matrikkeladresse = null,
+        oppholdAnnetSted = null
+    )
+}
+
 fun generatePdlHentPerson(
     pdlPersonNavn: PdlPersonNavn?,
     adressebeskyttelse: Adressebeskyttelse?
@@ -27,6 +66,15 @@ fun generatePdlHentPerson(
             ),
             adressebeskyttelse = listOf(
                 adressebeskyttelse ?: generateAdressebeskyttelse()
+            ),
+            bostedsadresse = listOf(
+                generateBostedsadress()
+            ),
+            kontaktadresse = listOf(
+                generateKontaktadressee()
+            ),
+            oppholdsadresse = listOf(
+                generateOppholdsadresse()
             )
         )
     )
