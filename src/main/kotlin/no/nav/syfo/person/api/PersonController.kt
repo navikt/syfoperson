@@ -1,13 +1,15 @@
 package no.nav.syfo.person.api
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
-import no.nav.syfo.person.api.domain.*
 import no.nav.syfo.api.auth.OIDCIssuer.AZURE
 import no.nav.syfo.consumer.pdl.*
-import no.nav.syfo.person.skjermingskode.SkjermingskodeService
-import no.nav.syfo.consumer.veiledertilgang.VeilederTilgangConsumer
 import no.nav.syfo.consumer.skjermedepersoner.SkjermedePersonerPipConsumer
+import no.nav.syfo.consumer.veiledertilgang.VeilederTilgangConsumer
+import no.nav.syfo.person.api.domain.*
+import no.nav.syfo.person.skjermingskode.SkjermingskodeService
+import no.nav.syfo.util.NAV_PERSONIDENT_HEADER
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
+import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.*
 import javax.inject.Inject
 
@@ -55,11 +57,19 @@ class PersonController @Inject constructor(
     }
 
     @ResponseBody
-    @GetMapping(value = ["/adresse/{fnr}"], produces = [APPLICATION_JSON_VALUE])
-    fun getAdresse(@PathVariable fnr: Fnr): PersonAdresseReponse {
-        veilederTilgangConsumer.throwExceptionIfDeniedAccess(fnr)
+    @GetMapping(value = ["/adresse"], produces = [APPLICATION_JSON_VALUE])
+    fun getAdresse(
+        @RequestHeader headers: MultiValueMap<String, String>
+    ): PersonAdresseReponse {
+        val requestedPersonIdent: String? = headers.getFirst(NAV_PERSONIDENT_HEADER.toLowerCase())
+        if (requestedPersonIdent.isNullOrEmpty()) {
+            throw IllegalArgumentException("Did not find a PersonIdent in request headers")
+        }
+        val fodselsnummer = Fnr(requestedPersonIdent)
 
-        val person = pdlConsumer.person(fnr)
+        veilederTilgangConsumer.throwExceptionIfDeniedAccess(fodselsnummer)
+
+        val person = pdlConsumer.person(fodselsnummer)
         return PersonAdresseReponse(
             navn = person?.getName() ?: "",
             bostedsadresse = person?.bostedsadresse(),
