@@ -60,7 +60,7 @@ class VeilederTilgangConsumer @Inject constructor(
                 return false
             }
         } catch (e: HttpServerErrorException) {
-            LOG.error("HttpServerErrorException mot tilgangskontroll", uri, e)
+            LOG.error("HttpServerErrorException mot tilgangskontroll med status ${e.rawStatusCode}", e)
             metric.countEvent("call_tilgangskontroll_fail")
             return false
         }
