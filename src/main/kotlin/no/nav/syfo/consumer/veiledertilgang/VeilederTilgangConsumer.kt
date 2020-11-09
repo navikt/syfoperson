@@ -43,7 +43,7 @@ class VeilederTilgangConsumer @Inject constructor(
     }
 
     fun hasVeilederAccessToPersonWithAzure(fnr: String): Boolean {
-        val tilgangTilBrukerViaAzureUriMedFnr = tilgangTilBrukerViaAzureUriTemplate.build(singletonMap<String, String>(FNR, fnr))
+        val tilgangTilBrukerViaAzureUriMedFnr = tilgangTilBrukerViaAzureUriTemplate.build(singletonMap(FNR, fnr))
         return callUriWithTemplate(tilgangTilBrukerViaAzureUriMedFnr)
     }
 
