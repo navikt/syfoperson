@@ -14,7 +14,7 @@ query($ident: ID!, $navnHistorikk: Boolean!){
     adressebeskyttelse(historikk: false) {
       gradering
     }
-    bostedsadresse(historikk: true) {
+    bostedsadresse(historikk: false) {
       angittFlyttedato
       gyldigFraOgMed
       gyldigTilOgMed
