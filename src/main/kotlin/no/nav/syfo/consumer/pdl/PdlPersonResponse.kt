@@ -120,7 +120,9 @@ fun PdlHentPerson.bostedsadresse(): Bostedsadresse? {
     if (bostedsadresse.isNullOrEmpty()) {
         return null
     }
-    return bostedsadresse.first()
+    return bostedsadresse.filter {
+        it.gyldigFraOgMed != null
+    }.maxByOrNull { it.gyldigFraOgMed!! }
 }
 
 fun PdlHentPerson.kontaktadresse(): Kontaktadresse? {
@@ -128,7 +130,9 @@ fun PdlHentPerson.kontaktadresse(): Kontaktadresse? {
     if (kontaktadresse.isNullOrEmpty()) {
         return null
     }
-    return kontaktadresse.first()
+    return kontaktadresse.filter {
+        it.gyldigFraOgMed != null
+    }.maxByOrNull { it.gyldigFraOgMed!! }
 }
 
 fun PdlHentPerson.oppholdsadresse(): Oppholdsadresse? {
@@ -136,5 +140,7 @@ fun PdlHentPerson.oppholdsadresse(): Oppholdsadresse? {
     if (oppholdsadresse.isNullOrEmpty()) {
         return null
     }
-    return oppholdsadresse.first()
+    return oppholdsadresse.filter {
+        it.gyldigFraOgMed != null
+    }.maxByOrNull { it.gyldigFraOgMed!! }
 }
