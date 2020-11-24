@@ -37,6 +37,11 @@ spec:
     - "https://syfoperson.nais.adeo.no"
   vault:
     enabled: true
+    paths:
+      - kvPath: "/serviceuser/data/prod/srvsyfoperson"
+        mountPath: "/secrets/serviceuser/syfoperson"
+      - kvPath: "/kv/prod/fss/syfoperson/default"
+        mountPath: "/var/run/secrets/nais.io/vault"
   env:
     - name: APP_NAME
       value: "syfoperson"
