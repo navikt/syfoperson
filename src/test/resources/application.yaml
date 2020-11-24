@@ -6,8 +6,6 @@ server:
   servlet:
     context-path: /syfoperson
 
-no.nav.modig.security.sts.url: "sts.url"
-
 no.nav.security.jwt:
   issuers: veileder
   issuer:
