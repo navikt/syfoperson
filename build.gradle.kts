@@ -18,7 +18,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "9.4.0"
     id("com.github.johnrengelman.shadow") version "6.0.0"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.4.10"
-    id("org.springframework.boot") version "2.3.4.RELEASE"
+    id("org.springframework.boot") version "2.3.7.RELEASE"
     id("io.spring.dependency-management") version "1.0.10.RELEASE"
 }
 
