@@ -1,4 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import com.github.jengelman.gradle.plugins.shadow.transformers.PropertiesFileTransformer
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -72,10 +71,6 @@ tasks {
     }
 
     withType<ShadowJar> {
-        transform(ServiceFileTransformer::class.java) {
-            setPath("META-INF/cxf")
-            include("bus-extensions.txt")
-        }
         transform(PropertiesFileTransformer::class.java) {
             paths = listOf("META-INF/spring.factories")
             mergeStrategy = "append"
