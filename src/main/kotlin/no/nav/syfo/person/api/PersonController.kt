@@ -2,6 +2,8 @@ package no.nav.syfo.person.api
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.syfo.api.auth.OIDCIssuer.AZURE
+import no.nav.syfo.consumer.dkif.DigitalKontaktinfoBolk
+import no.nav.syfo.consumer.dkif.DkifConsumer
 import no.nav.syfo.consumer.pdl.*
 import no.nav.syfo.consumer.skjermedepersoner.SkjermedePersonerPipConsumer
 import no.nav.syfo.consumer.veiledertilgang.VeilederTilgangConsumer
@@ -17,6 +19,7 @@ import javax.inject.Inject
 @RequestMapping(value = ["/api/person"])
 @ProtectedWithClaims(issuer = AZURE)
 class PersonController @Inject constructor(
+    val dkifConsumer: DkifConsumer,
     val pdlConsumer: PdlConsumer,
     val skjermingskodeService: SkjermingskodeService,
     val skjermedePersonerPipConsumer: SkjermedePersonerPipConsumer,
@@ -96,5 +99,22 @@ class PersonController @Inject constructor(
             kontaktadresse = person?.kontaktadresse(),
             oppholdsadresse = person?.oppholdsadresse()
         )
+    }
+
+    @ResponseBody
+    @GetMapping(value = ["/kontaktinformasjon"], produces = [APPLICATION_JSON_VALUE])
+    fun getKontaktInfo(
+        @RequestHeader headers: MultiValueMap<String, String>
+    ): DigitalKontaktinfoBolk {
+        val requestedPersonIdent = headers.getFirst(NAV_PERSONIDENT_HEADER.toLowerCase())
+        if (requestedPersonIdent.isNullOrEmpty()) {
+            throw IllegalArgumentException("Did not find a PersonIdent in request headers")
+        } else {
+            val fodselsnummer = Fnr(requestedPersonIdent)
+
+            veilederTilgangConsumer.throwExceptionIfDeniedAccess(fodselsnummer)
+
+            return dkifConsumer.digitalKontaktinfoBolk(fodselsnummer)
+        }
     }
 }
