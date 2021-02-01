@@ -57,6 +57,26 @@ class PersonController @Inject constructor(
     }
 
     @ResponseBody
+    @GetMapping(value = ["/adressebeskyttelse"], produces = [APPLICATION_JSON_VALUE])
+    fun getAdressebeskyttelse(
+        @RequestHeader headers: MultiValueMap<String, String>
+    ): AdressebeskyttelseResponse {
+        val requestedPersonIdent = headers.getFirst(NAV_PERSONIDENT_HEADER.toLowerCase())
+        if (requestedPersonIdent.isNullOrEmpty()) {
+            throw IllegalArgumentException("Did not find a PersonIdent in request headers")
+        } else {
+            val fodselsnummer = Fnr(requestedPersonIdent)
+
+            veilederTilgangConsumer.throwExceptionIfDeniedAccess(fodselsnummer)
+
+            val adressebeskyttelse = pdlConsumer.isKode6Or7(fodselsnummer)
+            return AdressebeskyttelseResponse(
+                beskyttet = adressebeskyttelse
+            )
+        }
+    }
+
+    @ResponseBody
     @GetMapping(value = ["/adresse"], produces = [APPLICATION_JSON_VALUE])
     fun getAdresse(
         @RequestHeader headers: MultiValueMap<String, String>
