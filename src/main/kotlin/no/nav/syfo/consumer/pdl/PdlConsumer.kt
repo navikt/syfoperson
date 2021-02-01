@@ -1,8 +1,8 @@
 package no.nav.syfo.consumer.pdl
 
-import no.nav.syfo.person.api.domain.Fnr
-import no.nav.syfo.metric.Metric
 import no.nav.syfo.consumer.sts.StsConsumer
+import no.nav.syfo.metric.Metric
+import no.nav.syfo.person.api.domain.Fnr
 import no.nav.syfo.util.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -48,6 +48,10 @@ class PdlConsumer(
             LOG.error("Error from PDL with request-url: $pdlUrl", exception)
             throw exception
         }
+    }
+
+    fun isKode6Or7(fnr: Fnr): Boolean {
+        return person(fnr)?.isKode6Or7() ?: throw PdlRequestFailedException()
     }
 
     private fun createRequestEntity(request: PdlRequest): HttpEntity<PdlRequest> {
