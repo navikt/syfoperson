@@ -32,16 +32,16 @@ class PdlConsumer(
                 PdlPersonResponse::class.java
             )
 
-            val pdlPersonReponse = pdlPerson.body!!
-            return if (pdlPersonReponse.errors != null && pdlPersonReponse.errors.isNotEmpty()) {
+            val pdlPersonResponse = pdlPerson.body!!
+            return if (pdlPersonResponse.errors != null && pdlPersonResponse.errors.isNotEmpty()) {
                 metric.countEvent(CALL_PDL_PERSON_FAIL)
-                pdlPersonReponse.errors.forEach {
+                pdlPersonResponse.errors.forEach {
                     LOG.error("Error while requesting person from PersonDataLosningen: ${it.errorMessage()}")
                 }
                 null
             } else {
                 metric.countEvent(CALL_PDL_PERSON_SUCCESS)
-                pdlPersonReponse.data
+                pdlPersonResponse.data
             }
         } catch (exception: RestClientException) {
             metric.countEvent(CALL_PDL_PERSON_FAIL)

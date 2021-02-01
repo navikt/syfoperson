@@ -80,7 +80,7 @@ class PersonController @Inject constructor(
     @GetMapping(value = ["/adresse"], produces = [APPLICATION_JSON_VALUE])
     fun getAdresse(
         @RequestHeader headers: MultiValueMap<String, String>
-    ): PersonAdresseReponse {
+    ): PersonAdresseResponse {
         val requestedPersonIdent: String? = headers.getFirst(NAV_PERSONIDENT_HEADER.toLowerCase())
         if (requestedPersonIdent.isNullOrEmpty()) {
             throw IllegalArgumentException("Did not find a PersonIdent in request headers")
@@ -90,7 +90,7 @@ class PersonController @Inject constructor(
         veilederTilgangConsumer.throwExceptionIfDeniedAccess(fodselsnummer)
 
         val person = pdlConsumer.person(fodselsnummer)
-        return PersonAdresseReponse(
+        return PersonAdresseResponse(
             navn = person?.getName() ?: "",
             bostedsadresse = person?.bostedsadresse(),
             kontaktadresse = person?.kontaktadresse(),
