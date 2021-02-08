@@ -64,7 +64,7 @@ class PersonController @Inject constructor(
     fun getAdressebeskyttelse(
         @RequestHeader headers: MultiValueMap<String, String>
     ): AdressebeskyttelseResponse {
-        val requestedPersonIdent = headers.getFirst(NAV_PERSONIDENT_HEADER)
+        val requestedPersonIdent = headers.getFirst(NAV_PERSONIDENT_HEADER.toLowerCase())
         if (requestedPersonIdent.isNullOrEmpty()) {
             throw IllegalArgumentException("Did not find a PersonIdent in request headers")
         } else {
@@ -84,7 +84,7 @@ class PersonController @Inject constructor(
     fun getAdresse(
         @RequestHeader headers: MultiValueMap<String, String>
     ): PersonAdresseResponse {
-        val requestedPersonIdent: String? = headers.getFirst(NAV_PERSONIDENT_HEADER)
+        val requestedPersonIdent: String? = headers.getFirst(NAV_PERSONIDENT_HEADER.toLowerCase())
         if (requestedPersonIdent.isNullOrEmpty()) {
             throw IllegalArgumentException("Did not find a PersonIdent in request headers")
         }
@@ -106,7 +106,7 @@ class PersonController @Inject constructor(
     fun getKontaktInfo(
         @RequestHeader headers: MultiValueMap<String, String>
     ): DigitalKontaktinfoBolk {
-        val requestedPersonIdent = headers.getFirst(NAV_PERSONIDENT_HEADER)
+        val requestedPersonIdent = headers.getFirst(NAV_PERSONIDENT_HEADER.toLowerCase())
         if (requestedPersonIdent.isNullOrEmpty()) {
             throw IllegalArgumentException("Did not find a PersonIdent in request headers")
         } else {
