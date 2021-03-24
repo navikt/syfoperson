@@ -11,7 +11,7 @@ Commits til ikke-master-branch bygges uten automatisk deploy.
 
 ### Cache
 
-For caching brukes Redis. Redis pod må startes manuelt ved å kjøre følgdende kommando: `kubectl apply -f redis-config.yaml`.
+For caching brukes Redis. Redis pod må startes manuelt ved å kjøre følgdende kommando: `kubectl apply -f .nais/redis-config.yaml`.
 
 ### Lint
 Kjør `./gradlew --continue ktlintCheck`
