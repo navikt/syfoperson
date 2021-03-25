@@ -39,27 +39,6 @@ class PersonController @Inject constructor(
     }
 
     @ResponseBody
-    @GetMapping(value = ["/navn/{fnr}"], produces = [APPLICATION_JSON_VALUE])
-    fun getNameFnr(@PathVariable fnr: Fnr): FnrMedNavn {
-        return FnrMedNavn(
-            fnr.fnr,
-            pdlConsumer.person(fnr)?.getName() ?: ""
-        )
-    }
-
-    @ResponseBody
-    @GetMapping(value = ["/egenansatt/{fnr}"], produces = [APPLICATION_JSON_VALUE])
-    fun isEgenAnsattFnr(@PathVariable fnr: Fnr): Boolean {
-        return skjermedePersonerPipConsumer.erSkjermet(fnr.fnr)
-    }
-
-    @ResponseBody
-    @GetMapping(value = ["/diskresjonskode/{fnr}"], produces = [APPLICATION_JSON_VALUE])
-    fun getDiskresjonskodeFnr(@PathVariable fnr: Fnr): String {
-        return pdlConsumer.person(fnr)?.getDiskresjonskode() ?: ""
-    }
-
-    @ResponseBody
     @GetMapping(value = ["/navn"], produces = [APPLICATION_JSON_VALUE])
     fun getName(
         @RequestHeader headers: MultiValueMap<String, String>
