@@ -9,7 +9,7 @@ import no.nav.syfo.consumer.skjermedepersoner.SkjermedePersonerPipConsumer
 import no.nav.syfo.consumer.veiledertilgang.VeilederTilgangConsumer
 import no.nav.syfo.person.api.domain.*
 import no.nav.syfo.person.skjermingskode.SkjermingskodeService
-import no.nav.syfo.util.NAV_PERSONIDENT_HEADER
+import no.nav.syfo.util.getPersonIdentHeader
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.*
@@ -64,19 +64,16 @@ class PersonController @Inject constructor(
     fun getAdressebeskyttelse(
         @RequestHeader headers: MultiValueMap<String, String>
     ): AdressebeskyttelseResponse {
-        val requestedPersonIdent = headers.getFirst(NAV_PERSONIDENT_HEADER.toLowerCase())
-        if (requestedPersonIdent.isNullOrEmpty()) {
-            throw IllegalArgumentException("Did not find a PersonIdent in request headers")
-        } else {
-            val fodselsnummer = Fnr(requestedPersonIdent)
+        val requestedPersonIdent = headers.getPersonIdentHeader()?.let { personIdent ->
+            Fnr(personIdent)
+        } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
 
-            veilederTilgangConsumer.throwExceptionIfDeniedAccess(fodselsnummer)
+        veilederTilgangConsumer.throwExceptionIfDeniedAccess(requestedPersonIdent)
 
-            val adressebeskyttelse = pdlConsumer.isKode6Or7(fodselsnummer)
-            return AdressebeskyttelseResponse(
-                beskyttet = adressebeskyttelse
-            )
-        }
+        val adressebeskyttelse = pdlConsumer.isKode6Or7(requestedPersonIdent)
+        return AdressebeskyttelseResponse(
+            beskyttet = adressebeskyttelse
+        )
     }
 
     @ResponseBody
@@ -84,15 +81,13 @@ class PersonController @Inject constructor(
     fun getAdresse(
         @RequestHeader headers: MultiValueMap<String, String>
     ): PersonAdresseResponse {
-        val requestedPersonIdent: String? = headers.getFirst(NAV_PERSONIDENT_HEADER.toLowerCase())
-        if (requestedPersonIdent.isNullOrEmpty()) {
-            throw IllegalArgumentException("Did not find a PersonIdent in request headers")
-        }
-        val fodselsnummer = Fnr(requestedPersonIdent)
+        val requestedPersonIdent = headers.getPersonIdentHeader()?.let { personIdent ->
+            Fnr(personIdent)
+        } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
 
-        veilederTilgangConsumer.throwExceptionIfDeniedAccess(fodselsnummer)
+        veilederTilgangConsumer.throwExceptionIfDeniedAccess(requestedPersonIdent)
 
-        val person = pdlConsumer.person(fodselsnummer)
+        val person = pdlConsumer.person(requestedPersonIdent)
         return PersonAdresseResponse(
             navn = person?.getName() ?: "",
             bostedsadresse = person?.bostedsadresse(),
@@ -106,15 +101,12 @@ class PersonController @Inject constructor(
     fun getKontaktInfo(
         @RequestHeader headers: MultiValueMap<String, String>
     ): DigitalKontaktinfoBolk {
-        val requestedPersonIdent = headers.getFirst(NAV_PERSONIDENT_HEADER.toLowerCase())
-        if (requestedPersonIdent.isNullOrEmpty()) {
-            throw IllegalArgumentException("Did not find a PersonIdent in request headers")
-        } else {
-            val fodselsnummer = Fnr(requestedPersonIdent)
+        val requestedPersonIdent = headers.getPersonIdentHeader()?.let { personIdent ->
+            Fnr(personIdent)
+        } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
 
-            veilederTilgangConsumer.throwExceptionIfDeniedAccess(fodselsnummer)
+        veilederTilgangConsumer.throwExceptionIfDeniedAccess(requestedPersonIdent)
 
-            return dkifConsumer.digitalKontaktinfoBolk(fodselsnummer)
-        }
+        return dkifConsumer.digitalKontaktinfoBolk(requestedPersonIdent)
     }
 }

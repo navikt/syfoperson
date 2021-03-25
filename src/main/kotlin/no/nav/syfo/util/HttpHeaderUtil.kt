@@ -1,5 +1,6 @@
 package no.nav.syfo.util
 
+import org.springframework.util.MultiValueMap
 import java.util.*
 
 const val NAV_CONSUMER_ID_HEADER = "Nav-Consumer-Id"
@@ -14,3 +15,7 @@ const val NAV_CONSUMER_TOKEN_HEADER = "Nav-Consumer-Token"
 const val MDC_CALL_ID = "callId"
 
 fun createCallId(): String = UUID.randomUUID().toString()
+
+fun MultiValueMap<String, String>.getPersonIdentHeader(): String? {
+    return this.getFirst(NAV_PERSONIDENT_HEADER.toLowerCase())
+}
