@@ -40,7 +40,7 @@ class PersonController @Inject constructor(
 
     @ResponseBody
     @GetMapping(value = ["/navn/{fnr}"], produces = [APPLICATION_JSON_VALUE])
-    fun getName(@PathVariable fnr: Fnr): FnrMedNavn {
+    fun getNameFnr(@PathVariable fnr: Fnr): FnrMedNavn {
         return FnrMedNavn(
             fnr.fnr,
             pdlConsumer.person(fnr)?.getName() ?: ""
@@ -49,14 +49,53 @@ class PersonController @Inject constructor(
 
     @ResponseBody
     @GetMapping(value = ["/egenansatt/{fnr}"], produces = [APPLICATION_JSON_VALUE])
-    fun isEgenAnsatt(@PathVariable fnr: Fnr): Boolean {
+    fun isEgenAnsattFnr(@PathVariable fnr: Fnr): Boolean {
         return skjermedePersonerPipConsumer.erSkjermet(fnr.fnr)
     }
 
     @ResponseBody
     @GetMapping(value = ["/diskresjonskode/{fnr}"], produces = [APPLICATION_JSON_VALUE])
-    fun getDiskresjonskode(@PathVariable fnr: Fnr): String {
+    fun getDiskresjonskodeFnr(@PathVariable fnr: Fnr): String {
         return pdlConsumer.person(fnr)?.getDiskresjonskode() ?: ""
+    }
+
+    @ResponseBody
+    @GetMapping(value = ["/navn"], produces = [APPLICATION_JSON_VALUE])
+    fun getName(
+        @RequestHeader headers: MultiValueMap<String, String>
+    ): FnrMedNavn {
+        val requestedPersonIdent = headers.getPersonIdentHeader()?.let { personIdent ->
+            Fnr(personIdent)
+        } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
+
+        return FnrMedNavn(
+            requestedPersonIdent.fnr,
+            pdlConsumer.person(requestedPersonIdent)?.getName() ?: ""
+        )
+    }
+
+    @ResponseBody
+    @GetMapping(value = ["/egenansatt"], produces = [APPLICATION_JSON_VALUE])
+    fun isEgenAnsatt(
+        @RequestHeader headers: MultiValueMap<String, String>
+    ): Boolean {
+        val requestedPersonIdent = headers.getPersonIdentHeader()?.let { personIdent ->
+            Fnr(personIdent)
+        } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
+
+        return skjermedePersonerPipConsumer.erSkjermet(requestedPersonIdent.fnr)
+    }
+
+    @ResponseBody
+    @GetMapping(value = ["/diskresjonskode"], produces = [APPLICATION_JSON_VALUE])
+    fun getDiskresjonskode(
+        @RequestHeader headers: MultiValueMap<String, String>
+    ): String {
+        val requestedPersonIdent = headers.getPersonIdentHeader()?.let { personIdent ->
+            Fnr(personIdent)
+        } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
+
+        return pdlConsumer.person(requestedPersonIdent)?.getDiskresjonskode() ?: ""
     }
 
     @ResponseBody
