@@ -9,7 +9,7 @@ import no.nav.syfo.consumer.skjermedepersoner.SkjermedePersonerPipConsumer
 import no.nav.syfo.consumer.veiledertilgang.VeilederTilgangConsumer
 import no.nav.syfo.person.api.domain.*
 import no.nav.syfo.person.skjermingskode.SkjermingskodeService
-import no.nav.syfo.util.getPersonIdentHeader
+import no.nav.syfo.util.getPersonIdent
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.*
@@ -43,7 +43,7 @@ class PersonController @Inject constructor(
     fun getName(
         @RequestHeader headers: MultiValueMap<String, String>
     ): FnrMedNavn {
-        val requestedPersonIdent = headers.getPersonIdentHeader()?.let { personIdent ->
+        val requestedPersonIdent = headers.getPersonIdent()?.let { personIdent ->
             Fnr(personIdent)
         } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
 
@@ -58,7 +58,7 @@ class PersonController @Inject constructor(
     fun isEgenAnsatt(
         @RequestHeader headers: MultiValueMap<String, String>
     ): Boolean {
-        val requestedPersonIdent = headers.getPersonIdentHeader()?.let { personIdent ->
+        val requestedPersonIdent = headers.getPersonIdent()?.let { personIdent ->
             Fnr(personIdent)
         } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
 
@@ -70,7 +70,7 @@ class PersonController @Inject constructor(
     fun getDiskresjonskode(
         @RequestHeader headers: MultiValueMap<String, String>
     ): String {
-        val requestedPersonIdent = headers.getPersonIdentHeader()?.let { personIdent ->
+        val requestedPersonIdent = headers.getPersonIdent()?.let { personIdent ->
             Fnr(personIdent)
         } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
 
@@ -82,7 +82,7 @@ class PersonController @Inject constructor(
     fun getAdressebeskyttelse(
         @RequestHeader headers: MultiValueMap<String, String>
     ): AdressebeskyttelseResponse {
-        val requestedPersonIdent = headers.getPersonIdentHeader()?.let { personIdent ->
+        val requestedPersonIdent = headers.getPersonIdent()?.let { personIdent ->
             Fnr(personIdent)
         } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
 
@@ -99,7 +99,7 @@ class PersonController @Inject constructor(
     fun getAdresse(
         @RequestHeader headers: MultiValueMap<String, String>
     ): PersonAdresseResponse {
-        val requestedPersonIdent = headers.getPersonIdentHeader()?.let { personIdent ->
+        val requestedPersonIdent = headers.getPersonIdent()?.let { personIdent ->
             Fnr(personIdent)
         } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
 
@@ -119,7 +119,7 @@ class PersonController @Inject constructor(
     fun getKontaktInfo(
         @RequestHeader headers: MultiValueMap<String, String>
     ): DigitalKontaktinfoBolk {
-        val requestedPersonIdent = headers.getPersonIdentHeader()?.let { personIdent ->
+        val requestedPersonIdent = headers.getPersonIdent()?.let { personIdent ->
             Fnr(personIdent)
         } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
 

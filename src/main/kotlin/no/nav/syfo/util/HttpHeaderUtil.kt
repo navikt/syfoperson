@@ -16,6 +16,5 @@ const val MDC_CALL_ID = "callId"
 
 fun createCallId(): String = UUID.randomUUID().toString()
 
-fun MultiValueMap<String, String>.getPersonIdentHeader(): String? {
-    return this.getFirst(NAV_PERSONIDENT_HEADER.toLowerCase())
-}
+fun MultiValueMap<String, String>.getPersonIdent(): String? =
+    this.getFirst(NAV_PERSONIDENT_HEADER.toLowerCase())
