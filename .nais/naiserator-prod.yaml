@@ -37,6 +37,21 @@ spec:
     - "https://syfoperson.intern.nav.no"
     - "https://syfoperson.prod-fss-pub.nais.io"
     - "https://syfoperson.nais.adeo.no"
+  accessPolicy:
+    inbound:
+      rules:
+        - application: finnfastlege
+          namespace: teamsykefravr
+          cluster: prod-fss
+  azure:
+    application:
+      enabled: true
+      tenant: nav.no
+      replyURLs:
+        - "https://syfoperson.intern.nav.no/oauth2/callback"
+      claims:
+        extra:
+          - "NAVident"
   vault:
     enabled: true
     paths:
