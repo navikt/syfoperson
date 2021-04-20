@@ -68,6 +68,10 @@ spec:
       value: "443"
     - name: APPDYNAMICS_CONTROLLER_SSL_ENABLED
       value: "true"
+    - name: SYFOTILGANGSKONTROLL_CLIENT_ID
+      value: "32e36aa5-1d12-452a-9b1e-9f3f557cbb4d"
+    - name: NO_NAV_SECURITY_JWT_ISSUER_VEILEDERAAD_DISCOVERYURL
+      value: "https://login.microsoftonline.com/966ac572-f5b7-4bbe-aa88-c76419c0f851/v2.0/.well-known/openid-configuration"
     - name: NO_NAV_SECURITY_JWT_ISSUER_VEILEDER_DISCOVERYURL
       value: https://login.microsoftonline.com/966ac572-f5b7-4bbe-aa88-c76419c0f851/.well-known/openid-configuration
     - name: NO_NAV_SECURITY_JWT_ISSUER_VEILEDER_ACCEPTEDAUDIENCE

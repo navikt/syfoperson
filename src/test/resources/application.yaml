@@ -7,12 +7,27 @@ server:
     context-path: /syfoperson
 
 no.nav.security.jwt:
-  issuers: veileder
   issuer:
     veileder:
       discoveryurl: http://metadata
       accepted_audience: aud-localhost
       cookie_name: localhost-idtoken
+    veilederaad:
+      discoveryurl: http://metadata
+      accepted_audience: aud-localhost
+      cookie_name: localhost-idtoken
+
+azure:
+  app:
+    client:
+      id: "1345678"
+      secret: "secret"
+  openid:
+    config:
+      token:
+        endpoint: "https://login.microsoftonline.com/id/oauth2/v2.0/token"
+
+syfotilgangskontroll.client.id: "syfotilgangskontrollId"
 
 srvsyfoperson:
   username: "username"

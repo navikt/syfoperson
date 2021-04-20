@@ -5,6 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 group = "no.nav.syfo"
 version = "1.0.0"
 
+val apacheHttpClientVersion = "4.5.13"
 val jaxRiVersion = "2.3.2"
 val tokenValidationSpringSupportVersion = "1.3.0"
 val prometheusVersion = "1.5.5"
@@ -50,6 +51,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
     implementation("no.nav.security:token-validation-spring:$tokenValidationSpringSupportVersion")
+
+    implementation("org.apache.httpcomponents:httpclient:$apacheHttpClientVersion")
 
     implementation("io.micrometer:micrometer-registry-prometheus:$prometheusVersion")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
