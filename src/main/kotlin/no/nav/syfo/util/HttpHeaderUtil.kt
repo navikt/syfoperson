@@ -18,3 +18,6 @@ fun createCallId(): String = UUID.randomUUID().toString()
 
 fun MultiValueMap<String, String>.getPersonIdent(): String? =
     this.getFirst(NAV_PERSONIDENT_HEADER.toLowerCase())
+
+fun getOrCreateCallId(headers: MultiValueMap<String, String>): String = headers.getFirst(NAV_CALL_ID_HEADER.toLowerCase())
+    ?: createCallId()

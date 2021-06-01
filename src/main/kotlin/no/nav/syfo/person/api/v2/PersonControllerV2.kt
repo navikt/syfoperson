@@ -6,13 +6,17 @@ import no.nav.syfo.consumer.dkif.DigitalKontaktinfoBolk
 import no.nav.syfo.consumer.dkif.DkifConsumer
 import no.nav.syfo.consumer.pdl.*
 import no.nav.syfo.consumer.skjermedepersoner.SkjermedePersonerPipConsumer
+import no.nav.syfo.consumer.syketilfelle.domain.toOppfolgingstilfellePersonDTO
 import no.nav.syfo.consumer.veiledertilgang.VeilederTilgangConsumer
+import no.nav.syfo.person.Oppfolgingstilfelle.OppfolgingstilfelleService
 import no.nav.syfo.person.api.domain.*
 import no.nav.syfo.person.skjermingskode.SkjermingskodeService
+import no.nav.syfo.util.getOrCreateCallId
 import no.nav.syfo.util.getPersonIdent
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.*
+import java.lang.RuntimeException
 import javax.inject.Inject
 
 @RestController
@@ -20,6 +24,7 @@ import javax.inject.Inject
 @ProtectedWithClaims(issuer = VEILEDER_AZURE_V2)
 class PersonControllerV2 @Inject constructor(
     val dkifConsumer: DkifConsumer,
+    val oppfolgingstilfelleService: OppfolgingstilfelleService,
     val pdlConsumer: PdlConsumer,
     val skjermingskodeService: SkjermingskodeService,
     val skjermedePersonerPipConsumer: SkjermedePersonerPipConsumer,
@@ -126,5 +131,25 @@ class PersonControllerV2 @Inject constructor(
         veilederTilgangConsumer.throwExceptionIfDeniedAccessAzureOBO(requestedPersonIdent)
 
         return dkifConsumer.digitalKontaktinfoBolk(requestedPersonIdent)
+    }
+
+    @ResponseBody
+    @GetMapping(value = ["/oppfolgingstilfelle"], produces = [APPLICATION_JSON_VALUE])
+    fun getOppfolgingstilfelle(
+        @RequestHeader headers: MultiValueMap<String, String>
+    ): OppfolgingstilfellePersonDTO {
+        val callId = getOrCreateCallId(headers)
+
+        val requestedPersonIdent = headers.getPersonIdent()?.let { personIdent ->
+            Fnr(personIdent)
+        } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
+
+        veilederTilgangConsumer.throwExceptionIfDeniedAccessAzureOBO(requestedPersonIdent)
+
+        return oppfolgingstilfelleService.oppfolgingstilfelle(
+            personIdent = requestedPersonIdent,
+            callId = callId,
+        )?.toOppfolgingstilfellePersonDTO()
+            ?: throw RuntimeException("PersonIdent has no Oppfolgingstilfelle")
     }
 }
