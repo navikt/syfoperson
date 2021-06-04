@@ -19,8 +19,8 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("org.jetbrains.kotlin.plugin.allopen") version "1.4.10"
-    id("org.springframework.boot") version "2.3.7.RELEASE"
-    id("io.spring.dependency-management") version "1.0.10.RELEASE"
+    id("org.springframework.boot") version "2.4.6"
+    id("io.spring.dependency-management") version "1.0.11.RELEASE"
 }
 
 allOpen {
@@ -71,6 +71,10 @@ tasks {
         doLast {
             println(project.version)
         }
+    }
+
+    test {
+        useJUnitPlatform()
     }
 
     withType<ShadowJar> {

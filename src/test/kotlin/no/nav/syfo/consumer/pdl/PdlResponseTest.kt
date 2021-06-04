@@ -3,7 +3,7 @@ package no.nav.syfo.consumer.pdl
 import no.nav.syfo.testhelper.UserConstants
 import no.nav.syfo.testhelper.generatePdlHentPerson
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class PdlResponseTest {
 
