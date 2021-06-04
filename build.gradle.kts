@@ -15,10 +15,10 @@ val javaxActivationVersion = "1.2.0"
 val kotlinJacksonVersion = "2.11.2"
 
 plugins {
-    kotlin("jvm") version "1.4.32"
+    kotlin("jvm") version "1.5.10"
     id("org.jlleitschuh.gradle.ktlint") version "10.1.0"
     id("com.github.johnrengelman.shadow") version "7.0.0"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.4.10"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.5.10"
     id("org.springframework.boot") version "2.4.6"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
 }
@@ -78,6 +78,9 @@ tasks {
     }
 
     withType<ShadowJar> {
+        archiveBaseName.set("app")
+        archiveClassifier.set("")
+        archiveVersion.set("")
         transform(PropertiesFileTransformer::class.java) {
             paths = listOf("META-INF/spring.factories")
             mergeStrategy = "append"
