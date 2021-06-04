@@ -6,7 +6,7 @@ group = "no.nav.syfo"
 version = "1.0.0"
 
 val apacheHttpClientVersion = "4.5.13"
-val jaxRiVersion = "2.3.2"
+val jaxRiVersion = "3.0.1"
 val tokenValidationSpringSupportVersion = "1.3.0"
 val prometheusVersion = "1.5.5"
 val logstashVersion = "4.10"
