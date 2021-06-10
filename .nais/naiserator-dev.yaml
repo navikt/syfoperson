@@ -43,6 +43,9 @@ spec:
         - application: finnfastlege
           namespace: teamsykefravr
           cluster: dev-fss
+        - application: syfooversikt
+          namespace: teamsykefravr
+          cluster: dev-fss
   azure:
     application:
       enabled: true
