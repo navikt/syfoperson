@@ -52,6 +52,8 @@ class PersonControllerV2 @Inject constructor(
             Fnr(personIdent)
         } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
 
+        veilederTilgangConsumer.throwExceptionIfDeniedAccessAzureOBO(requestedPersonIdent)
+
         return FnrMedNavn(
             requestedPersonIdent.fnr,
             pdlConsumer.person(requestedPersonIdent)?.getName() ?: ""
@@ -67,6 +69,8 @@ class PersonControllerV2 @Inject constructor(
             Fnr(personIdent)
         } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
 
+        veilederTilgangConsumer.throwExceptionIfDeniedAccessAzureOBO(requestedPersonIdent)
+
         return skjermedePersonerPipConsumer.erSkjermet(requestedPersonIdent.fnr)
     }
 
@@ -78,6 +82,8 @@ class PersonControllerV2 @Inject constructor(
         val requestedPersonIdent = headers.getPersonIdent()?.let { personIdent ->
             Fnr(personIdent)
         } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
+
+        veilederTilgangConsumer.throwExceptionIfDeniedAccessAzureOBO(requestedPersonIdent)
 
         return pdlConsumer.person(requestedPersonIdent)?.getDiskresjonskode() ?: ""
     }

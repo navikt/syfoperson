@@ -52,6 +52,8 @@ class PersonController @Inject constructor(
             Fnr(personIdent)
         } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
 
+        veilederTilgangConsumer.throwExceptionIfDeniedAccess(requestedPersonIdent)
+
         return FnrMedNavn(
             requestedPersonIdent.fnr,
             pdlConsumer.person(requestedPersonIdent)?.getName() ?: ""
@@ -67,6 +69,8 @@ class PersonController @Inject constructor(
             Fnr(personIdent)
         } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
 
+        veilederTilgangConsumer.throwExceptionIfDeniedAccess(requestedPersonIdent)
+
         return skjermedePersonerPipConsumer.erSkjermet(requestedPersonIdent.fnr)
     }
 
@@ -78,6 +82,8 @@ class PersonController @Inject constructor(
         val requestedPersonIdent = headers.getPersonIdent()?.let { personIdent ->
             Fnr(personIdent)
         } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
+
+        veilederTilgangConsumer.throwExceptionIfDeniedAccess(requestedPersonIdent)
 
         return pdlConsumer.person(requestedPersonIdent)?.getDiskresjonskode() ?: ""
     }
