@@ -18,13 +18,22 @@ class AzureAdV2TokenConsumer @Autowired constructor(
         scopeClientId: String,
         token: String
     ): String {
-        val response = restTemplateWithProxy.exchange(
-            azureTokenEndpoint,
-            HttpMethod.POST,
-            requestEntity(scopeClientId, token),
-            TokenResponse::class.java
-        )
-        return response.body!!.access_token
+        val scopeToken = scopeTokenMap[scopeClientId]
+        return if (scopeToken == null || scopeToken.isExpired()) {
+            val response = restTemplateWithProxy.exchange(
+                azureTokenEndpoint,
+                HttpMethod.POST,
+                requestEntity(scopeClientId, token),
+                TokenResponse::class.java
+            )
+            val tokenResponse = response.body!!
+
+            val azureADV2Token = tokenResponse.toAzureAdV2Token()
+            scopeTokenMap[scopeClientId] = azureADV2Token
+            azureADV2Token.accessToken
+        } else {
+            scopeToken.accessToken
+        }
     }
 
     private fun requestEntity(
@@ -42,5 +51,10 @@ class AzureAdV2TokenConsumer @Autowired constructor(
         body.add("scope", "api://$scopeClientId/.default")
         body.add("requested_token_use", "on_behalf_of")
         return HttpEntity<MultiValueMap<String, String>>(body, headers)
+    }
+
+    companion object {
+        @Volatile
+        private var scopeTokenMap = HashMap<String, AzureAdV2Token>()
     }
 }
