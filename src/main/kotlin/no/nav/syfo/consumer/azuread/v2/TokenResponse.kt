@@ -11,7 +11,7 @@ data class TokenResponse(
 ) : Serializable
 
 fun TokenResponse.toAzureAdV2Token(): AzureAdV2Token {
-    val expiresOn = LocalDateTime.now().plusMinutes(this.expires_in * 1000)
+    val expiresOn = LocalDateTime.now().plusSeconds(this.expires_in)
     return AzureAdV2Token(
         accessToken = this.access_token,
         expires = expiresOn

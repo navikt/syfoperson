@@ -54,7 +54,6 @@ class AzureAdV2TokenConsumer @Autowired constructor(
     }
 
     companion object {
-        @Volatile
-        private var scopeTokenMap = HashMap<String, AzureAdV2Token>()
+        private val scopeTokenMap = HashMap<String, AzureAdV2Token>()
     }
 }
