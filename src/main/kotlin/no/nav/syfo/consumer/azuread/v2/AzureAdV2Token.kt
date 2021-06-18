@@ -8,4 +8,4 @@ data class AzureAdV2Token(
     val expires: LocalDateTime
 ) : Serializable
 
-fun AzureAdV2Token.isExpired() = this.expires < LocalDateTime.now().plusSeconds(120L)
+fun AzureAdV2Token.isExpired() = this.expires < LocalDateTime.now().plusSeconds(120)
