@@ -8,6 +8,7 @@ import no.nav.syfo.metric.Metric
 import no.nav.syfo.person.api.domain.Fnr
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.*
 import org.springframework.stereotype.Service
 import org.springframework.web.client.*
@@ -108,6 +109,29 @@ class VeilederTilgangConsumer @Inject constructor(
         }
     }
 
+    fun hasVeilederAccessToPersonListWithOBOO(
+        personIdentNumberList: List<Fnr>,
+    ): List<String> {
+        val token = tokenFraOIDC(contextHolder, OIDCIssuer.VEILEDER_AZURE_V2)
+        val oboToken = azureAdV2TokenConsumer.getOnBehalfOfToken(
+            scopeClientId = syfotilgangskontrollClientId,
+            token = token
+        )
+        return try {
+            val response = template.exchange(
+                accessToUsersV2Url(),
+                HttpMethod.POST,
+                createPostEntity(oboToken, personIdentNumberList),
+                object : ParameterizedTypeReference<List<String>>() {},
+            )
+            response.body!!
+        } catch (e: RestClientResponseException) {
+            LOG.error("RestClientResponseException mot syfo-tilgangskontroll med status ${e.rawStatusCode}", e)
+            metric.countEvent("call_tilgangskontroll_fail")
+            emptyList()
+        }
+    }
+
     private fun createEntity(token: String): HttpEntity<String> {
         val headers = HttpHeaders()
         headers.accept = listOf(MediaType.APPLICATION_JSON)
@@ -115,14 +139,31 @@ class VeilederTilgangConsumer @Inject constructor(
         return HttpEntity(headers)
     }
 
+    private fun createPostEntity(
+        token: String,
+        personIdentNumberList: List<Fnr>,
+    ): HttpEntity<List<String>> {
+        val body = personIdentNumberList.map { it.fnr }
+        val headers = HttpHeaders()
+        headers.accept = listOf(MediaType.APPLICATION_JSON)
+        headers.contentType = MediaType.APPLICATION_JSON
+        headers.setBearerAuth(token)
+        return HttpEntity(body, headers)
+    }
+
     fun accessToUserV2Url(fnr: Fnr): String {
         return "$tilgangskontrollUrl$ACCESS_TO_USER_WITH_AZURE_V2_PATH/${fnr.fnr}"
+    }
+
+    fun accessToUsersV2Url(): String {
+        return "$tilgangskontrollUrl$ACCESS_TO_USERS_WITH_AZURE_V2_PATH"
     }
 
     companion object {
 
         private val LOG = LoggerFactory.getLogger(VeilederTilgangConsumer::class.java)
         const val FNR = "fnr"
+        const val ACCESS_TO_USERS_WITH_AZURE_V2_PATH = "/navident/brukere"
         const val ACCESS_TO_USER_WITH_AZURE_V2_PATH = "/navident/bruker"
         const val ACCESS_TO_USER_WITH_AZURE_PATH = "/bruker"
         private const val FNR_PLACEHOLDER = "{$FNR}"

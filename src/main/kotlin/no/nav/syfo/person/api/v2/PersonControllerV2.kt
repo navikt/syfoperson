@@ -16,7 +16,6 @@ import no.nav.syfo.util.getPersonIdent
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.util.MultiValueMap
 import org.springframework.web.bind.annotation.*
-import java.lang.RuntimeException
 import javax.inject.Inject
 
 @RestController
@@ -32,15 +31,17 @@ class PersonControllerV2 @Inject constructor(
 ) {
     @PostMapping(value = ["/info"], produces = [APPLICATION_JSON_VALUE])
     fun getPersoninfoForPersons(@RequestBody brukerFnrListe: List<Fnr>): List<PersonInfo> {
-        brukerFnrListe.filter { veilederTilgangConsumer.hasVeilederAccessToPersonWithAzureOBO(it) }
+        val grantedAccessList = veilederTilgangConsumer.hasVeilederAccessToPersonListWithOBOO(brukerFnrListe)
 
-        return brukerFnrListe.map {
-            val person = pdlConsumer.person(it)
-            PersonInfo(
-                it.fnr,
-                skjermingskodeService.hentBrukersSkjermingskode(person, it.fnr)
-            )
-        }
+        return brukerFnrListe
+            .filter { personIdentNumber -> grantedAccessList.contains(personIdentNumber.fnr) }
+            .map {
+                val person = pdlConsumer.person(it)
+                PersonInfo(
+                    it.fnr,
+                    skjermingskodeService.hentBrukersSkjermingskode(person, it.fnr)
+                )
+            }
     }
 
     @ResponseBody
