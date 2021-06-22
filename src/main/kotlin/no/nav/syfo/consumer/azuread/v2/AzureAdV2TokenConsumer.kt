@@ -1,10 +1,12 @@
 package no.nav.syfo.consumer.azuread.v2
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.*
 import org.springframework.http.*
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
+import org.springframework.web.client.RestClientResponseException
 import org.springframework.web.client.RestTemplate
 
 @Component
@@ -20,17 +22,22 @@ class AzureAdV2TokenConsumer @Autowired constructor(
     ): String {
         val scopeToken = scopeTokenMap[scopeClientId]
         return if (scopeToken == null || scopeToken.isExpired()) {
-            val response = restTemplateWithProxy.exchange(
-                azureTokenEndpoint,
-                HttpMethod.POST,
-                requestEntity(scopeClientId, token),
-                TokenResponse::class.java
-            )
-            val tokenResponse = response.body!!
+            try {
+                val response = restTemplateWithProxy.exchange(
+                    azureTokenEndpoint,
+                    HttpMethod.POST,
+                    requestEntity(scopeClientId, token),
+                    TokenResponse::class.java
+                )
+                val tokenResponse = response.body!!
 
-            val azureADV2Token = tokenResponse.toAzureAdV2Token()
-            scopeTokenMap[scopeClientId] = azureADV2Token
-            azureADV2Token.accessToken
+                val azureADV2Token = tokenResponse.toAzureAdV2Token()
+                scopeTokenMap[scopeClientId] = azureADV2Token
+                azureADV2Token.accessToken
+            } catch (e: RestClientResponseException) {
+                log.error("Call to get AzureADV2Token AzureAD for scope: $scopeClientId with status: ${e.rawStatusCode} and message: ${e.responseBodyAsString}", e)
+                throw e
+            }
         } else {
             scopeToken.accessToken
         }
@@ -54,6 +61,8 @@ class AzureAdV2TokenConsumer @Autowired constructor(
     }
 
     companion object {
+        private val log = LoggerFactory.getLogger(AzureAdV2TokenConsumer::class.java)
+
         private val scopeTokenMap = HashMap<String, AzureAdV2Token>()
     }
 }
