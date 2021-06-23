@@ -20,26 +20,19 @@ class AzureAdV2TokenConsumer @Autowired constructor(
         scopeClientId: String,
         token: String
     ): String {
-        val scopeToken = scopeTokenMap[scopeClientId]
-        return if (scopeToken == null || scopeToken.isExpired()) {
-            try {
-                val response = restTemplateWithProxy.exchange(
-                    azureTokenEndpoint,
-                    HttpMethod.POST,
-                    requestEntity(scopeClientId, token),
-                    TokenResponse::class.java
-                )
-                val tokenResponse = response.body!!
+        try {
+            val response = restTemplateWithProxy.exchange(
+                azureTokenEndpoint,
+                HttpMethod.POST,
+                requestEntity(scopeClientId, token),
+                TokenResponse::class.java
+            )
+            val tokenResponse = response.body!!
 
-                val azureADV2Token = tokenResponse.toAzureAdV2Token()
-                scopeTokenMap[scopeClientId] = azureADV2Token
-                azureADV2Token.accessToken
-            } catch (e: RestClientResponseException) {
-                log.error("Call to get AzureADV2Token AzureAD for scope: $scopeClientId with status: ${e.rawStatusCode} and message: ${e.responseBodyAsString}", e)
-                throw e
-            }
-        } else {
-            scopeToken.accessToken
+            return tokenResponse.toAzureAdV2Token().accessToken
+        } catch (e: RestClientResponseException) {
+            log.error("Call to get AzureADV2Token AzureAD for scope: $scopeClientId with status: ${e.rawStatusCode} and message: ${e.responseBodyAsString}", e)
+            throw e
         }
     }
 
@@ -62,7 +55,5 @@ class AzureAdV2TokenConsumer @Autowired constructor(
 
     companion object {
         private val log = LoggerFactory.getLogger(AzureAdV2TokenConsumer::class.java)
-
-        private val scopeTokenMap = HashMap<String, AzureAdV2Token>()
     }
 }
