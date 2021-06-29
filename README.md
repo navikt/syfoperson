@@ -12,7 +12,6 @@ The information retrieved by Syfoperson is made available for frontend applicati
 * Kotlin
 * Spring Boot
 * Redis
-* Postgres
 * Vault
 
 ### Pipeline
