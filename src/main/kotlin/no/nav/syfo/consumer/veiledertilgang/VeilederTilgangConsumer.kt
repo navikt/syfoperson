@@ -12,10 +12,6 @@ import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.*
 import org.springframework.stereotype.Service
 import org.springframework.web.client.*
-import org.springframework.web.util.UriComponentsBuilder
-import org.springframework.web.util.UriComponentsBuilder.fromHttpUrl
-import java.net.URI
-import java.util.Collections.singletonMap
 import javax.inject.Inject
 import javax.ws.rs.ForbiddenException
 
@@ -28,51 +24,6 @@ class VeilederTilgangConsumer @Inject constructor(
     private val contextHolder: TokenValidationContextHolder,
     private val azureAdV2TokenConsumer: AzureAdV2TokenConsumer
 ) {
-    private val tilgangTilBrukerViaAzureUriTemplate: UriComponentsBuilder
-
-    init {
-        tilgangTilBrukerViaAzureUriTemplate = fromHttpUrl(tilgangskontrollUrl)
-            .path(ACCESS_TO_USER_WITH_AZURE_PATH)
-            .queryParam(FNR, FNR_PLACEHOLDER)
-    }
-
-    fun throwExceptionIfDeniedAccess(fnr: Fnr) {
-        val hasAccess = hasVeilederAccessToPersonWithAzure(fnr.fnr)
-        if (!hasAccess) {
-            throw ForbiddenException()
-        }
-    }
-
-    fun hasVeilederAccessToPersonWithAzure(fnr: String): Boolean {
-        val tilgangTilBrukerViaAzureUriMedFnr = tilgangTilBrukerViaAzureUriTemplate.build(singletonMap(FNR, fnr))
-        return callUriWithTemplate(tilgangTilBrukerViaAzureUriMedFnr)
-    }
-
-    private fun callUriWithTemplate(uri: URI): Boolean {
-        val token = tokenFraOIDC(contextHolder, OIDCIssuer.AZURE)
-        return try {
-            val response = template.exchange(
-                uri,
-                HttpMethod.GET,
-                createEntity(token),
-                String::class.java
-            )
-            return response.statusCode.is2xxSuccessful
-        } catch (e: HttpClientErrorException) {
-            if (e.rawStatusCode == 403) {
-                false
-            } else {
-                LOG.error("HttpClientErrorException mot tilgangskontroll", e)
-                metric.countEvent("call_tilgangskontroll_denied")
-                return false
-            }
-        } catch (e: HttpServerErrorException) {
-            LOG.error("HttpServerErrorException mot tilgangskontroll med status ${e.rawStatusCode}", e)
-            metric.countEvent("call_tilgangskontroll_fail")
-            return false
-        }
-    }
-
     fun throwExceptionIfDeniedAccessAzureOBO(fnr: Fnr) {
         val hasAccess = hasVeilederAccessToPersonWithAzureOBO(fnr)
         if (!hasAccess) {
@@ -162,10 +113,7 @@ class VeilederTilgangConsumer @Inject constructor(
     companion object {
 
         private val LOG = LoggerFactory.getLogger(VeilederTilgangConsumer::class.java)
-        const val FNR = "fnr"
         const val ACCESS_TO_USERS_WITH_AZURE_V2_PATH = "/navident/brukere"
         const val ACCESS_TO_USER_WITH_AZURE_V2_PATH = "/navident/bruker"
-        const val ACCESS_TO_USER_WITH_AZURE_PATH = "/bruker"
-        private const val FNR_PLACEHOLDER = "{$FNR}"
     }
 }
