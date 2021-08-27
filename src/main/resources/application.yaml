@@ -5,12 +5,7 @@ spring:
     port: 6379
 
 no.nav.security.jwt:
-  issuers: veileder,veilederaad
   issuer:
-    veileder:
-      discoveryurl: <nais-manifest>
-      accepted_audience: <nais-manifest>
-      cookie_name: isso-idtoken
     veilederaad:
       discoveryurl: ${azure.app.well.known.url}
       accepted_audience: ${azure.app.client.id}
