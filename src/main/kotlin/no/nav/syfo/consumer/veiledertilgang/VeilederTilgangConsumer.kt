@@ -6,6 +6,7 @@ import no.nav.syfo.api.auth.OIDCUtil.tokenFraOIDC
 import no.nav.syfo.consumer.azuread.v2.AzureAdV2TokenConsumer
 import no.nav.syfo.metric.Metric
 import no.nav.syfo.person.api.domain.Fnr
+import no.nav.syfo.util.*
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.ParameterizedTypeReference
@@ -24,6 +25,14 @@ class VeilederTilgangConsumer @Inject constructor(
     private val contextHolder: TokenValidationContextHolder,
     private val azureAdV2TokenConsumer: AzureAdV2TokenConsumer
 ) {
+    private val tilgangskontrollPersonUrl: String
+    private val tilgangskontrollPersonListUrl: String
+
+    init {
+        tilgangskontrollPersonUrl = "$tilgangskontrollUrl$TILGANGSKONTROLL_PERSON_PATH"
+        tilgangskontrollPersonListUrl = "$tilgangskontrollUrl$TILGANGSKONTROLL_PERSON_LIST_PATH"
+    }
+
     fun throwExceptionIfDeniedAccessAzureOBO(fnr: Fnr) {
         val hasAccess = hasVeilederAccessToPersonWithAzureOBO(fnr)
         if (!hasAccess) {
@@ -39,9 +48,12 @@ class VeilederTilgangConsumer @Inject constructor(
         )
         try {
             val response = template.exchange(
-                accessToUserV2Url(fnr),
+                tilgangskontrollPersonUrl,
                 HttpMethod.GET,
-                createEntity(oboToken),
+                createEntity(
+                    personIdentNumber = fnr,
+                    token = oboToken,
+                ),
                 String::class.java
             )
             return response.statusCode.is2xxSuccessful
@@ -70,7 +82,7 @@ class VeilederTilgangConsumer @Inject constructor(
         )
         return try {
             val response = template.exchange(
-                accessToUsersV2Url(),
+                tilgangskontrollPersonListUrl,
                 HttpMethod.POST,
                 createPostEntity(oboToken, personIdentNumberList),
                 object : ParameterizedTypeReference<List<String>>() {},
@@ -83,10 +95,16 @@ class VeilederTilgangConsumer @Inject constructor(
         }
     }
 
-    private fun createEntity(token: String): HttpEntity<String> {
+    private fun createEntity(
+        personIdentNumber: Fnr,
+        token: String,
+    ): HttpEntity<String> {
         val headers = HttpHeaders()
         headers.accept = listOf(MediaType.APPLICATION_JSON)
         headers.setBearerAuth(token)
+        headers[NAV_PERSONIDENT_HEADER] = personIdentNumber.fnr
+        headers[NAV_CALL_ID_HEADER] = createCallId()
+        headers[NAV_CONSUMER_ID_HEADER] = APP_CONSUMER_ID
         return HttpEntity(headers)
     }
 
@@ -102,18 +120,10 @@ class VeilederTilgangConsumer @Inject constructor(
         return HttpEntity(body, headers)
     }
 
-    fun accessToUserV2Url(fnr: Fnr): String {
-        return "$tilgangskontrollUrl$ACCESS_TO_USER_WITH_AZURE_V2_PATH/${fnr.fnr}"
-    }
-
-    fun accessToUsersV2Url(): String {
-        return "$tilgangskontrollUrl$ACCESS_TO_USERS_WITH_AZURE_V2_PATH"
-    }
-
     companion object {
 
         private val LOG = LoggerFactory.getLogger(VeilederTilgangConsumer::class.java)
-        const val ACCESS_TO_USERS_WITH_AZURE_V2_PATH = "/navident/brukere"
-        const val ACCESS_TO_USER_WITH_AZURE_V2_PATH = "/navident/bruker"
+        const val TILGANGSKONTROLL_PERSON_LIST_PATH = "/navident/brukere"
+        const val TILGANGSKONTROLL_PERSON_PATH = "/navident/person"
     }
 }

@@ -76,8 +76,6 @@ spec:
       value: "443"
     - name: APPDYNAMICS_CONTROLLER_SSL_ENABLED
       value: "true"
-    - name: SYFOTILGANGSKONTROLL_CLIENT_ID
-      value: "32e36aa5-1d12-452a-9b1e-9f3f557cbb4d"
     - name: DKIF_URL
       value: https://dkif.nais.preprod.local
     - name: PDL_URL
@@ -86,5 +84,7 @@ spec:
       value: https://security-token-service.nais.preprod.local
     - name: SYFOSYKETILFELLE_URL
       value: "https://syfosyketilfelle.nais.preprod.local"
+    - name: SYFOTILGANGSKONTROLL_CLIENT_ID
+      value: "dev-fss.teamsykefravr.syfo-tilgangskontroll"
     - name: TILGANGSKONTROLLAPI_URL
       value: https://syfo-tilgangskontroll.nais.preprod.local/syfo-tilgangskontroll/api/tilgang
