@@ -90,23 +90,6 @@ class PersonControllerV2 @Inject constructor(
     }
 
     @ResponseBody
-    @GetMapping(value = ["/adressebeskyttelse"], produces = [APPLICATION_JSON_VALUE])
-    fun getAdressebeskyttelse(
-        @RequestHeader headers: MultiValueMap<String, String>
-    ): AdressebeskyttelseResponse {
-        val requestedPersonIdent = headers.getPersonIdent()?.let { personIdent ->
-            Fnr(personIdent)
-        } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
-
-        veilederTilgangConsumer.throwExceptionIfDeniedAccessAzureOBO(requestedPersonIdent)
-
-        val adressebeskyttelse = pdlConsumer.isKode6Or7(requestedPersonIdent)
-        return AdressebeskyttelseResponse(
-            beskyttet = adressebeskyttelse
-        )
-    }
-
-    @ResponseBody
     @GetMapping(value = ["/adresse"], produces = [APPLICATION_JSON_VALUE])
     fun getAdresse(
         @RequestHeader headers: MultiValueMap<String, String>

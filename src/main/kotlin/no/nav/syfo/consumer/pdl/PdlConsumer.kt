@@ -102,10 +102,6 @@ class PdlConsumer(
         }
     }
 
-    fun isKode6Or7(fnr: Fnr): Boolean {
-        return person(fnr)?.isKode6Or7() ?: throw PdlRequestFailedException()
-    }
-
     private fun getPdlQuery(queryFilePath: String): String {
         return this::class.java.getResource(queryFilePath)
             .readText()
