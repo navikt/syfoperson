@@ -32,6 +32,20 @@ class AzureAdV2TokenConsumer @Autowired constructor(
         }
     }
 
+    fun getSystemToken(
+        scopeClientId: String,
+    ): String {
+        try {
+            val requestEntity = systemTokenRequestEntity(
+                scopeClientId = scopeClientId,
+            )
+            return getToken(requestEntity = requestEntity)
+        } catch (e: RestClientResponseException) {
+            log.error("Call to get AzureADV2Token from AzureAD as system for scope: $scopeClientId with status: ${e.rawStatusCode} and message: ${e.responseBodyAsString}", e)
+            throw e
+        }
+    }
+
     private fun getToken(
         requestEntity: HttpEntity<MultiValueMap<String, String>>,
     ): String {
@@ -60,6 +74,20 @@ class AzureAdV2TokenConsumer @Autowired constructor(
         body.add("assertion", token)
         body.add("scope", "api://$scopeClientId/.default")
         body.add("requested_token_use", "on_behalf_of")
+        return HttpEntity<MultiValueMap<String, String>>(body, headers)
+    }
+
+    private fun systemTokenRequestEntity(
+        scopeClientId: String,
+    ): HttpEntity<MultiValueMap<String, String>> {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.MULTIPART_FORM_DATA
+        val body: MultiValueMap<String, String> = LinkedMultiValueMap()
+        body.add("client_id", azureAppClientId)
+        body.add("scope", "api://$scopeClientId/.default")
+        body.add("grant_type", "client_credentials")
+        body.add("client_secret", azureAppClientSecret)
+
         return HttpEntity<MultiValueMap<String, String>>(body, headers)
     }
 

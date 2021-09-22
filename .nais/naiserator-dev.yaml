@@ -78,8 +78,10 @@ spec:
       value: "true"
     - name: DKIF_URL
       value: https://dkif.nais.preprod.local
+    - name: PDL_CLIENT_ID
+      value: "dev-fss.pdl.pdl-api"
     - name: PDL_URL
-      value: https://pdl-api.nais.preprod.local/graphql
+      value: "https://pdl-api.dev.intern.nav.no/graphql"
     - name: SECURITY_TOKEN_SERVICE_REST_URL
       value: https://security-token-service.nais.preprod.local
     - name: SYFOSYKETILFELLE_URL
