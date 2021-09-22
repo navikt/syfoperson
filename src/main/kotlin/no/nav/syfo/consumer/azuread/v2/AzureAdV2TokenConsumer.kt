@@ -21,22 +21,32 @@ class AzureAdV2TokenConsumer @Autowired constructor(
         token: String
     ): String {
         try {
-            val response = restTemplateWithProxy.exchange(
-                azureTokenEndpoint,
-                HttpMethod.POST,
-                requestEntity(scopeClientId, token),
-                TokenResponse::class.java
+            val requestEntity = onBehalfOfRequestEntity(
+                scopeClientId = scopeClientId,
+                token = token
             )
-            val tokenResponse = response.body!!
-
-            return tokenResponse.toAzureAdV2Token().accessToken
+            return getToken(requestEntity = requestEntity)
         } catch (e: RestClientResponseException) {
-            log.error("Call to get AzureADV2Token AzureAD for scope: $scopeClientId with status: ${e.rawStatusCode} and message: ${e.responseBodyAsString}", e)
+            log.error("Call to get AzureADV2Token from AzureAD on behalf of user for scope: $scopeClientId with status: ${e.rawStatusCode} and message: ${e.responseBodyAsString}", e)
             throw e
         }
     }
 
-    private fun requestEntity(
+    private fun getToken(
+        requestEntity: HttpEntity<MultiValueMap<String, String>>,
+    ): String {
+        val response = restTemplateWithProxy.exchange(
+            azureTokenEndpoint,
+            HttpMethod.POST,
+            requestEntity,
+            AzureAdV2TokenResponse::class.java
+        )
+        val tokenResponse = response.body!!
+
+        return tokenResponse.toAzureAdV2Token().accessToken
+    }
+
+    private fun onBehalfOfRequestEntity(
         scopeClientId: String,
         token: String
     ): HttpEntity<MultiValueMap<String, String>> {
