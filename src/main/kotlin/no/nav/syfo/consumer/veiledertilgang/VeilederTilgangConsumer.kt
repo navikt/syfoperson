@@ -2,6 +2,8 @@ package no.nav.syfo.consumer.veiledertilgang
 
 import no.nav.security.token.support.core.context.TokenValidationContextHolder
 import no.nav.syfo.api.auth.OIDCIssuer
+import no.nav.syfo.api.auth.OIDCUtil.getAZPFraOIDC
+import no.nav.syfo.api.auth.OIDCUtil.getNAVIdentFraOIDC
 import no.nav.syfo.api.auth.OIDCUtil.tokenFraOIDC
 import no.nav.syfo.consumer.azuread.v2.AzureAdV2TokenConsumer
 import no.nav.syfo.metric.Metric
@@ -42,9 +44,16 @@ class VeilederTilgangConsumer @Inject constructor(
 
     fun hasVeilederAccessToPersonWithAzureOBO(fnr: Fnr): Boolean {
         val token = tokenFraOIDC(contextHolder, OIDCIssuer.VEILEDER_AZURE_V2)
+        val veilederId = getNAVIdentFraOIDC(contextHolder)
+            ?: throw RuntimeException("Missing veilederId in OIDC-context")
+        val azp = getAZPFraOIDC(contextHolder)
+            ?: throw RuntimeException("Missing azp in OIDC-context")
+
         val oboToken = azureAdV2TokenConsumer.getOnBehalfOfToken(
             scopeClientId = syfotilgangskontrollClientId,
-            token = token
+            token = token,
+            veilederId = veilederId,
+            azp = azp,
         )
         try {
             val response = template.exchange(
@@ -76,9 +85,15 @@ class VeilederTilgangConsumer @Inject constructor(
         personIdentNumberList: List<Fnr>,
     ): List<String> {
         val token = tokenFraOIDC(contextHolder, OIDCIssuer.VEILEDER_AZURE_V2)
+        val veilederId = getNAVIdentFraOIDC(contextHolder)
+            ?: throw RuntimeException("Missing veilederId in OIDC-context")
+        val azp = getAZPFraOIDC(contextHolder)
+            ?: throw RuntimeException("Missing azp in OIDC-context")
         val oboToken = azureAdV2TokenConsumer.getOnBehalfOfToken(
             scopeClientId = syfotilgangskontrollClientId,
-            token = token
+            token = token,
+            veilederId = veilederId,
+            azp = azp,
         )
         return try {
             val response = template.exchange(
