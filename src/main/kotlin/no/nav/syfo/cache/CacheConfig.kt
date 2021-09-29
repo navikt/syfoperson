@@ -25,6 +25,10 @@ class CacheConfig {
             .defaultCacheConfig()
             .entryTtl(Duration.ofHours(1L))
 
+        cacheConfigurations[TOKENS] = RedisCacheConfiguration
+            .defaultCacheConfig()
+            .entryTtl(Duration.ofHours(1L))
+
         return RedisCacheManager.builder(redisConnectionFactory)
             .cacheDefaults(RedisCacheConfiguration.defaultCacheConfig())
             .withInitialCacheConfigurations(cacheConfigurations)
@@ -33,5 +37,6 @@ class CacheConfig {
 
     companion object {
         const val EGNEANSATTBYFNR = "egenAnsattByFnr"
+        const val TOKENS = "tokens"
     }
 }
