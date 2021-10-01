@@ -84,8 +84,6 @@ spec:
       value: "https://pdl-api.dev.intern.nav.no/graphql"
     - name: SECURITY_TOKEN_SERVICE_REST_URL
       value: https://security-token-service.nais.preprod.local
-    - name: SYFOSYKETILFELLE_URL
-      value: "https://syfosyketilfelle.nais.preprod.local"
     - name: SYFOTILGANGSKONTROLL_CLIENT_ID
       value: "dev-fss.teamsykefravr.syfo-tilgangskontroll"
     - name: TILGANGSKONTROLLAPI_URL
