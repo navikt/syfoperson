@@ -38,9 +38,6 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: isdialogmote
-          namespace: teamsykefravr
-          cluster: dev-gcp
         - application: finnfastlege
           namespace: teamsykefravr
           cluster: dev-fss
