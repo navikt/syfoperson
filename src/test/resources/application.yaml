@@ -25,18 +25,8 @@ azure:
 
 syfotilgangskontroll.client.id: "syfotilgangskontrollId"
 
-srvsyfoperson:
-  username: "username"
-  password: "password"
-
-srv.username: "username"
-srv.password: "password"
-
-fasit.environment.name: 'local'
-
 isproxy.client.id: "dev-fss.teamsykefravr.isproxy"
 isproxy.url: "https://isproxy.dev.intern.nav.no"
 tilgangskontrollapi.url: "https://tilgangskontroll.nais.no"
-security.token.service.rest.url: "https://sts.nais.no"
 pdl.client.id: "dev-fss.pdl.pdl-api"
 pdl.url: "https://pdl.nais.no"
