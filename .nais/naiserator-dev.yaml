@@ -63,8 +63,6 @@ spec:
   vault:
     enabled: true
     paths:
-      - kvPath: "/serviceuser/data/dev/srvsyfoperson"
-        mountPath: "/secrets/serviceuser/syfoperson"
       - kvPath: "/kv/preprod/fss/syfoperson/default"
         mountPath: "/var/run/secrets/nais.io/vault"
   env:
@@ -84,8 +82,6 @@ spec:
       value: "dev-fss.pdl.pdl-api"
     - name: PDL_URL
       value: "https://pdl-api.dev.intern.nav.no/graphql"
-    - name: SECURITY_TOKEN_SERVICE_REST_URL
-      value: https://security-token-service.nais.preprod.local
     - name: SYFOTILGANGSKONTROLL_CLIENT_ID
       value: "dev-fss.teamsykefravr.syfo-tilgangskontroll"
     - name: TILGANGSKONTROLLAPI_URL
