@@ -3,6 +3,7 @@ kind: "Application"
 metadata:
   labels:
     team: teamsykefravr
+  namespace: teamsykefravr
   name: syfoperson-redis
 spec:
   image: redis:5-alpine
@@ -12,10 +13,17 @@ spec:
     max: 1
   resources:
     limits:
-      cpu: 250m
+      cpu: 100m
       memory: 256Mi
     requests:
-      cpu: 250m
+      cpu: 100m
       memory: 256Mi
   service:
     port: 6379
+    protocol: redis
+  accessPolicy:
+    inbound:
+      rules:
+        - application: syfoperson
+  envFrom:
+    - secret: syfoperson-redis-password

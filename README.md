@@ -15,7 +15,7 @@ The information retrieved by Syfoperson is made available for frontend applicati
 
 ### Pipeline
 Pipeline is run with Github Action workflows.
-Commits to Master-branch is deployed automatically to dev-fss and prod-fss.
+Commits to Master-branch is deployed automatically to dev-gcp and prod-gcp.
 Commits to non-master-branch is built without automatic deploy.
 
 ### Cache

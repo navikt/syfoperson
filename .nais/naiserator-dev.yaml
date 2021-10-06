@@ -11,13 +11,15 @@ spec:
   liveness:
     path: /syfoperson/internal/isAlive
     initialDelay: 40
-    timeout: 1
-    periodSeconds: 20
+    periodSeconds: 5
+    timeout: 5
     failureThreshold: 3
   readiness:
     path: /syfoperson/internal/isReady
-    initialDelay: 20
-    timeout: 1
+    initialDelay: 40
+    periodSeconds: 5
+    timeout: 5
+    failureThreshold: 3
   resources:
     limits:
       cpu: 1000m
@@ -34,7 +36,6 @@ spec:
     path: /syfoperson/internal/prometheus
   ingresses:
     - "https://syfoperson.dev.intern.nav.no"
-    - "https://syfoperson.dev-fss-pub.nais.io"
   accessPolicy:
     inbound:
       rules:
@@ -47,6 +48,14 @@ spec:
         - application: syfooversikt
           namespace: teamsykefravr
           cluster: dev-fss
+    outbound:
+      external:
+        - host: "isproxy.dev-fss-pub.nais.io"
+        - host: "pdl-api.dev-fss-pub.nais.io"
+        - host: "skjermede-personer-pip.dev.intern.nav.no"
+        - host: "syfo-tilgangskontroll.dev-fss-pub.nais.io"
+      rules:
+        - application: syfoperson-redis
   azure:
     application:
       enabled: true
@@ -56,6 +65,8 @@ spec:
       claims:
         extra:
           - "NAVident"
+  envFrom:
+    - secret: syfoperson-redis-password
   env:
     - name: ISPROXY_CLIENT_ID
       value: "dev-fss.teamsykefravr.isproxy"
@@ -64,8 +75,12 @@ spec:
     - name: PDL_CLIENT_ID
       value: "dev-fss.pdl.pdl-api"
     - name: PDL_URL
-      value: "https://pdl-api.dev.intern.nav.no/graphql"
+      value: "https://pdl-api.dev-fss-pub.nais.io/graphql"
+    - name: SKJERMEDEPERSONERPIP_CLIENT_ID
+      value: "dev-gcp.nom.skjermede-personer-pip"
+    - name: SKJERMEDEPERSONERPIP_URL
+      value: "https://skjermede-personer-pip.dev.intern.nav.no"
     - name: SYFOTILGANGSKONTROLL_CLIENT_ID
       value: "dev-fss.teamsykefravr.syfo-tilgangskontroll"
     - name: TILGANGSKONTROLLAPI_URL
-      value: https://syfo-tilgangskontroll.nais.preprod.local/syfo-tilgangskontroll/api/tilgang
+      value: "https://syfo-tilgangskontroll.dev-fss-pub.nais.io/syfo-tilgangskontroll/api/tilgang"

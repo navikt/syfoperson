@@ -8,7 +8,6 @@ import no.nav.syfo.metric.Metric
 import no.nav.syfo.person.api.domain.Fnr
 import no.nav.syfo.util.*
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.*
 import org.springframework.stereotype.Service
@@ -22,7 +21,7 @@ class DkifConsumer(
     private val azureAdV2TokenConsumer: AzureAdV2TokenConsumer,
     private val contextHolder: TokenValidationContextHolder,
     private val metric: Metric,
-    @Qualifier("restTemplateWithProxy") private val restTemplateProxy: RestTemplate,
+    private val restTemplate: RestTemplate,
 ) {
     private val dkifKontaktinfoUrl: String = "$isproxyBaseUrl$ISPROXY_DKIF_KONTAKTINFORMASJON_PATH"
 
@@ -43,7 +42,7 @@ class DkifConsumer(
             token = oboToken,
         )
         try {
-            val response = restTemplateProxy.exchange(
+            val response = restTemplate.exchange(
                 this.dkifKontaktinfoUrl,
                 HttpMethod.GET,
                 requestEntity,

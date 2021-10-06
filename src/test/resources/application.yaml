@@ -27,6 +27,8 @@ syfotilgangskontroll.client.id: "syfotilgangskontrollId"
 
 isproxy.client.id: "dev-fss.teamsykefravr.isproxy"
 isproxy.url: "https://isproxy.dev.intern.nav.no"
+skjermedepersonerpip.client.id: "dev-gcp.nom.skjermede-personer-pip"
+skjermedepersonerpip.url: "https://skjermede-personer-pip.dev.intern.nav.no"
 tilgangskontrollapi.url: "https://tilgangskontroll.nais.no"
 pdl.client.id: "dev-fss.pdl.pdl-api"
 pdl.url: "https://pdl.nais.no"
