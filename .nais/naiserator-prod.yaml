@@ -76,8 +76,10 @@ spec:
       value: "443"
     - name: APPDYNAMICS_CONTROLLER_SSL_ENABLED
       value: "true"
-    - name: DKIF_URL
-      value: https://dkif.nais.adeo.no
+    - name: ISPROXY_CLIENT_ID
+      value: "prod-fss.teamsykefravr.isproxy"
+    - name: ISPROXY_URL
+      value: "https://isproxy.intern.nav.no"
     - name: PDL_CLIENT_ID
       value: "prod-fss.pdl.pdl-api"
     - name: PDL_URL

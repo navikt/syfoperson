@@ -1,10 +1,14 @@
 package no.nav.syfo.consumer.dkif
 
-import no.nav.syfo.consumer.sts.StsConsumer
+import no.nav.security.token.support.core.context.TokenValidationContextHolder
+import no.nav.syfo.api.auth.OIDCIssuer
+import no.nav.syfo.api.auth.OIDCUtil
+import no.nav.syfo.consumer.azuread.v2.AzureAdV2TokenConsumer
 import no.nav.syfo.metric.Metric
 import no.nav.syfo.person.api.domain.Fnr
 import no.nav.syfo.util.*
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.*
 import org.springframework.stereotype.Service
@@ -13,23 +17,36 @@ import org.springframework.web.client.RestTemplate
 
 @Service
 class DkifConsumer(
-    @Value("\${dkif.url}") private val dkifUrl: String,
+    @Value("\${isproxy.url}") private val isproxyBaseUrl: String,
+    @Value("\${isproxy.client.id}") private val isproxyClientId: String,
+    private val azureAdV2TokenConsumer: AzureAdV2TokenConsumer,
+    private val contextHolder: TokenValidationContextHolder,
     private val metric: Metric,
-    private val stsConsumer: StsConsumer,
-    private val template: RestTemplate
+    @Qualifier("restTemplateWithProxy") private val restTemplateProxy: RestTemplate,
 ) {
-    private val dkifKontaktinfoUrl: String
-
-    init {
-        this.dkifKontaktinfoUrl = "$dkifUrl$DKIF_KONTAKTINFO_PATH"
-    }
+    private val dkifKontaktinfoUrl: String = "$isproxyBaseUrl$ISPROXY_DKIF_KONTAKTINFORMASJON_PATH"
 
     fun digitalKontaktinfoBolk(ident: Fnr): DigitalKontaktinfoBolk {
+        val token = OIDCUtil.tokenFraOIDC(contextHolder, OIDCIssuer.VEILEDER_AZURE_V2)
+        val veilederId = OIDCUtil.getNAVIdentFraOIDC(contextHolder)
+            ?: throw RuntimeException("Missing veilederId in OIDC-context")
+        val azp = OIDCUtil.getAZPFraOIDC(contextHolder)
+            ?: throw RuntimeException("Missing azp in OIDC-context")
+        val oboToken = azureAdV2TokenConsumer.getOnBehalfOfToken(
+            scopeClientId = isproxyClientId,
+            token = token,
+            veilederId = veilederId,
+            azp = azp,
+        )
+        val requestEntity = entity(
+            ident = ident,
+            token = oboToken,
+        )
         try {
-            val response = template.exchange(
+            val response = restTemplateProxy.exchange(
                 this.dkifKontaktinfoUrl,
                 HttpMethod.GET,
-                entity(ident),
+                requestEntity,
                 DigitalKontaktinfoBolk::class.java
             )
 
@@ -37,7 +54,7 @@ class DkifConsumer(
                 metric.countEvent(CALL_DKIF_SUCCESS)
                 return digitalKontakinfoBolk
             } ?: run {
-                val errorMessage = "Failed to get Kontaktinfo from DKIF: ReponseBody is null"
+                val errorMessage = "Failed to get Kontaktinfo from Isproxy-DKIF: ReponseBody is null"
                 LOG.error(errorMessage)
                 throw DKIFRequestFailedException(errorMessage)
             }
@@ -48,8 +65,10 @@ class DkifConsumer(
         }
     }
 
-    private fun entity(ident: Fnr): HttpEntity<String> {
-        val token: String = stsConsumer.token()
+    private fun entity(
+        ident: Fnr,
+        token: String,
+    ): HttpEntity<String> {
         val headers = HttpHeaders()
         headers.contentType = MediaType.APPLICATION_JSON
         headers[HttpHeaders.AUTHORIZATION] = bearerHeader(token)
@@ -62,7 +81,7 @@ class DkifConsumer(
     companion object {
         private val LOG = LoggerFactory.getLogger(DkifConsumer::class.java)
 
-        const val DKIF_KONTAKTINFO_PATH = "/api/v1/personer/kontaktinformasjon"
+        const val ISPROXY_DKIF_KONTAKTINFORMASJON_PATH = "/api/v1/dkif/kontaktinformasjon"
 
         private const val CALL_DKIF_BASE = "call_dkif"
         const val CALL_DKIF_FAIL = "${CALL_DKIF_BASE}_fail"
