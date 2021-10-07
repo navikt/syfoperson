@@ -10,14 +10,16 @@ spec:
   port: 8080
   liveness:
     path: /syfoperson/internal/isAlive
-    initialDelay: 20
-    timeout: 1
-    periodSeconds: 10
+    initialDelay: 40
+    periodSeconds: 5
+    timeout: 5
     failureThreshold: 3
   readiness:
     path: /syfoperson/internal/isReady
-    initialDelay: 20
-    timeout: 1
+    initialDelay: 40
+    periodSeconds: 5
+    timeout: 5
+    failureThreshold: 3
   resources:
     limits:
       cpu: 1000m
@@ -34,7 +36,6 @@ spec:
     path: /syfoperson/internal/prometheus
   ingresses:
     - "https://syfoperson.intern.nav.no"
-    - "https://syfoperson.prod-fss-pub.nais.io"
   accessPolicy:
     inbound:
       rules:
@@ -47,6 +48,14 @@ spec:
         - application: syfooversikt
           namespace: teamsykefravr
           cluster: prod-fss
+    outbound:
+      external:
+        - host: "isproxy.prod-fss-pub.nais.io"
+        - host: "pdl-api.prod-fss-pub.nais.io"
+        - host: "skjermede-personer-pip.intern.nav.no"
+        - host: "syfo-tilgangskontroll.prod-fss-pub.nais.io"
+      rules:
+        - application: syfoperson-redis
   azure:
     application:
       enabled: true
@@ -56,6 +65,8 @@ spec:
       claims:
         extra:
           - "NAVident"
+  envFrom:
+    - secret: syfoperson-redis-password
   env:
     - name: ISPROXY_CLIENT_ID
       value: "prod-fss.teamsykefravr.isproxy"
@@ -64,8 +75,12 @@ spec:
     - name: PDL_CLIENT_ID
       value: "prod-fss.pdl.pdl-api"
     - name: PDL_URL
-      value: "https://pdl-api.intern.nav.no/graphql"
+      value: "https://pdl-api.prod-fss-pub.nais.io/graphql"
+    - name: SKJERMEDEPERSONERPIP_CLIENT_ID
+      value: "prod-gcp.nom.skjermede-personer-pip"
+    - name: SKJERMEDEPERSONERPIP_URL
+      value: "https://skjermede-personer-pip.intern.nav.no"
     - name: SYFOTILGANGSKONTROLL_CLIENT_ID
       value: "prod-fss.teamsykefravr.syfo-tilgangskontroll"
     - name: TILGANGSKONTROLLAPI_URL
-      value: https://syfo-tilgangskontroll.nais.adeo.no/syfo-tilgangskontroll/api/tilgang
+      value: "https://syfo-tilgangskontroll.prod-fss-pub.nais.io/syfo-tilgangskontroll/api/tilgang"
