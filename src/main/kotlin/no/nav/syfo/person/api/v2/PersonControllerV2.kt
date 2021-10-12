@@ -5,10 +5,13 @@ import no.nav.syfo.api.auth.OIDCIssuer.VEILEDER_AZURE_V2
 import no.nav.syfo.consumer.dkif.*
 import no.nav.syfo.consumer.pdl.*
 import no.nav.syfo.consumer.skjermedepersoner.SkjermedePersonerPipConsumer
+import no.nav.syfo.consumer.syketilfelle.toOppfolgingstilfellePersonDTO
 import no.nav.syfo.consumer.veiledertilgang.VeilederTilgangConsumer
 import no.nav.syfo.person.api.domain.*
 import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonBrukerinfo
+import no.nav.syfo.person.oppfolgingstilfelle.OppfolgingstilfelleService
 import no.nav.syfo.person.skjermingskode.SkjermingskodeService
+import no.nav.syfo.util.getOrCreateCallId
 import no.nav.syfo.util.getPersonIdent
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.util.MultiValueMap
@@ -21,6 +24,7 @@ import javax.inject.Inject
 class PersonControllerV2 @Inject constructor(
     val dkifConsumer: DkifConsumer,
     val pdlConsumer: PdlConsumer,
+    val oppfolgingstilfelleService: OppfolgingstilfelleService,
     val skjermingskodeService: SkjermingskodeService,
     val skjermedePersonerPipConsumer: SkjermedePersonerPipConsumer,
     val veilederTilgangConsumer: VeilederTilgangConsumer
@@ -117,6 +121,27 @@ class PersonControllerV2 @Inject constructor(
         veilederTilgangConsumer.throwExceptionIfDeniedAccessAzureOBO(requestedPersonIdent)
 
         return dkifConsumer.digitalKontaktinfoBolk(requestedPersonIdent)
+    }
+
+    @ResponseBody
+    @GetMapping(value = ["/oppfolgingstilfelle/utenarbeidsgiver"], produces = [APPLICATION_JSON_VALUE])
+    fun getOppfolgingstilfelleListUtenArbeidsgiver(
+        @RequestHeader headers: MultiValueMap<String, String>
+    ): List<OppfolgingstilfellePersonDTO> {
+        val callId = getOrCreateCallId(headers = headers)
+
+        val requestedPersonIdent = headers.getPersonIdent()?.let { personIdent ->
+            Fnr(personIdent)
+        } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
+
+        veilederTilgangConsumer.throwExceptionIfDeniedAccessAzureOBO(fnr = requestedPersonIdent)
+
+        return oppfolgingstilfelleService.oppfolgingstilfellePersonUtenArbeidsgiver(
+            callId = callId,
+            personIdent = requestedPersonIdent,
+        )?.toOppfolgingstilfellePersonDTO()?.let {
+            listOf(it)
+        } ?: emptyList()
     }
 
     @ResponseBody
