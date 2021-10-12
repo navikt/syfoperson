@@ -2,12 +2,12 @@ package no.nav.syfo.person.api.v2
 
 import no.nav.security.token.support.core.api.ProtectedWithClaims
 import no.nav.syfo.api.auth.OIDCIssuer.VEILEDER_AZURE_V2
-import no.nav.syfo.consumer.dkif.DigitalKontaktinfoBolk
-import no.nav.syfo.consumer.dkif.DkifConsumer
+import no.nav.syfo.consumer.dkif.*
 import no.nav.syfo.consumer.pdl.*
 import no.nav.syfo.consumer.skjermedepersoner.SkjermedePersonerPipConsumer
 import no.nav.syfo.consumer.veiledertilgang.VeilederTilgangConsumer
 import no.nav.syfo.person.api.domain.*
+import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonBrukerinfo
 import no.nav.syfo.person.skjermingskode.SkjermingskodeService
 import no.nav.syfo.util.getPersonIdent
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
@@ -117,5 +117,25 @@ class PersonControllerV2 @Inject constructor(
         veilederTilgangConsumer.throwExceptionIfDeniedAccessAzureOBO(requestedPersonIdent)
 
         return dkifConsumer.digitalKontaktinfoBolk(requestedPersonIdent)
+    }
+
+    @ResponseBody
+    @GetMapping(value = ["/brukerinfo"], produces = [APPLICATION_JSON_VALUE])
+    fun getBrukerinfo(
+        @RequestHeader headers: MultiValueMap<String, String>
+    ): SyfomodiapersonBrukerinfo {
+        val requestedPersonIdent = headers.getPersonIdent()?.let { personIdent ->
+            Fnr(personIdent)
+        } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
+
+        veilederTilgangConsumer.throwExceptionIfDeniedAccessAzureOBO(requestedPersonIdent)
+
+        val digitalKontaktinfo = dkifConsumer.digitalKontaktinfo(requestedPersonIdent)
+        val name = pdlConsumer.person(requestedPersonIdent)?.getName()
+
+        return SyfomodiapersonBrukerinfo(
+            navn = name,
+            kontaktinfo = digitalKontaktinfo.toSyfomodiapersonKontaktinfo()
+        )
     }
 }

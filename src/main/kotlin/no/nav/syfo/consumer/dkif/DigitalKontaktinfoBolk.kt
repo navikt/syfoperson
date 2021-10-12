@@ -1,5 +1,6 @@
 package no.nav.syfo.consumer.dkif
 
+import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonKontaktinfo
 import java.io.Serializable
 
 data class DigitalKontaktinfoBolk(
@@ -14,6 +15,14 @@ data class DigitalKontaktinfo(
     val mobiltelefonnummer: String? = null,
     val personident: String
 ) : Serializable
+
+fun DigitalKontaktinfo.toSyfomodiapersonKontaktinfo() =
+    SyfomodiapersonKontaktinfo(
+        fnr = this.personident,
+        epost = this.epostadresse,
+        tlf = this.mobiltelefonnummer,
+        skalHaVarsel = this.kanVarsles,
+    )
 
 data class Feil(
     val melding: String

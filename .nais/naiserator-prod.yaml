@@ -71,7 +71,7 @@ spec:
     - name: ISPROXY_CLIENT_ID
       value: "prod-fss.teamsykefravr.isproxy"
     - name: ISPROXY_URL
-      value: "https://isproxy.intern.nav.no"
+      value: "https://isproxy.prod-fss-pub.nais.io"
     - name: PDL_CLIENT_ID
       value: "prod-fss.pdl.pdl-api"
     - name: PDL_URL

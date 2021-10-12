@@ -25,6 +25,30 @@ class DkifConsumer(
 ) {
     private val dkifKontaktinfoUrl: String = "$isproxyBaseUrl$ISPROXY_DKIF_KONTAKTINFORMASJON_PATH"
 
+    fun digitalKontaktinfo(ident: Fnr): DigitalKontaktinfo {
+        val digitalKontaktinfoBolk = digitalKontaktinfoBolk(ident = ident)
+        val kontaktinfo = digitalKontaktinfoBolk.kontaktinfo?.get(ident.fnr)
+        val feil = digitalKontaktinfoBolk.feil?.get(ident.fnr)
+        when {
+            kontaktinfo != null -> {
+                return kontaktinfo
+            }
+            feil != null -> {
+                if (feil.melding == "Ingen kontaktinformasjon er registrert på personen") {
+                    return DigitalKontaktinfo(
+                        kanVarsles = false,
+                        personident = ident.fnr
+                    )
+                } else {
+                    throw DKIFRequestFailedException(feil.melding)
+                }
+            }
+            else -> {
+                throw DKIFRequestFailedException("Kontaktinfo is null")
+            }
+        }
+    }
+
     fun digitalKontaktinfoBolk(ident: Fnr): DigitalKontaktinfoBolk {
         val token = OIDCUtil.tokenFraOIDC(contextHolder, OIDCIssuer.VEILEDER_AZURE_V2)
         val veilederId = OIDCUtil.getNAVIdentFraOIDC(contextHolder)
