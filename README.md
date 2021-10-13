@@ -19,8 +19,8 @@ Commits to Master-branch is deployed automatically to dev-gcp and prod-gcp.
 Commits to non-master-branch is built without automatic deploy.
 
 ### Cache
-A single Redis pod is responsible for caching.
-To deploy the redis pod run: `kubectl apply -f .nais/redis-config.yaml`.
+This application uses Redis for caching. A single Redis pod is responsible for caching. Redis is deployed automatically on changes to workflow or config on master
+branch. For manual deploy, run: `kubectl apply -f .nais/redis-config.yaml`
 
 ### Lint (Ktlint)
 ##### Command line
