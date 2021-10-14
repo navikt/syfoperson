@@ -9,7 +9,7 @@ metadata:
   namespace: teamsykefravr
   name: syfoperson-redis
 spec:
-  image: redis:5-alpine
+  image: bitnami/redis:6.0.12
   port: 6379
   replicas:
     min: 1
@@ -28,5 +28,6 @@ spec:
     inbound:
       rules:
         - application: syfoperson
+        - application: syfoperson-redisexporter
   envFrom:
     - secret: syfoperson-redis-password

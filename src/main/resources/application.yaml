@@ -3,6 +3,7 @@ spring:
   redis:
     host: syfoperson-redis
     port: 6379
+    password: ${redis.password}
 
 no.nav.security.jwt:
   issuer:
