@@ -5,8 +5,10 @@ import no.nav.syfo.api.auth.OIDCIssuer.VEILEDER_AZURE_V2
 import no.nav.syfo.consumer.dkif.*
 import no.nav.syfo.consumer.pdl.*
 import no.nav.syfo.consumer.skjermedepersoner.SkjermedePersonerPipConsumer
+import no.nav.syfo.consumer.syketilfelle.toOppfolgingstilfelleDTO
 import no.nav.syfo.consumer.syketilfelle.toOppfolgingstilfellePersonDTO
 import no.nav.syfo.consumer.veiledertilgang.VeilederTilgangConsumer
+import no.nav.syfo.domain.Virksomhetsnummer
 import no.nav.syfo.person.api.domain.*
 import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonBrukerinfo
 import no.nav.syfo.person.oppfolgingstilfelle.OppfolgingstilfelleService
@@ -121,6 +123,31 @@ class PersonControllerV2 @Inject constructor(
         veilederTilgangConsumer.throwExceptionIfDeniedAccessAzureOBO(requestedPersonIdent)
 
         return dkifConsumer.digitalKontaktinfoBolk(requestedPersonIdent)
+    }
+
+    @ResponseBody
+    @GetMapping(value = ["/oppfolgingstilfelle/arbeidsgiver/{virksomhetsnummer}"], produces = [APPLICATION_JSON_VALUE])
+    fun getOppfolgingstilfelleListArbeidsgiver(
+        @PathVariable virksomhetsnummer: String,
+        @RequestHeader headers: MultiValueMap<String, String>,
+    ): List<OppfolgingstilfelleDTO> {
+        val callId = getOrCreateCallId(headers = headers)
+
+        val requestedPersonIdent = headers.getPersonIdent()?.let { personIdent ->
+            Fnr(personIdent)
+        } ?: throw IllegalArgumentException("Did not find a PersonIdent in request headers")
+
+        val virksomhetsnummerValid = Virksomhetsnummer(virksomhetsnummer)
+
+        veilederTilgangConsumer.throwExceptionIfDeniedAccessAzureOBO(fnr = requestedPersonIdent)
+
+        return oppfolgingstilfelleService.oppfolgingstilfellePersonArbeidsgiver(
+            callId = callId,
+            personIdent = requestedPersonIdent,
+            virksomhetsnummer = virksomhetsnummerValid,
+        )?.toOppfolgingstilfelleDTO()?.let {
+            listOf(it)
+        } ?: emptyList()
     }
 
     @ResponseBody
