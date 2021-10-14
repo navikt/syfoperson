@@ -2,6 +2,7 @@ package no.nav.syfo.consumer.pdl
 
 import no.nav.syfo.consumer.azuread.v2.AzureAdV2TokenConsumer
 import no.nav.syfo.metric.Metric
+import no.nav.syfo.person.api.domain.AktorId
 import no.nav.syfo.person.api.domain.Fnr
 import no.nav.syfo.util.ALLE_TEMA_HEADERVERDI
 import no.nav.syfo.util.TEMA_HEADER
@@ -9,8 +10,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.*
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestClientException
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.*
 
 @Service
 class PdlConsumer(
@@ -20,6 +20,52 @@ class PdlConsumer(
     @Value("\${pdl.client.id}") private val pdlClientId: String,
     @Value("\${pdl.url}") private val pdlUrl: String,
 ) {
+    fun aktorId(personIdent: Fnr, callId: String): AktorId {
+        return identer(personIdent.fnr, callId).aktorId()
+            ?: throw PdlRequestFailedException("Request to get Ident of Type ${IdentType.AKTORID.name} from PDL Failed")
+    }
+
+    fun identer(ident: String, callId: String): PdlHentIdenter? {
+        val request = PdlHentIdenterRequest(
+            query = getPdlQuery("/pdl/hentIdenter.graphql"),
+            variables = PdlHentIdenterRequestVariables(
+                ident = ident,
+                historikk = false,
+                grupper = listOf(
+                    IdentType.AKTORID.name,
+                    IdentType.FOLKEREGISTERIDENT.name
+                )
+            )
+        )
+        val entity = HttpEntity(
+            request,
+            createRequestHeaders()
+        )
+        try {
+            val pdlReponseEntity = restTemplate.exchange(
+                pdlUrl,
+                HttpMethod.POST,
+                entity,
+                PdlHentIdenterResponse::class.java
+            )
+            val pdlIdenterReponse = pdlReponseEntity.body!!
+            return if (pdlIdenterReponse.errors != null && pdlIdenterReponse.errors.isNotEmpty()) {
+                metric.countEvent(CALL_PDL_IDENTER_FAIL)
+                pdlIdenterReponse.errors.forEach {
+                    LOG.error("Error while requesting Identer from PersonDataLosningen: ${it.errorMessage()}")
+                }
+                null
+            } else {
+                metric.countEvent(CALL_PDL_IDENTER_SUCCESS)
+                pdlIdenterReponse.data
+            }
+        } catch (exception: RestClientResponseException) {
+            metric.countEvent(CALL_PDL_IDENTER_FAIL)
+            LOG.error("Error from PDL with request-url: $pdlUrl", exception)
+            throw exception
+        }
+    }
+
     fun person(fnr: Fnr): PdlHentPerson? {
         val request = PdlRequest(
             getPdlQuery("/pdl/hentPerson.graphql"),
@@ -78,5 +124,8 @@ class PdlConsumer(
         private const val CALL_PDL_BASE = "call_pdl"
         const val CALL_PDL_PERSON_FAIL = "${CALL_PDL_BASE}_fail"
         const val CALL_PDL_PERSON_SUCCESS = "${CALL_PDL_BASE}_success"
+
+        const val CALL_PDL_IDENTER_FAIL = "${CALL_PDL_BASE}_identer_fail"
+        const val CALL_PDL_IDENTER_SUCCESS = "${CALL_PDL_BASE}_identer_success"
     }
 }
