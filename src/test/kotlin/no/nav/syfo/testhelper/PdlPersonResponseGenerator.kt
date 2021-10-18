@@ -1,12 +1,12 @@
 package no.nav.syfo.testhelper
 
-import no.nav.syfo.consumer.pdl.*
+import no.nav.syfo.client.pdl.*
 
 fun generatePdlPersonNavn(): PdlPersonNavn {
     return PdlPersonNavn(
-        fornavn = UserConstants.ARBEIDSTAKER_NAME_FIRST,
-        mellomnavn = UserConstants.ARBEIDSTAKER_NAME_MIDDLE,
-        etternavn = UserConstants.ARBEIDSTAKER_NAME_LAST
+        fornavn = UserConstants.PERSON_NAME_FIRST,
+        mellomnavn = UserConstants.PERSON_NAME_MIDDLE,
+        etternavn = UserConstants.PERSON_NAME_LAST
     )
 }
 

@@ -9,13 +9,13 @@ spec:
   image: {{ image }}
   port: 8080
   liveness:
-    path: /syfoperson/internal/isAlive
+    path: /internal/is_alive
     initialDelay: 40
     periodSeconds: 5
     timeout: 5
     failureThreshold: 3
   readiness:
-    path: /syfoperson/internal/isReady
+    path: /internal/is_ready
     initialDelay: 40
     periodSeconds: 5
     timeout: 5
@@ -33,7 +33,7 @@ spec:
     cpuThresholdPercentage: 90
   prometheus:
     enabled: true
-    path: /syfoperson/internal/prometheus
+    path: /internal/metrics
   ingresses:
     - "https://syfoperson.intern.nav.no"
   accessPolicy:
@@ -76,11 +76,13 @@ spec:
       value: "prod-fss.pdl.pdl-api"
     - name: PDL_URL
       value: "https://pdl-api.prod-fss-pub.nais.io/graphql"
+    - name: REDIS_HOST
+      value: "syfoperson-redis.teamsykefravr.svc.cluster.local"
     - name: SKJERMEDEPERSONERPIP_CLIENT_ID
       value: "prod-gcp.nom.skjermede-personer-pip"
     - name: SKJERMEDEPERSONERPIP_URL
       value: "https://skjermede-personer-pip.intern.nav.no"
     - name: SYFOTILGANGSKONTROLL_CLIENT_ID
       value: "prod-fss.teamsykefravr.syfo-tilgangskontroll"
-    - name: TILGANGSKONTROLLAPI_URL
-      value: "https://syfo-tilgangskontroll.prod-fss-pub.nais.io/syfo-tilgangskontroll/api/tilgang"
+    - name: SYFOTILGANGSKONTROLL_URL
+      value: "https://syfo-tilgangskontroll.prod-fss-pub.nais.io"

@@ -1,44 +1,45 @@
 package no.nav.syfo.person.oppfolgingstilfelle
 
-import no.nav.syfo.consumer.pdl.PdlConsumer
-import no.nav.syfo.consumer.syketilfelle.*
+import no.nav.syfo.client.pdl.PdlClient
+import no.nav.syfo.client.syketilfelle.*
+import no.nav.syfo.domain.PersonIdentNumber
 import no.nav.syfo.domain.Virksomhetsnummer
-import no.nav.syfo.person.api.domain.Fnr
-import org.springframework.stereotype.Service
-import javax.inject.Inject
 
-@Service
-class OppfolgingstilfelleService @Inject constructor(
-    private val pdlConsumer: PdlConsumer,
-    private val syketilfelleConsumer: SyketilfelleConsumer
+class OppfolgingstilfelleService(
+    private val pdlClient: PdlClient,
+    private val syketilfelleClient: SyketilfelleClient,
 ) {
-    fun oppfolgingstilfellePersonArbeidsgiver(
+    suspend fun oppfolgingstilfellePersonArbeidsgiver(
         callId: String,
-        personIdent: Fnr,
+        personIdentNumber: PersonIdentNumber,
+        token: String,
         virksomhetsnummer: Virksomhetsnummer,
-    ): KOppfolgingstilfelle? {
-        val personAktorId = pdlConsumer.aktorId(
-            personIdent = personIdent,
+    ): KOppfolgingstilfelleDTO? {
+        val personAktorId = pdlClient.aktorId(
+            personIdentNumber = personIdentNumber,
             callId = callId,
         )
-        return syketilfelleConsumer.getOppfolgingstilfellePersonArbeidsgiver(
+        return syketilfelleClient.getOppfolgingstilfellePersonArbeidsgiver(
             aktorId = personAktorId,
             callId = callId,
+            token = token,
             virksomhetsnummer = virksomhetsnummer,
         )
     }
 
-    fun oppfolgingstilfellePersonUtenArbeidsgiver(
+    suspend fun oppfolgingstilfellePersonUtenArbeidsgiver(
         callId: String,
-        personIdent: Fnr,
-    ): KOppfolgingstilfellePerson? {
-        val personAktorId = pdlConsumer.aktorId(
-            personIdent = personIdent,
+        personIdentNumber: PersonIdentNumber,
+        token: String,
+    ): KOppfolgingstilfellePersonDTO? {
+        val personAktorId = pdlClient.aktorId(
             callId = callId,
+            personIdentNumber = personIdentNumber,
         )
-        return syketilfelleConsumer.getOppfolgingstilfellePerson(
+        return syketilfelleClient.getOppfolgingstilfellePerson(
             aktorId = personAktorId,
             callId = callId,
+            token = token,
         )
     }
 }
