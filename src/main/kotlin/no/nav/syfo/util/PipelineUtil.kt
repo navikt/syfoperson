@@ -83,7 +83,9 @@ suspend fun PipelineContext<out Unit, ApplicationCall>.handleApiError(
         }
     }
     val message = "Failed to process request successfully, callId=$callId, message=${ex.message}"
-    log.error("Failed to get response for resource=$resource, status=${responseStatus.value} message=$message callId=$callId")
+    if (responseStatus == HttpStatusCode.Forbidden) {
+        log.error("Failed to get response for resource=$resource, status=${responseStatus.value} message=$message callId=$callId")
+    }
     call.respond(responseStatus, message)
 }
 
