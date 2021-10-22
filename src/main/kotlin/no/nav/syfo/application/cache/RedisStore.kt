@@ -37,14 +37,19 @@ class RedisStore(
         value: T,
     ) {
         val valueJson = objectMapper.writeValueAsString(value)
-        set(
-            expireSeconds = expireSeconds,
-            key = key,
-            value = valueJson,
-        )
+        if (expireSeconds > 0) {
+            set(
+                expireSeconds = expireSeconds,
+                key = key,
+                value = valueJson,
+            )
+        } else {
+            val message = "Won't put value into the Redis-cache with expireSeconds=$expireSeconds"
+            log.warn(message, Exception(message))
+        }
     }
 
-    fun set(
+    private fun set(
         expireSeconds: Long,
         key: String,
         value: String,
