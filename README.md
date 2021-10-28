@@ -1,17 +1,31 @@
 ![Build status](https://github.com/navikt/syfoperson/workflows/main/badge.svg?branch=master)
 
 # Syfoperson
-Syfoperson is a Spring Boot application written in Kotlin.
+Syfoperson is a Ktor application written in Kotlin.
 It is responsible for retrieving information about a person(Sykmeldt Arbeidstaker) 
 for availabilty within the domain SYFO(Sykefraværsoppfølging).
-The information retrieved by Syfoperson is made available for frontend application wihtin SYFO and for GCP application within SYFO. 
+The information retrieved by Syfoperson is available for frontend applications within the SYFO domain in Modia. 
 
-## Technologies Used
+## Technologies used
+
 * Docker
 * Gradle
 * Kotlin
-* Spring Boot
+* Ktor
 * Redis
+
+##### Test Libraries:
+
+* Kluent
+* Mockk
+* Spek
+#### Requirements
+
+* JDK 11
+
+### Build
+
+Run `./gradlew clean shadowJar`
 
 ### Pipeline
 Pipeline is run with Github Action workflows.
