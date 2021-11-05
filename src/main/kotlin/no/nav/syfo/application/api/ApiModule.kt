@@ -9,7 +9,7 @@ import no.nav.syfo.application.api.authentication.*
 import no.nav.syfo.application.cache.RedisStore
 import no.nav.syfo.application.metric.api.registerMetricApi
 import no.nav.syfo.client.azuread.AzureAdClient
-import no.nav.syfo.client.dkif.DkifClient
+import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
 import no.nav.syfo.client.syketilfelle.SyketilfelleClient
@@ -55,10 +55,10 @@ fun Application.apiModule(
         redisStore = redisStore,
     )
 
-    val dkifClient = DkifClient(
+    val krrClient = KRRClient(
         azureAdClient = azureAdClient,
-        baseUrl = environment.isproxyUrl,
-        clientId = environment.isproxyClientId,
+        baseUrl = environment.krrUrl,
+        clientId = environment.krrClientId,
     )
     val pdlClient = PdlClient(
         azureAdClient = azureAdClient,
@@ -96,7 +96,7 @@ fun Application.apiModule(
         registerMetricApi()
         authenticate(JwtIssuerType.INTERNAL_AZUREAD.name) {
             registrerPersonApi(
-                dkifClient = dkifClient,
+                krrClient = krrClient,
                 pdlClient = pdlClient,
                 oppfolgingstilfelleService = oppfolgingstilfelleService,
                 skjermingskodeService = skjermingskodeService,
