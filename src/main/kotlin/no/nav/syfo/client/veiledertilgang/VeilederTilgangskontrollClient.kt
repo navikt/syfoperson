@@ -5,6 +5,7 @@ import io.ktor.client.features.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import net.logstash.logback.argument.StructuredArguments
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.httpClientDefault
@@ -51,6 +52,10 @@ class VeilederTilgangskontrollClient(
         } catch (e: ServerResponseException) {
             handleUnexpectedResponseException(e.response, callId)
             false
+        } catch (e: ClosedReceiveChannelException) {
+            log.error("ClosedReceiveChannelException while requesting access to person from syfo-tilgangskontroll", e)
+            COUNT_CALL_TILGANGSKONTROLL_PERSON_FAIL.increment()
+            false
         }
     }
 
@@ -78,6 +83,10 @@ class VeilederTilgangskontrollClient(
             response.receive<List<String>>().map {
                 PersonIdentNumber(it)
             }
+        } catch (e: ClosedReceiveChannelException) {
+            log.error("ClosedReceiveChannelException while requesting access to personlist from syfo-tilgangskontroll", e)
+            COUNT_CALL_TILGANGSKONTROLL_PERSON_FAIL.increment()
+            emptyList()
         } catch (e: ResponseException) {
             if (e.response.status == HttpStatusCode.Forbidden) {
                 COUNT_CALL_TILGANGSKONTROLL_PERSON_FORBIDDEN.increment()

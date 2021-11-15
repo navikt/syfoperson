@@ -2,6 +2,7 @@ package no.nav.syfo.client.skjermedepersonerpip
 
 import io.ktor.client.features.*
 import io.ktor.client.request.*
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import net.logstash.logback.argument.StructuredArguments
 import no.nav.syfo.application.cache.RedisStore
 import no.nav.syfo.client.azuread.AzureAdClient
@@ -49,6 +50,9 @@ class SkjermedePersonerPipClient(
                     value = skjermedePersonerResponse,
                 )
                 return skjermedePersonerResponse
+            } catch (e: ClosedReceiveChannelException) {
+                COUNT_CALL_SKJERMEDE_PERSONER__SKJERMET_FAIL.increment()
+                throw RuntimeException("Caught ClosedReceiveChannelException in SkjermedePersonerPipClient.isSkjermet", e)
             } catch (e: ResponseException) {
                 log.error(
                     "Error while requesting Response from Skjermede Person {}, {}, {}",
