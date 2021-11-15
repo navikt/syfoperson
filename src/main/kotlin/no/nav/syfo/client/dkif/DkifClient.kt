@@ -3,6 +3,7 @@ package no.nav.syfo.client.dkif
 import io.ktor.client.features.*
 import io.ktor.client.request.*
 import io.ktor.http.*
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import net.logstash.logback.argument.StructuredArguments
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.httpClientDefault
@@ -78,6 +79,9 @@ class DkifClient(
                 log.error(errorMessage)
                 throw DKIFRequestFailedException(errorMessage)
             }
+        } catch (e: ClosedReceiveChannelException) {
+            COUNT_CALL_DKIF_KONTAKTINFORMASJON_FAIL.increment()
+            throw RuntimeException("Caught ClosedReceiveChannelException in DkifClient.digitalKontaktinfoBolk", e)
         } catch (e: ResponseException) {
             log.error(
                 "Error while requesting Response from Ereg {}, {}, {}",

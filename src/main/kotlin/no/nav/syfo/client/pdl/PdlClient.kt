@@ -5,6 +5,7 @@ import io.ktor.client.features.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import net.logstash.logback.argument.StructuredArguments
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.httpClientDefault
@@ -132,6 +133,9 @@ class PdlClient(
                     return null
                 }
             }
+        } catch (e: ClosedReceiveChannelException) {
+            COUNT_CALL_PDL_PERSON_FAIL.increment()
+            throw RuntimeException("Caught ClosedReceiveChannelException in PdlClient.person", e)
         } catch (e: ResponseException) {
             COUNT_CALL_PDL_PERSON_FAIL.increment()
             log.error(
