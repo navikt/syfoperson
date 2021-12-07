@@ -50,7 +50,7 @@ class PersonBrukerinfoApiSpek : Spek({
                     it("should return OK if request is successful") {
                         val digitalKontaktinfoBolkKanVarslesTrue = digitalKontaktinfoBolkKanVarslesTrue(
                             personIdentNumber = ARBEIDSTAKER_PERSONIDENT.value,
-                        ).kontaktinfo?.get(ARBEIDSTAKER_PERSONIDENT.value)!!
+                        ).personer?.get(ARBEIDSTAKER_PERSONIDENT.value)!!
 
                         with(
                             handleRequest(HttpMethod.Get, url) {

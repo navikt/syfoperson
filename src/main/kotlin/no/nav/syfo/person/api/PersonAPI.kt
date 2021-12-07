@@ -5,8 +5,8 @@ import io.ktor.application.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import no.nav.syfo.client.dkif.DkifClient
-import no.nav.syfo.client.dkif.toSyfomodiapersonKontaktinfo
+import no.nav.syfo.client.krr.KRRClient
+import no.nav.syfo.client.krr.toSyfomodiapersonKontaktinfo
 import no.nav.syfo.client.pdl.*
 import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
 import no.nav.syfo.client.syketilfelle.toOppfolgingstilfelleDTO
@@ -37,7 +37,7 @@ const val apiPersonBrukerinfoPath = "/brukerinfo"
 private val objectMapper = configuredJacksonMapper()
 
 fun Route.registrerPersonApi(
-    dkifClient: DkifClient,
+    krrClient: KRRClient,
     pdlClient: PdlClient,
     oppfolgingstilfelleService: OppfolgingstilfelleService,
     skjermingskodeService: SkjermingskodeService,
@@ -191,7 +191,7 @@ fun Route.registrerPersonApi(
                 val token = getBearerHeader()
                     ?: throw IllegalArgumentException("No Authorization header supplied")
 
-                val response = dkifClient.digitalKontaktinfo(
+                val response = krrClient.digitalKontaktinfo(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
                     token = token,
@@ -269,7 +269,7 @@ fun Route.registrerPersonApi(
                 val token = getBearerHeader()
                     ?: throw IllegalArgumentException("No Authorization header supplied")
 
-                val kontaktinfo = dkifClient.digitalKontaktinfo(
+                val kontaktinfo = krrClient.digitalKontaktinfo(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
                     token = token

@@ -8,6 +8,7 @@ class ExternalMockEnvironment {
     val applicationState: ApplicationState = testAppState()
     val azureAdMock = AzureAdMock()
     val isproxyMock = IsproxyMock()
+    val krrMock = KrrMock()
     val pdlMock = PdlMock()
     val skjermedPersonerPipMock = SkjermedePersonerPipMock()
     val veilederTilgangskontrollMock = VeilederTilgangskontrollMock()
@@ -15,6 +16,7 @@ class ExternalMockEnvironment {
     val externalApplicationMockMap = hashMapOf(
         azureAdMock.name to azureAdMock.server,
         isproxyMock.name to isproxyMock.server,
+        krrMock.name to krrMock.server,
         pdlMock.name to pdlMock.server,
         skjermedPersonerPipMock.name to skjermedPersonerPipMock.server,
         veilederTilgangskontrollMock.name to veilederTilgangskontrollMock.server,
@@ -23,6 +25,7 @@ class ExternalMockEnvironment {
     val environment = testEnvironment(
         azureOpenIdTokenEndpoint = azureAdMock.url,
         isproxyUrl = isproxyMock.url,
+        krrUrl = krrMock.url,
         pdlUrl = pdlMock.url,
         skjermedePersonerPipUrl = skjermedPersonerPipMock.url,
         syfotilgangskontrollUrl = veilederTilgangskontrollMock.url,

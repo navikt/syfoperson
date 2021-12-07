@@ -5,7 +5,7 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.ktor.http.*
 import io.ktor.http.HttpHeaders.Authorization
 import io.ktor.server.testing.*
-import no.nav.syfo.client.dkif.DigitalKontaktinfo
+import no.nav.syfo.client.krr.DigitalKontaktinfo
 import no.nav.syfo.testhelper.*
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VEILEDER_NO_ACCESS
@@ -58,7 +58,7 @@ class PersonKontaktinformasjonApiSpek : Spek({
                             digitalKontaktinfo.personident shouldBeEqualTo ARBEIDSTAKER_PERSONIDENT.value
                             digitalKontaktinfo shouldBeEqualTo digitalKontaktinfoBolkKanVarslesTrue(
                                 personIdentNumber = ARBEIDSTAKER_PERSONIDENT.value,
-                            ).kontaktinfo?.get(ARBEIDSTAKER_PERSONIDENT.value)
+                            ).personer?.get(ARBEIDSTAKER_PERSONIDENT.value)
                         }
                     }
                 }
