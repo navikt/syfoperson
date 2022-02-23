@@ -6,7 +6,6 @@ import java.net.ServerSocket
 
 fun testEnvironment(
     azureOpenIdTokenEndpoint: String = "azureTokenEndpoint",
-    isproxyUrl: String = "isproxy",
     krrUrl: String = "krr",
     pdlUrl: String = "pdl",
     skjermedePersonerPipUrl: String = "skjermedepersonerpip",
@@ -16,8 +15,6 @@ fun testEnvironment(
     azureAppClientSecret = "syfoperson-secret",
     azureAppWellKnownUrl = "wellknown",
     azureOpenidConfigTokenEndpoint = azureOpenIdTokenEndpoint,
-    isproxyClientId = "dev-fss.teamsykefravr.isproxy",
-    isproxyUrl = isproxyUrl,
     krrClientId = "dev-gcp.team-rocket.digdir-krr-proxy",
     krrUrl = krrUrl,
     pdlClientId = "dev-fss.pdl.pdl-api",

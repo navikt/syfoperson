@@ -6,9 +6,6 @@ data class Environment(
     val azureAppWellKnownUrl: String = getEnvVar("AZURE_APP_WELL_KNOWN_URL"),
     val azureOpenidConfigTokenEndpoint: String = getEnvVar("AZURE_OPENID_CONFIG_TOKEN_ENDPOINT"),
 
-    val isproxyClientId: String = getEnvVar("ISPROXY_CLIENT_ID"),
-    val isproxyUrl: String = getEnvVar("ISPROXY_URL"),
-
     val krrClientId: String = getEnvVar("KRR_CLIENT_ID"),
     val krrUrl: String = getEnvVar("KRR_URL"),
 

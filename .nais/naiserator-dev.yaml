@@ -50,7 +50,6 @@ spec:
           cluster: dev-fss
     outbound:
       external:
-        - host: "isproxy.dev-fss-pub.nais.io"
         - host: "pdl-api.dev-fss-pub.nais.io"
         - host: "skjermede-personer-pip.dev.intern.nav.no"
         - host: "syfo-tilgangskontroll.dev-fss-pub.nais.io"
@@ -69,10 +68,6 @@ spec:
   envFrom:
     - secret: syfoperson-redis-password
   env:
-    - name: ISPROXY_CLIENT_ID
-      value: "dev-fss.teamsykefravr.isproxy"
-    - name: ISPROXY_URL
-      value: "https://isproxy.dev-fss-pub.nais.io"
     - name: KRR_CLIENT_ID
       value: "dev-gcp.team-rocket.digdir-krr-proxy"
     - name: KRR_URL
