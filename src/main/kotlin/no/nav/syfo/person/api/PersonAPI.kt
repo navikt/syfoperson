@@ -10,7 +10,6 @@ import no.nav.syfo.client.krr.toSyfomodiapersonKontaktinfo
 import no.nav.syfo.client.pdl.*
 import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
 import no.nav.syfo.client.syketilfelle.toOppfolgingstilfelleDTO
-import no.nav.syfo.client.syketilfelle.toOppfolgingstilfellePersonDTO
 import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
 import no.nav.syfo.domain.PersonIdentNumber
 import no.nav.syfo.domain.Virksomhetsnummer
@@ -30,7 +29,6 @@ const val apiPersonKontaktinformasjonPath = "/kontaktinformasjon"
 const val apiPersonNavnPath = "/navn"
 const val apiPersonOppfolgingstilfelleArbeidsgiverPath = "/oppfolgingstilfelle/arbeidsgiver"
 const val apiPersonOppfolgingstilfelleVirksomhetsnummerParam = "virksomhetsnummer"
-const val apiPersonOppfolgingstilfelleNoArbeidsgiverPath = "/oppfolgingstilfelle/utenarbeidsgiver"
 
 const val apiPersonBrukerinfoPath = "/brukerinfo"
 
@@ -224,31 +222,6 @@ fun Route.registrerPersonApi(
                     token = token,
                     virksomhetsnummer = virksomhetsnummer,
                 )?.toOppfolgingstilfelleDTO()?.let {
-                    listOf(it)
-                } ?: emptyList()
-
-                call.respond(response)
-            }
-        }
-
-        get(apiPersonOppfolgingstilfelleNoArbeidsgiverPath) {
-            personRequestHandler(
-                resource = apiPersonOppfolgingstilfelleNoArbeidsgiverPath,
-                veilederTilgangskontrollClient = veilederTilgangskontrollClient,
-            ) {
-                val personIdentNumber = getPersonIdent()?.let { requestedPersonIdent ->
-                    PersonIdentNumber(requestedPersonIdent)
-                } ?: throw IllegalArgumentException("No personIdentNumber supplied in header")
-
-                val callId = getCallId()
-                val token = getBearerHeader()
-                    ?: throw IllegalArgumentException("No Authorization header supplied")
-
-                val response = oppfolgingstilfelleService.oppfolgingstilfellePersonUtenArbeidsgiver(
-                    callId = callId,
-                    personIdentNumber = personIdentNumber,
-                    token = token,
-                )?.toOppfolgingstilfellePersonDTO()?.let {
                     listOf(it)
                 } ?: emptyList()
 
