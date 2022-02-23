@@ -7,7 +7,6 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import no.nav.syfo.application.api.installContentNegotiation
 import no.nav.syfo.client.syketilfelle.*
-import no.nav.syfo.client.syketilfelle.SyketilfelleClient.Companion.ISPROXY_SYFOSYKETILFELLE_OPPFOLGINGSTILFELLE_PERSON_NO_ARBEIDSGIVER_PATH
 import no.nav.syfo.domain.AktorId
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_AKTORID
 import no.nav.syfo.testhelper.UserConstants.VIRKSOMHETSNUMMER_DEFAULT
@@ -20,29 +19,6 @@ fun kOppfolgingstilfelleDTO(
 ) = KOppfolgingstilfelleDTO(
     aktorId = aktorId.value,
     orgnummer = VIRKSOMHETSNUMMER_DEFAULT.value,
-    tidslinje = listOf(
-        KSyketilfelledagDTO(
-            dag = LocalDate.now().minusDays(10),
-            prioritertSyketilfellebit = null,
-        ),
-        KSyketilfelledagDTO(
-            dag = LocalDate.now().plusDays(10),
-            prioritertSyketilfellebit = null,
-        ),
-    ),
-    sisteDagIArbeidsgiverperiode = KSyketilfelledagDTO(
-        dag = LocalDate.now().plusDays(10),
-        prioritertSyketilfellebit = null,
-    ),
-    antallBrukteDager = 0,
-    oppbruktArbeidsgvierperiode = false,
-    utsendelsestidspunkt = LocalDateTime.now(),
-)
-
-fun kOppfolgingstilfellePersonDTO(
-    aktorId: AktorId = ARBEIDSTAKER_AKTORID,
-) = KOppfolgingstilfellePersonDTO(
-    aktorId = aktorId.value,
     tidslinje = listOf(
         KSyketilfelledagDTO(
             dag = LocalDate.now().minusDays(10),
@@ -79,13 +55,6 @@ class IsproxyMock {
                 get("${SyketilfelleClient.ISPROXY_SYFOSYKETILFELLE_OPPFOLGINGSTILFELLE_PERSON_PATH}/${ARBEIDSTAKER_AKTORID.value}/${VIRKSOMHETSNUMMER_DEFAULT.value}") {
                     call.respond(
                         kOppfolgingstilfelleDTO(
-                            aktorId = ARBEIDSTAKER_AKTORID,
-                        )
-                    )
-                }
-                get("${SyketilfelleClient.ISPROXY_SYFOSYKETILFELLE_OPPFOLGINGSTILFELLE_PERSON_PATH}/${ARBEIDSTAKER_AKTORID.value}$ISPROXY_SYFOSYKETILFELLE_OPPFOLGINGSTILFELLE_PERSON_NO_ARBEIDSGIVER_PATH") {
-                    call.respond(
-                        kOppfolgingstilfellePersonDTO(
                             aktorId = ARBEIDSTAKER_AKTORID,
                         )
                     )

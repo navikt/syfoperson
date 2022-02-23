@@ -70,57 +70,11 @@ class SyketilfelleClient(
         return "$baseUrl$ISPROXY_SYFOSYKETILFELLE_OPPFOLGINGSTILFELLE_PERSON_PATH/${aktorId.value}/${virksomhetsnummer.value}"
     }
 
-    suspend fun getOppfolgingstilfellePerson(
-        aktorId: AktorId,
-        callId: String,
-        token: String,
-    ): KOppfolgingstilfellePersonDTO? {
-        val oboToken = azureAdClient.getOnBehalfOfToken(
-            scopeClientId = clientId,
-            token = token,
-        )?.accessToken ?: throw RuntimeException("Failed to request access to Person: Failed to get OBO token")
-
-        try {
-            val url = getSyfosyketilfelleUrl(aktorId)
-            val response: HttpResponse = httpClient.get(url) {
-                accept(ContentType.Application.Json)
-                contentType(ContentType.Application.Json)
-                header(HttpHeaders.Authorization, bearerHeader(oboToken))
-                header(NAV_CALL_ID_HEADER, callId)
-                header(NAV_CONSUMER_ID_HEADER, NAV_CONSUMER_APP_ID)
-            }
-
-            if (response.status == HttpStatusCode.NoContent) {
-                log.info("Syketilfelle returned HTTP-${response.status}: No Oppfolgingstilfelle was found for AktorId")
-                return null
-            }
-            val responseBody: KOppfolgingstilfellePersonDTO = response.receive()
-            COUNT_CALL_SYKETILFELLE_PERSON_ARBEIDSGIVER_SUCCESS.increment()
-            return responseBody
-        } catch (e: ServerResponseException) {
-            log.error(
-                "Error while requesting Oppfolgingstilfelle for Person with no Arbeidsgiver from Isproxy-Syfosyketilfell with {}, {}, {}",
-                StructuredArguments.keyValue("statusCode", e.response.status.value.toString()),
-                StructuredArguments.keyValue("message", e.message),
-                callIdArgument(callId),
-            )
-            COUNT_CALL_SYKETILFELLE_PERSON_ARBEIDSGIVER_FAIL.increment()
-            throw e
-        }
-    }
-
-    private fun getSyfosyketilfelleUrl(
-        aktorId: AktorId,
-    ): String {
-        return "$baseUrl$ISPROXY_SYFOSYKETILFELLE_OPPFOLGINGSTILFELLE_PERSON_PATH/${aktorId.value}$ISPROXY_SYFOSYKETILFELLE_OPPFOLGINGSTILFELLE_PERSON_NO_ARBEIDSGIVER_PATH"
-    }
-
     companion object {
         private val log = LoggerFactory.getLogger(SyketilfelleClient::class.java)
 
         const val ISPROXY_SYFOSYKETILFELLE_PATH = "/api/v1/syfosyketilfelle"
         const val ISPROXY_SYFOSYKETILFELLE_OPPFOLGINGSTILFELLE_PERSON_PATH =
             "$ISPROXY_SYFOSYKETILFELLE_PATH/oppfolgingstilfelle/person"
-        const val ISPROXY_SYFOSYKETILFELLE_OPPFOLGINGSTILFELLE_PERSON_NO_ARBEIDSGIVER_PATH = "/utenarbeidsgiver"
     }
 }
