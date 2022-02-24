@@ -9,13 +9,10 @@ import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.krr.toSyfomodiapersonKontaktinfo
 import no.nav.syfo.client.pdl.*
 import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
-import no.nav.syfo.client.syketilfelle.toOppfolgingstilfelleDTO
 import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
 import no.nav.syfo.domain.PersonIdentNumber
-import no.nav.syfo.domain.Virksomhetsnummer
 import no.nav.syfo.person.api.domain.*
 import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonBrukerinfo
-import no.nav.syfo.person.oppfolgingstilfelle.OppfolgingstilfelleService
 import no.nav.syfo.person.skjermingskode.SkjermingskodeService
 import no.nav.syfo.util.*
 
@@ -27,8 +24,6 @@ const val apiPersonEgenansattPath = "/egenansatt"
 const val apiPersonInfoPath = "/info"
 const val apiPersonKontaktinformasjonPath = "/kontaktinformasjon"
 const val apiPersonNavnPath = "/navn"
-const val apiPersonOppfolgingstilfelleArbeidsgiverPath = "/oppfolgingstilfelle/arbeidsgiver"
-const val apiPersonOppfolgingstilfelleVirksomhetsnummerParam = "virksomhetsnummer"
 
 const val apiPersonBrukerinfoPath = "/brukerinfo"
 
@@ -37,7 +32,6 @@ private val objectMapper = configuredJacksonMapper()
 fun Route.registrerPersonApi(
     krrClient: KRRClient,
     pdlClient: PdlClient,
-    oppfolgingstilfelleService: OppfolgingstilfelleService,
     skjermingskodeService: SkjermingskodeService,
     skjermedePersonerPipClient: SkjermedePersonerPipClient,
     veilederTilgangskontrollClient: VeilederTilgangskontrollClient,
@@ -194,37 +188,6 @@ fun Route.registrerPersonApi(
                     personIdentNumber = personIdentNumber,
                     token = token,
                 )
-                call.respond(response)
-            }
-        }
-
-        get("$apiPersonOppfolgingstilfelleArbeidsgiverPath/{$apiPersonOppfolgingstilfelleVirksomhetsnummerParam}") {
-            personRequestHandler(
-                resource = apiPersonOppfolgingstilfelleArbeidsgiverPath,
-                veilederTilgangskontrollClient = veilederTilgangskontrollClient,
-            ) {
-                val personIdentNumber = getPersonIdent()?.let { requestedPersonIdent ->
-                    PersonIdentNumber(requestedPersonIdent)
-                } ?: throw IllegalArgumentException("No personIdentNumber supplied in header")
-
-                val callId = getCallId()
-                val token = getBearerHeader()
-                    ?: throw IllegalArgumentException("No Authorization header supplied")
-
-                val virksomhetsnummer =
-                    call.parameters[apiPersonOppfolgingstilfelleVirksomhetsnummerParam]?.let { pathVirksomhetsnummer ->
-                        Virksomhetsnummer(pathVirksomhetsnummer)
-                    } ?: throw IllegalArgumentException("No Virksomhetsnummer found in path param")
-
-                val response = oppfolgingstilfelleService.oppfolgingstilfellePersonArbeidsgiver(
-                    callId = callId,
-                    personIdentNumber = personIdentNumber,
-                    token = token,
-                    virksomhetsnummer = virksomhetsnummer,
-                )?.toOppfolgingstilfelleDTO()?.let {
-                    listOf(it)
-                } ?: emptyList()
-
                 call.respond(response)
             }
         }

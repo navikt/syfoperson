@@ -12,11 +12,9 @@ import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
-import no.nav.syfo.client.syketilfelle.SyketilfelleClient
 import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
 import no.nav.syfo.client.wellknown.WellKnown
 import no.nav.syfo.person.api.registrerPersonApi
-import no.nav.syfo.person.oppfolgingstilfelle.OppfolgingstilfelleService
 import no.nav.syfo.person.skjermingskode.SkjermingskodeService
 import redis.clients.jedis.*
 
@@ -65,15 +63,6 @@ fun Application.apiModule(
         baseUrl = environment.pdlUrl,
         clientId = environment.pdlClientId,
     )
-    val syketilfelleClient = SyketilfelleClient(
-        azureAdClient = azureAdClient,
-        baseUrl = environment.isproxyUrl,
-        clientId = environment.isproxyClientId
-    )
-    val oppfolgingstilfelleService = OppfolgingstilfelleService(
-        pdlClient = pdlClient,
-        syketilfelleClient = syketilfelleClient,
-    )
     val skjermedePersonerPipClient = SkjermedePersonerPipClient(
         azureAdClient = azureAdClient,
         redisStore = redisStore,
@@ -98,7 +87,6 @@ fun Application.apiModule(
             registrerPersonApi(
                 krrClient = krrClient,
                 pdlClient = pdlClient,
-                oppfolgingstilfelleService = oppfolgingstilfelleService,
                 skjermingskodeService = skjermingskodeService,
                 skjermedePersonerPipClient = skjermedePersonerPipClient,
                 veilederTilgangskontrollClient = veilederTilgangskontrollClient,
