@@ -16,25 +16,21 @@ class SkjermedePersonerPipMock {
     val url = "http://localhost:$port"
 
     val name = "skjermedpersonerpip"
-    val server = mockTilgangServer()
-
-    private fun mockTilgangServer(): NettyApplicationEngine {
-        return embeddedServer(
-            factory = Netty,
-            port = port
-        ) {
-            installContentNegotiation()
-            routing {
-                get("/skjermet") {
-                    if (call.request.queryParameters["personident"] == ARBEIDSTAKER_PERSONIDENT.value) {
-                        call.respond(true)
-                    }
-                    if (call.request.queryParameters["personident"] == ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT.value) {
-                        call.respond(false)
-                    }
-                    if (call.request.queryParameters["personident"] == ARBEIDSTAKER_ADRESSEBESKYTTET.value) {
-                        call.respond(false)
-                    }
+    val server = embeddedServer(
+        factory = Netty,
+        port = port,
+    ) {
+        installContentNegotiation()
+        routing {
+            get("/skjermet") {
+                if (call.request.queryParameters["personident"] == ARBEIDSTAKER_PERSONIDENT.value) {
+                    call.respond(true)
+                }
+                if (call.request.queryParameters["personident"] == ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT.value) {
+                    call.respond(false)
+                }
+                if (call.request.queryParameters["personident"] == ARBEIDSTAKER_ADRESSEBESKYTTET.value) {
+                    call.respond(false)
                 }
             }
         }

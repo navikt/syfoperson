@@ -59,24 +59,20 @@ class PdlMock {
     private val port = getRandomPort()
     val url = "http://localhost:$port"
     val name = "pdl"
-    val server = mockPdlServer()
-
     val personResponseDefault = generatePdlPersonResponse()
 
-    private fun mockPdlServer(): NettyApplicationEngine {
-        return embeddedServer(
-            factory = Netty,
-            port = port
-        ) {
-            installContentNegotiation()
-            routing {
-                post {
-                    val pdlRequest = call.receive<PdlRequest>()
-                    if (ARBEIDSTAKER_ADRESSEBESKYTTET.value == pdlRequest.variables.ident) {
-                        call.respond(generatePdlPersonResponse(Gradering.STRENGT_FORTROLIG))
-                    } else {
-                        call.respond(personResponseDefault)
-                    }
+    val server = embeddedServer(
+        factory = Netty,
+        port = port,
+    ) {
+        installContentNegotiation()
+        routing {
+            post {
+                val pdlRequest = call.receive<PdlRequest>()
+                if (ARBEIDSTAKER_ADRESSEBESKYTTET.value == pdlRequest.variables.ident) {
+                    call.respond(generatePdlPersonResponse(Gradering.STRENGT_FORTROLIG))
+                } else {
+                    call.respond(personResponseDefault)
                 }
             }
         }
