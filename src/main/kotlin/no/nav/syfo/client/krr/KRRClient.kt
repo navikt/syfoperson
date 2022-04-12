@@ -1,6 +1,7 @@
 package no.nav.syfo.client.krr
 
-import io.ktor.client.features.*
+import io.ktor.client.call.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
@@ -65,8 +66,8 @@ class KRRClient(
                 header(NAV_CALL_ID_HEADER, callId)
                 accept(ContentType.Application.Json)
                 contentType(ContentType.Application.Json)
-                body = request
-            }
+                setBody(request)
+            }.body()
 
             response?.let { digitalKontakinfoBolk ->
                 COUNT_CALL_KRR_KONTAKTINFORMASJON_SUCCESS.increment()

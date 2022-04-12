@@ -1,6 +1,7 @@
 package no.nav.syfo.client.skjermedepersonerpip
 
-import io.ktor.client.features.*
+import io.ktor.client.call.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import net.logstash.logback.argument.StructuredArguments
@@ -41,7 +42,7 @@ class SkjermedePersonerPipClient(
                     header(NAV_CALL_ID_HEADER, callId)
                     header(NAV_CONSUMER_ID_HEADER, NAV_CONSUMER_APP_ID)
                     header(NAV_PERSONIDENTER_HEADER, personIdentNumber.value)
-                }
+                }.body()
 
                 COUNT_CALL_SKJERMEDE_PERSONER_SKJERMET_SUCCESS.increment()
                 redisStore.setObject(
@@ -52,7 +53,10 @@ class SkjermedePersonerPipClient(
                 return skjermedePersonerResponse
             } catch (e: ClosedReceiveChannelException) {
                 COUNT_CALL_SKJERMEDE_PERSONER__SKJERMET_FAIL.increment()
-                throw RuntimeException("Caught ClosedReceiveChannelException in SkjermedePersonerPipClient.isSkjermet", e)
+                throw RuntimeException(
+                    "Caught ClosedReceiveChannelException in SkjermedePersonerPipClient.isSkjermet",
+                    e
+                )
             } catch (e: ResponseException) {
                 log.error(
                     "Error while requesting Response from Skjermede Person {}, {}, {}",

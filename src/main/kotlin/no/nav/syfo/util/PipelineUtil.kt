@@ -1,9 +1,9 @@
 package no.nav.syfo.util
 
-import io.ktor.application.*
-import io.ktor.client.features.*
+import io.ktor.client.plugins.*
 import io.ktor.http.*
-import io.ktor.response.*
+import io.ktor.server.application.*
+import io.ktor.server.response.*
 import io.ktor.util.pipeline.*
 import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
 import no.nav.syfo.domain.PersonIdentNumber
@@ -12,20 +12,20 @@ import org.slf4j.LoggerFactory
 
 private val log: Logger = LoggerFactory.getLogger("no.nav.syfo")
 
-fun PipelineContext<out Unit, ApplicationCall>.getHeader(header: String): String? {
-    return this.call.request.headers[header]
-}
-
 fun PipelineContext<out Unit, ApplicationCall>.getBearerHeader(): String? {
     return this.call.request.headers[HttpHeaders.Authorization]?.removePrefix("Bearer ")
 }
 
-fun PipelineContext<out Unit, ApplicationCall>.getCallId(): String {
-    return this.call.request.headers[NAV_CALL_ID_HEADER].toString()
+fun ApplicationCall.getCallId(): String {
+    return this.request.headers[NAV_CALL_ID_HEADER].toString()
 }
 
-fun PipelineContext<out Unit, ApplicationCall>.getConsumerId(): String {
-    return this.call.request.headers[NAV_CONSUMER_ID_HEADER].toString()
+fun PipelineContext<out Unit, ApplicationCall>.getCallId(): String {
+    return this.call.getCallId()
+}
+
+fun ApplicationCall.getConsumerId(): String {
+    return this.request.headers[NAV_CONSUMER_ID_HEADER].toString()
 }
 
 fun PipelineContext<out Unit, ApplicationCall>.getPersonIdent(): String? {
