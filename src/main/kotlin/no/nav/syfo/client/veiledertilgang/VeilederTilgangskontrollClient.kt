@@ -1,7 +1,7 @@
 package no.nav.syfo.client.veiledertilgang
 
 import io.ktor.client.call.*
-import io.ktor.client.features.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -41,7 +41,7 @@ class VeilederTilgangskontrollClient(
                 accept(ContentType.Application.Json)
             }
             COUNT_CALL_TILGANGSKONTROLL_PERSON_SUCCESS.increment()
-            response.receive<Tilgang>().harTilgang
+            response.body<Tilgang>().harTilgang
         } catch (e: ClientRequestException) {
             if (e.response.status == HttpStatusCode.Forbidden) {
                 COUNT_CALL_TILGANGSKONTROLL_PERSON_FORBIDDEN.increment()
@@ -77,14 +77,17 @@ class VeilederTilgangskontrollClient(
                 contentType(ContentType.Application.Json)
                 header(HttpHeaders.Authorization, bearerHeader(oboToken))
                 header(NAV_CALL_ID_HEADER, callId)
-                body = requestBody
+                setBody(requestBody)
             }
             COUNT_CALL_TILGANGSKONTROLL_PERSON_SUCCESS.increment()
-            response.receive<List<String>>().map {
+            response.body<List<String>>().map {
                 PersonIdentNumber(it)
             }
         } catch (e: ClosedReceiveChannelException) {
-            log.error("ClosedReceiveChannelException while requesting access to personlist from syfo-tilgangskontroll", e)
+            log.error(
+                "ClosedReceiveChannelException while requesting access to personlist from syfo-tilgangskontroll",
+                e
+            )
             COUNT_CALL_TILGANGSKONTROLL_PERSON_FAIL.increment()
             emptyList()
         } catch (e: ResponseException) {

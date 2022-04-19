@@ -1,7 +1,7 @@
 package no.nav.syfo.client.pdl
 
 import io.ktor.client.call.*
-import io.ktor.client.features.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -34,16 +34,16 @@ class PdlClient(
         try {
 
             val response: HttpResponse = httpClient.post(baseUrl) {
-                body = request
                 contentType(ContentType.Application.Json)
                 header(HttpHeaders.Authorization, bearerHeader(systemToken.accessToken))
                 header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
                 header(NAV_CALL_ID_HEADER, callId)
+                setBody(request)
             }
 
             when (response.status) {
                 HttpStatusCode.OK -> {
-                    val pdlReponse = response.receive<PdlPersonResponse>()
+                    val pdlReponse = response.body<PdlPersonResponse>()
                     return if (!pdlReponse.errors.isNullOrEmpty()) {
                         COUNT_CALL_PDL_PERSON_FAIL.increment()
                         pdlReponse.errors.forEach {
