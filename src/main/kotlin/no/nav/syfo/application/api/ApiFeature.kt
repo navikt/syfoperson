@@ -36,7 +36,7 @@ fun Application.installContentNegotiation() {
     install(ContentNegotiation) {
         jackson(
             block = {
-                this.applyConfig()
+                this.configure()
             }
         )
     }
