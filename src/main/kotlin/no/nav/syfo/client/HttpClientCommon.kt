@@ -15,6 +15,7 @@ fun httpClientDefault() = HttpClient(CIO) {
             configure()
         }
     }
+    expectSuccess = true
 }
 
 val proxyConfig: HttpClientConfig<ApacheEngineConfig>.() -> Unit = {
@@ -23,6 +24,7 @@ val proxyConfig: HttpClientConfig<ApacheEngineConfig>.() -> Unit = {
             configure()
         }
     }
+    expectSuccess = true
     engine {
         customizeClient {
             setRoutePlanner(SystemDefaultRoutePlanner(ProxySelector.getDefault()))
