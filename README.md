@@ -21,7 +21,7 @@ The information retrieved by Syfoperson is available for frontend applications w
 * Spek
 #### Requirements
 
-* JDK 11
+* JDK 17
 
 ### Build
 
