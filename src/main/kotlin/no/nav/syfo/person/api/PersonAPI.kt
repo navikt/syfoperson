@@ -1,6 +1,5 @@
 package no.nav.syfo.person.api
 
-import com.fasterxml.jackson.core.type.TypeReference
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -27,8 +26,6 @@ const val apiPersonNavnPath = "/navn"
 
 const val apiPersonBrukerinfoPath = "/brukerinfo"
 
-private val objectMapper = configuredJacksonMapper()
-
 fun Route.registrerPersonApi(
     krrClient: KRRClient,
     pdlClient: PdlClient,
@@ -39,8 +36,7 @@ fun Route.registrerPersonApi(
     route(apiPersonBasePath) {
         post(apiPersonInfoPath) {
             try {
-                val json = call.receive<String>()
-                val list = objectMapper.readValue(json, object : TypeReference<List<PersonInfoRequest>>() {})
+                val list = call.receive<List<PersonInfoRequest>>()
                 val personIdentNumberList = list.map { personIdent ->
                     PersonIdentNumber(personIdent.fnr)
                 }
