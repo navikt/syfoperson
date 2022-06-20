@@ -58,7 +58,6 @@ class PersonInfoApiSpek : Spek({
                             handleRequest(HttpMethod.Post, url) {
                                 addHeader(Authorization, bearerHeader(validToken))
                                 addHeader(NAV_PERSONIDENT_HEADER, ARBEIDSTAKER_PERSONIDENT.value)
-                                addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
                                 setBody(objectMapper.writeValueAsString(requestBody))
                             }
                         ) {
