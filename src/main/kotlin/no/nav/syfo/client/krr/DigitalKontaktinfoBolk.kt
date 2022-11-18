@@ -4,7 +4,7 @@ import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonKontaktinfo
 import java.io.Serializable
 
 data class DigitalKontaktinfoBolk(
-    val feil: Map<String, Feil>? = null,
+    val feil: Map<String, String>? = null,
     val personer: Map<String, DigitalKontaktinfo>? = null
 ) : Serializable
 
@@ -24,7 +24,3 @@ fun DigitalKontaktinfo.toSyfomodiapersonKontaktinfo() =
         tlf = this.mobiltelefonnummer,
         skalHaVarsel = this.kanVarsles ?: false,
     )
-
-data class Feil(
-    val melding: String
-) : Serializable

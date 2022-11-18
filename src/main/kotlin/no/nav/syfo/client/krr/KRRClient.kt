@@ -43,9 +43,11 @@ class KRRClient(
             kontaktinfo != null -> {
                 return kontaktinfo
             }
+
             feil != null -> {
-                throw KRRRequestFailedException(feil.melding)
+                throw KRRRequestFailedException(feil)
             }
+
             else -> {
                 throw KRRRequestFailedException("Kontaktinfo is null")
             }
