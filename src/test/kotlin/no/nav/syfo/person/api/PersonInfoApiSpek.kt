@@ -68,6 +68,7 @@ class PersonInfoApiSpek : Spek({
                             personInfoList.size shouldBeEqualTo requestBody.size - 1
                             personInfoList[0].fnr shouldBeEqualTo ARBEIDSTAKER_PERSONIDENT.value
                             personInfoList[0].skjermingskode shouldBeEqualTo Skjermingskode.EGEN_ANSATT
+                            personInfoList[0].navn shouldBeEqualTo "${UserConstants.PERSON_NAME_FIRST} ${UserConstants.PERSON_NAME_MIDDLE} ${UserConstants.PERSON_NAME_LAST}"
                             personInfoList[1].fnr shouldBeEqualTo ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT.value
                             personInfoList[1].skjermingskode shouldBeEqualTo Skjermingskode.INGEN
                             personInfoList[2].fnr shouldBeEqualTo ARBEIDSTAKER_ADRESSEBESKYTTET.value

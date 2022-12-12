@@ -64,7 +64,8 @@ fun Route.registrerPersonApi(
                         )
                         PersonInfo(
                             fnr = personIdentNumber.value,
-                            skjermingskode = skjermingskode
+                            navn = person?.getFullName() ?: "",
+                            skjermingskode = skjermingskode,
                         )
                     }
                 call.respond(response)
