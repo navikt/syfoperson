@@ -20,8 +20,8 @@ fun generatePdlPersonResponse(
 ) = PdlPersonResponse(
     errors = null,
     data = generatePdlHentPerson(
-        generatePdlPersonNavn(),
-        generateAdressebeskyttelse(gradering = gradering),
+        pdlPersonNavn = generatePdlPersonNavn(),
+        adressebeskyttelse = generateAdressebeskyttelse(gradering = gradering),
         doedsdato = doedsdato,
     )
 )

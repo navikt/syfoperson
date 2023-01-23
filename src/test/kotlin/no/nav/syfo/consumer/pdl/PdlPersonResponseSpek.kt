@@ -21,7 +21,7 @@ class PdlPersonResponseSpek : Spek({
                     UserConstants.PERSON_NAME_LAST,
                 ),
                 null,
-            ).copy()
+            )
             val result = pdlPersonResponse.getFullName()
             val expected =
                 "${UserConstants.PERSON_NAME_FIRST} ${UserConstants.PERSON_NAME_MIDDLE} ${UserConstants.PERSON_NAME_LAST}"
@@ -36,7 +36,7 @@ class PdlPersonResponseSpek : Spek({
                     UserConstants.PERSON_NAME_LAST,
                 ),
                 null,
-            ).copy()
+            )
             val result = pdlPersonResponse.getFullName()
             val expected = "${UserConstants.PERSON_NAME_FIRST} ${UserConstants.PERSON_NAME_LAST}"
             result shouldBeEqualTo expected
@@ -51,8 +51,8 @@ class PdlPersonResponseSpek : Spek({
                 ),
                 null,
                 doedsdato = LocalDate.now(),
-            ).copy()
-            val result = pdlPersonResponse.hentPerson?.doedsfall?.firstOrNull()?.doedsdato
+            )
+            val result = pdlPersonResponse.getDoedsdato()
             result shouldBeEqualTo LocalDate.now()
         }
 
@@ -65,8 +65,8 @@ class PdlPersonResponseSpek : Spek({
                 ),
                 null,
                 doedsdato = null,
-            ).copy()
-            val result = pdlPersonResponse.hentPerson?.doedsfall?.firstOrNull()?.doedsdato
+            )
+            val result = pdlPersonResponse.getDoedsdato()
             result shouldBe null
         }
 
@@ -94,7 +94,7 @@ class PdlPersonResponseSpek : Spek({
             val pdlPersonResponse = generatePdlHentPerson(
                 null,
                 Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG_UTLAND),
-            ).copy()
+            )
             val result = pdlPersonResponse.isKode6Or7()
             val expected = true
             result shouldBeEqualTo expected
@@ -104,7 +104,7 @@ class PdlPersonResponseSpek : Spek({
             val pdlPersonResponse = generatePdlHentPerson(
                 null,
                 Adressebeskyttelse(gradering = Gradering.UGRADERT),
-            ).copy()
+            )
             val result = pdlPersonResponse.isKode6Or7()
             val expected = false
             result shouldBeEqualTo expected
