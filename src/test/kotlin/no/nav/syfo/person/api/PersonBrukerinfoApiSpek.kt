@@ -8,7 +8,7 @@ import io.ktor.server.testing.*
 import no.nav.syfo.client.pdl.getFullName
 import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonBrukerinfo
 import no.nav.syfo.testhelper.*
-import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOED
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOD
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VEILEDER_NO_ACCESS
 import no.nav.syfo.testhelper.mock.digitalKontaktinfoBolkKanVarslesTrue
@@ -72,11 +72,11 @@ class PersonBrukerinfoApiSpek : Spek({
                             syfomodiapersonBrukerinfo.dodsdato shouldBe null
                         }
                     }
-                    it("should include doedsdato") {
+                    it("should include dodsdato") {
                         with(
                             handleRequest(HttpMethod.Get, url) {
                                 addHeader(Authorization, bearerHeader(validToken))
-                                addHeader(NAV_PERSONIDENT_HEADER, ARBEIDSTAKER_DOED.value)
+                                addHeader(NAV_PERSONIDENT_HEADER, ARBEIDSTAKER_DOD.value)
                             }
                         ) {
                             response.status() shouldBeEqualTo HttpStatusCode.OK

@@ -10,7 +10,7 @@ import no.nav.syfo.application.api.installContentNegotiation
 import no.nav.syfo.client.pdl.*
 import no.nav.syfo.testhelper.UserConstants
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ADRESSEBESKYTTET
-import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOED
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOD
 import no.nav.syfo.testhelper.getRandomPort
 import java.time.LocalDate
 
@@ -82,7 +82,7 @@ class PdlMock {
                 call.respond(
                     if (ARBEIDSTAKER_ADRESSEBESKYTTET.value == pdlRequest.variables.ident) {
                         generatePdlPersonResponse(Gradering.STRENGT_FORTROLIG)
-                    } else if (ARBEIDSTAKER_DOED.value == pdlRequest.variables.ident) {
+                    } else if (ARBEIDSTAKER_DOD.value == pdlRequest.variables.ident) {
                         generatePdlPersonResponse(doedsdato = LocalDate.now())
                     } else {
                         personResponseDefault
