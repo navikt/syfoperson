@@ -121,7 +121,7 @@ fun PdlHentPerson.getFullName(): String? {
     }
 }
 
-fun PdlHentPerson.getDoedsdato() = hentPerson?.doedsfall?.firstOrNull()?.doedsdato
+fun PdlHentPerson.getDodsdato() = hentPerson?.doedsfall?.firstOrNull()?.doedsdato
 
 fun PdlHentPerson.bostedsadresse(): Bostedsadresse? {
     val bostedsadresse = this.hentPerson?.bostedsadresse

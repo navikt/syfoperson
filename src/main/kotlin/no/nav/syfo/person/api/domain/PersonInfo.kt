@@ -6,5 +6,5 @@ data class PersonInfo(
     val fnr: String,
     val navn: String,
     val skjermingskode: Skjermingskode,
-    val doedsdato: LocalDate? = null,
+    val dodsdato: LocalDate? = null,
 )

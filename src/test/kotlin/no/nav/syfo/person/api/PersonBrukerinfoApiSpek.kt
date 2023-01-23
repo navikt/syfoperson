@@ -69,7 +69,7 @@ class PersonBrukerinfoApiSpek : Spek({
                             syfomodiapersonBrukerinfo.kontaktinfo.tlf shouldBeEqualTo digitalKontaktinfoBolkKanVarslesTrue.mobiltelefonnummer
                             syfomodiapersonBrukerinfo.kontaktinfo.skalHaVarsel shouldBeEqualTo true
                             syfomodiapersonBrukerinfo.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.getFullName()
-                            syfomodiapersonBrukerinfo.doedsdato shouldBe null
+                            syfomodiapersonBrukerinfo.dodsdato shouldBe null
                         }
                     }
                     it("should include doedsdato") {
@@ -83,7 +83,7 @@ class PersonBrukerinfoApiSpek : Spek({
                             val syfomodiapersonBrukerinfo: SyfomodiapersonBrukerinfo =
                                 objectMapper.readValue(response.content!!)
                             syfomodiapersonBrukerinfo.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.getFullName()
-                            syfomodiapersonBrukerinfo.doedsdato shouldBeEqualTo LocalDate.now()
+                            syfomodiapersonBrukerinfo.dodsdato shouldBeEqualTo LocalDate.now()
                         }
                     }
                 }

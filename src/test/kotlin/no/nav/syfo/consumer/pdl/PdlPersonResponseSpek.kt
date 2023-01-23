@@ -52,7 +52,7 @@ class PdlPersonResponseSpek : Spek({
                 null,
                 doedsdato = LocalDate.now(),
             )
-            val result = pdlPersonResponse.getDoedsdato()
+            val result = pdlPersonResponse.getDodsdato()
             result shouldBeEqualTo LocalDate.now()
         }
 
@@ -66,7 +66,7 @@ class PdlPersonResponseSpek : Spek({
                 null,
                 doedsdato = null,
             )
-            val result = pdlPersonResponse.getDoedsdato()
+            val result = pdlPersonResponse.getDodsdato()
             result shouldBe null
         }
 
