@@ -1,6 +1,7 @@
 package no.nav.syfo.testhelper
 
 import no.nav.syfo.client.pdl.*
+import java.time.LocalDate
 
 fun generatePdlPersonNavn(): PdlPersonNavn {
     return PdlPersonNavn(
@@ -57,7 +58,8 @@ fun generateOppholdsadresse(): Oppholdsadresse {
 
 fun generatePdlHentPerson(
     pdlPersonNavn: PdlPersonNavn?,
-    adressebeskyttelse: Adressebeskyttelse?
+    adressebeskyttelse: Adressebeskyttelse?,
+    doedsdato: LocalDate? = null,
 ): PdlHentPerson {
     return PdlHentPerson(
         hentPerson = PdlPerson(
@@ -75,7 +77,10 @@ fun generatePdlHentPerson(
             ),
             oppholdsadresse = listOf(
                 generateOppholdsadresse()
-            )
+            ),
+            doedsfall = if (doedsdato == null) emptyList() else {
+                listOf(PdlDoedsfall(doedsdato))
+            },
         )
     )
 }
