@@ -13,6 +13,7 @@ import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VEILEDER_NO_ACCESS
 import no.nav.syfo.testhelper.mock.digitalKontaktinfoBolkKanVarslesTrue
 import no.nav.syfo.util.*
+import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
@@ -68,6 +69,7 @@ class PersonBrukerinfoApiSpek : Spek({
                             syfomodiapersonBrukerinfo.kontaktinfo.tlf shouldBeEqualTo digitalKontaktinfoBolkKanVarslesTrue.mobiltelefonnummer
                             syfomodiapersonBrukerinfo.kontaktinfo.skalHaVarsel shouldBeEqualTo true
                             syfomodiapersonBrukerinfo.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.getFullName()
+                            syfomodiapersonBrukerinfo.doedsdato shouldBe null
                         }
                     }
                     it("should include doedsdato") {
