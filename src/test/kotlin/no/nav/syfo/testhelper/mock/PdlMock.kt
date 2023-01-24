@@ -10,13 +10,19 @@ import no.nav.syfo.application.api.installContentNegotiation
 import no.nav.syfo.client.pdl.*
 import no.nav.syfo.testhelper.UserConstants
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ADRESSEBESKYTTET
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOD
 import no.nav.syfo.testhelper.getRandomPort
+import java.time.LocalDate
 
-fun generatePdlPersonResponse(gradering: Gradering? = null) = PdlPersonResponse(
+fun generatePdlPersonResponse(
+    gradering: Gradering? = null,
+    doedsdato: LocalDate? = null,
+) = PdlPersonResponse(
     errors = null,
     data = generatePdlHentPerson(
-        generatePdlPersonNavn(),
-        generateAdressebeskyttelse(gradering = gradering)
+        pdlPersonNavn = generatePdlPersonNavn(),
+        adressebeskyttelse = generateAdressebeskyttelse(gradering = gradering),
+        doedsdato = doedsdato,
     )
 )
 
@@ -38,7 +44,8 @@ fun generateAdressebeskyttelse(
 
 fun generatePdlHentPerson(
     pdlPersonNavn: PdlPersonNavn?,
-    adressebeskyttelse: Adressebeskyttelse? = null
+    adressebeskyttelse: Adressebeskyttelse? = null,
+    doedsdato: LocalDate? = null,
 ): PdlHentPerson {
     return PdlHentPerson(
         hentPerson = PdlPerson(
@@ -51,6 +58,9 @@ fun generatePdlHentPerson(
             bostedsadresse = null,
             kontaktadresse = null,
             oppholdsadresse = null,
+            doedsfall = if (doedsdato == null) emptyList() else {
+                listOf(PdlDoedsfall(doedsdato))
+            },
         )
     )
 }
@@ -69,11 +79,15 @@ class PdlMock {
         routing {
             post {
                 val pdlRequest = call.receive<PdlRequest>()
-                if (ARBEIDSTAKER_ADRESSEBESKYTTET.value == pdlRequest.variables.ident) {
-                    call.respond(generatePdlPersonResponse(Gradering.STRENGT_FORTROLIG))
-                } else {
-                    call.respond(personResponseDefault)
-                }
+                call.respond(
+                    if (ARBEIDSTAKER_ADRESSEBESKYTTET.value == pdlRequest.variables.ident) {
+                        generatePdlPersonResponse(Gradering.STRENGT_FORTROLIG)
+                    } else if (ARBEIDSTAKER_DOD.value == pdlRequest.variables.ident) {
+                        generatePdlPersonResponse(doedsdato = LocalDate.now())
+                    } else {
+                        personResponseDefault
+                    }
+                )
             }
         }
     }

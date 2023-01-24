@@ -66,6 +66,7 @@ fun Route.registrerPersonApi(
                             fnr = personIdentNumber.value,
                             navn = person?.getFullName() ?: "",
                             skjermingskode = skjermingskode,
+                            dodsdato = person?.getDodsdato(),
                         )
                     }
                 call.respond(response)
@@ -208,14 +209,15 @@ fun Route.registrerPersonApi(
                     token = token
                 ).toSyfomodiapersonKontaktinfo()
 
-                val name = pdlClient.person(
+                val pdlPerson = pdlClient.person(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
-                )?.getFullName()
+                )
 
                 val response = SyfomodiapersonBrukerinfo(
-                    navn = name,
-                    kontaktinfo = kontaktinfo
+                    navn = pdlPerson?.getFullName(),
+                    kontaktinfo = kontaktinfo,
+                    dodsdato = pdlPerson?.getDodsdato(),
                 )
                 call.respond(response)
             }

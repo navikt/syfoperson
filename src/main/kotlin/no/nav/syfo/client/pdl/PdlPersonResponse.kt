@@ -2,6 +2,7 @@ package no.nav.syfo.client.pdl
 
 import no.nav.syfo.util.lowerCapitalize
 import java.io.Serializable
+import java.time.LocalDate
 
 data class PdlPersonResponse(
     val errors: List<PdlError>?,
@@ -39,12 +40,17 @@ data class PdlPerson(
     val bostedsadresse: List<Bostedsadresse>?,
     val kontaktadresse: List<Kontaktadresse>?,
     val oppholdsadresse: List<Oppholdsadresse>?,
+    val doedsfall: List<PdlDoedsfall>?,
 ) : Serializable
 
 data class PdlPersonNavn(
     val fornavn: String,
     val mellomnavn: String?,
     val etternavn: String
+) : Serializable
+
+data class PdlDoedsfall(
+    val doedsdato: LocalDate?,
 ) : Serializable
 
 data class Adressebeskyttelse(
@@ -114,6 +120,8 @@ fun PdlHentPerson.getFullName(): String? {
         }
     }
 }
+
+fun PdlHentPerson.getDodsdato() = hentPerson?.doedsfall?.firstOrNull()?.doedsdato
 
 fun PdlHentPerson.bostedsadresse(): Bostedsadresse? {
     val bostedsadresse = this.hentPerson?.bostedsadresse

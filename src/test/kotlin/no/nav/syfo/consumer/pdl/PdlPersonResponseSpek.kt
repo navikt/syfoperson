@@ -4,9 +4,11 @@ import no.nav.syfo.client.pdl.*
 import no.nav.syfo.person.api.PersonNavnApiSpek
 import no.nav.syfo.testhelper.UserConstants
 import no.nav.syfo.testhelper.generatePdlHentPerson
+import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
+import java.time.LocalDate
 
 class PdlPersonResponseSpek : Spek({
     describe(PersonNavnApiSpek::class.java.simpleName) {
@@ -19,7 +21,7 @@ class PdlPersonResponseSpek : Spek({
                     UserConstants.PERSON_NAME_LAST,
                 ),
                 null,
-            ).copy()
+            )
             val result = pdlPersonResponse.getFullName()
             val expected =
                 "${UserConstants.PERSON_NAME_FIRST} ${UserConstants.PERSON_NAME_MIDDLE} ${UserConstants.PERSON_NAME_LAST}"
@@ -34,10 +36,38 @@ class PdlPersonResponseSpek : Spek({
                     UserConstants.PERSON_NAME_LAST,
                 ),
                 null,
-            ).copy()
+            )
             val result = pdlPersonResponse.getFullName()
             val expected = "${UserConstants.PERSON_NAME_FIRST} ${UserConstants.PERSON_NAME_LAST}"
             result shouldBeEqualTo expected
+        }
+
+        it("getDoedsdato when set") {
+            val pdlPersonResponse = generatePdlHentPerson(
+                PdlPersonNavn(
+                    UserConstants.PERSON_NAME_FIRST,
+                    UserConstants.PERSON_NAME_MIDDLE,
+                    UserConstants.PERSON_NAME_LAST,
+                ),
+                null,
+                doedsdato = LocalDate.now(),
+            )
+            val result = pdlPersonResponse.getDodsdato()
+            result shouldBeEqualTo LocalDate.now()
+        }
+
+        it("getDoedsdato when not set") {
+            val pdlPersonResponse = generatePdlHentPerson(
+                PdlPersonNavn(
+                    UserConstants.PERSON_NAME_FIRST,
+                    UserConstants.PERSON_NAME_MIDDLE,
+                    UserConstants.PERSON_NAME_LAST,
+                ),
+                null,
+                doedsdato = null,
+            )
+            val result = pdlPersonResponse.getDodsdato()
+            result shouldBe null
         }
 
         it("isKode6Or7 is true with ${Gradering.FORTROLIG}") {
@@ -64,7 +94,7 @@ class PdlPersonResponseSpek : Spek({
             val pdlPersonResponse = generatePdlHentPerson(
                 null,
                 Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG_UTLAND),
-            ).copy()
+            )
             val result = pdlPersonResponse.isKode6Or7()
             val expected = true
             result shouldBeEqualTo expected
@@ -74,7 +104,7 @@ class PdlPersonResponseSpek : Spek({
             val pdlPersonResponse = generatePdlHentPerson(
                 null,
                 Adressebeskyttelse(gradering = Gradering.UGRADERT),
-            ).copy()
+            )
             val result = pdlPersonResponse.isKode6Or7()
             val expected = false
             result shouldBeEqualTo expected
