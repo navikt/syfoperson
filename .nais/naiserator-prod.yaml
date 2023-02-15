@@ -61,6 +61,7 @@ spec:
         - application: syfoperson-redis
   azure:
     application:
+      allowAllUsers: true
       enabled: true
       tenant: nav.no
       replyURLs:
