@@ -36,6 +36,7 @@ spec:
     path: /internal/metrics
   ingresses:
     - "https://syfoperson.dev.intern.nav.no"
+    - "https://syfoperson.intern.dev.nav.no"
   accessPolicy:
     inbound:
       rules:
@@ -67,8 +68,6 @@ spec:
       allowAllUsers: true
       enabled: true
       tenant: trygdeetaten.no
-      replyURLs:
-        - "https://syfoperson.dev.intern.nav.no/oauth2/callback"
       claims:
         extra:
           - "NAVident"
