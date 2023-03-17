@@ -67,8 +67,6 @@ spec:
       allowAllUsers: true
       enabled: true
       tenant: nav.no
-      replyURLs:
-        - "https://syfoperson.intern.nav.no/oauth2/callback"
       claims:
         extra:
           - "NAVident"
