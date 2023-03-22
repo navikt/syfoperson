@@ -59,10 +59,8 @@ spec:
         - host: "pdl-api.dev-fss-pub.nais.io"
         - host: "skjermede-personer-pip.dev.intern.nav.no"
         - host: "syfo-tilgangskontroll.dev-fss-pub.nais.io"
+        - host: "digdir-krr-proxy.intern.dev.nav.no"
       rules:
-        - application: digdir-krr-proxy
-          namespace: team-rocket
-          cluster: dev-gcp
         - application: syfoperson-redis
   azure:
     application:
