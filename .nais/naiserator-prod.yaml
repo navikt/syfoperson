@@ -61,6 +61,7 @@ spec:
         - host: "syfo-tilgangskontroll.prod-fss-pub.nais.io"
       rules:
         - application: digdir-krr-proxy
+          namespace: team-rocket
         - application: syfoperson-redis
   azure:
     application:
