@@ -62,6 +62,7 @@ spec:
       rules:
         - application: digdir-krr-proxy
           namespace: team-rocket
+          cluster: dev-gcp
         - application: syfoperson-redis
   azure:
     application:
