@@ -57,11 +57,13 @@ spec:
     outbound:
       external:
         - host: "pdl-api.dev-fss-pub.nais.io"
-        - host: "skjermede-personer-pip.dev.intern.nav.no"
         - host: "syfo-tilgangskontroll.dev-fss-pub.nais.io"
-        - host: "digdir-krr-proxy.intern.dev.nav.no"
       rules:
         - application: syfoperson-redis
+        - application: digdir-krr-proxy
+          namespace: team-rocket
+        - application: skjermede-personer-pip
+          namespace: nom
   azure:
     application:
       allowAllUsers: true
@@ -76,7 +78,7 @@ spec:
     - name: KRR_CLIENT_ID
       value: "dev-gcp.team-rocket.digdir-krr-proxy"
     - name: KRR_URL
-      value: "https://digdir-krr-proxy.intern.dev.nav.no"
+      value: "http://digdir-krr-proxy.team-rocket"
     - name: PDL_CLIENT_ID
       value: "dev-fss.pdl.pdl-api"
     - name: PDL_URL
@@ -86,7 +88,7 @@ spec:
     - name: SKJERMEDEPERSONERPIP_CLIENT_ID
       value: "dev-gcp.nom.skjermede-personer-pip"
     - name: SKJERMEDEPERSONERPIP_URL
-      value: "https://skjermede-personer-pip.dev.intern.nav.no"
+      value: "http://skjermede-personer-pip.nom"
     - name: SYFOTILGANGSKONTROLL_CLIENT_ID
       value: "dev-fss.teamsykefravr.syfo-tilgangskontroll"
     - name: SYFOTILGANGSKONTROLL_URL
