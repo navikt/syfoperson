@@ -54,6 +54,15 @@ spec:
         - application: syfooversikt
           namespace: teamsykefravr
           cluster: prod-fss
+        - application: syfomodiaperson
+          namespace: teamsykefravr
+          cluster: prod-gcp
+        - application: syfomoteoversikt
+          namespace: teamsykefravr
+          cluster: prod-gcp
+        - application: syfooversikt
+          namespace: teamsykefravr
+          cluster: prod-gcp
     outbound:
       external:
         - host: "pdl-api.prod-fss-pub.nais.io"
