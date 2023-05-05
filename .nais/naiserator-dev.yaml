@@ -54,9 +54,9 @@ spec:
     outbound:
       external:
         - host: "pdl-api.dev-fss-pub.nais.io"
-        - host: "syfo-tilgangskontroll.dev-fss-pub.nais.io"
       rules:
         - application: syfoperson-redis
+        - application: syfo-tilgangskontroll
         - application: digdir-krr-proxy
           namespace: team-rocket
         - application: skjermede-personer-pip
@@ -87,6 +87,6 @@ spec:
     - name: SKJERMEDEPERSONERPIP_URL
       value: "http://skjermede-personer-pip.nom"
     - name: SYFOTILGANGSKONTROLL_CLIENT_ID
-      value: "dev-fss.teamsykefravr.syfo-tilgangskontroll"
+      value: "dev-gcp.teamsykefravr.syfo-tilgangskontroll"
     - name: SYFOTILGANGSKONTROLL_URL
-      value: "https://syfo-tilgangskontroll.dev-fss-pub.nais.io"
+      value: "http://syfo-tilgangskontroll"
