@@ -4,23 +4,23 @@ group = "no.nav.syfo"
 version = "1.0.0"
 
 object Versions {
-    const val jackson = "2.13.4"
-    const val jedis = "4.2.3"
-    const val ktor = "2.1.2"
-    const val kluent = "1.68"
-    const val logback = "1.2.11"
-    const val logstashEncoder = "7.2"
-    const val mockk = "1.12.4"
-    const val nimbusJoseJwt = "9.25.1"
-    const val micrometerRegistry = "1.9.4"
+    const val jacksonDataType = "2.15.2"
+    const val jedis = "4.4.3"
+    const val ktor = "2.3.1"
+    const val kluent = "1.72"
+    const val logback = "1.4.7"
+    const val logstashEncoder = "7.3"
+    const val mockk = "1.13.5"
+    const val nimbusJoseJwt = "9.31"
+    const val micrometerRegistry = "1.11.0"
     const val redisEmbedded = "0.7.3"
-    const val spek = "2.0.18"
+    const val spek = "2.0.19"
 }
 
 plugins {
     kotlin("jvm") version "1.8.22"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("org.jlleitschuh.gradle.ktlint") version "10.3.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.4.2"
 }
 
 repositories {
@@ -54,7 +54,7 @@ dependencies {
     testImplementation("it.ozimov:embedded-redis:${Versions.redisEmbedded}")
 
     // (De-)serialization
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${Versions.jackson}")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${Versions.jacksonDataType}")
 
     testImplementation("com.nimbusds:nimbus-jose-jwt:${Versions.nimbusJoseJwt}")
     testImplementation("io.ktor:ktor-server-test-host:${Versions.ktor}")

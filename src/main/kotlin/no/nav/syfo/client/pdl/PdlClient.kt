@@ -32,7 +32,6 @@ class PdlClient(
             scopeClientId = clientId,
         ) ?: throw RuntimeException("Failed to send request to PDL: No token was found")
         try {
-
             val response: HttpResponse = httpClient.post(baseUrl) {
                 contentType(ContentType.Application.Json)
                 header(HttpHeaders.Authorization, bearerHeader(systemToken.accessToken))
