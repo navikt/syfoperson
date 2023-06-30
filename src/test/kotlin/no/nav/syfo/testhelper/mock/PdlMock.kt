@@ -11,18 +11,21 @@ import no.nav.syfo.client.pdl.*
 import no.nav.syfo.testhelper.UserConstants
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ADRESSEBESKYTTET
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOD
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON
 import no.nav.syfo.testhelper.getRandomPort
 import java.time.LocalDate
 
 fun generatePdlPersonResponse(
     gradering: Gradering? = null,
     doedsdato: LocalDate? = null,
+    tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
 ) = PdlPersonResponse(
     errors = null,
     data = generatePdlHentPerson(
         pdlPersonNavn = generatePdlPersonNavn(),
         adressebeskyttelse = generateAdressebeskyttelse(gradering = gradering),
         doedsdato = doedsdato,
+        tilrettelagtKommunikasjon = tilrettelagtKommunikasjon,
     )
 )
 
@@ -46,6 +49,7 @@ fun generatePdlHentPerson(
     pdlPersonNavn: PdlPersonNavn?,
     adressebeskyttelse: Adressebeskyttelse? = null,
     doedsdato: LocalDate? = null,
+    tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
 ): PdlHentPerson {
     return PdlHentPerson(
         hentPerson = PdlPerson(
@@ -61,9 +65,16 @@ fun generatePdlHentPerson(
             doedsfall = if (doedsdato == null) emptyList() else {
                 listOf(PdlDoedsfall(doedsdato))
             },
+            tilrettelagtKommunikasjon = tilrettelagtKommunikasjon?.let { listOf(it) }
         )
     )
 }
+
+private fun generatePdlTilrettelagtKommunikasjon(): PdlTilrettelagtKommunikasjon =
+    PdlTilrettelagtKommunikasjon(
+        talespraaktolk = PdlSprak(spraak = "Norsk (NO)"),
+        tegnspraaktolk = PdlSprak(spraak = "Norsk (NO)")
+    )
 
 class PdlMock {
     private val port = getRandomPort()
@@ -84,6 +95,8 @@ class PdlMock {
                         generatePdlPersonResponse(Gradering.STRENGT_FORTROLIG)
                     } else if (ARBEIDSTAKER_DOD.value == pdlRequest.variables.ident) {
                         generatePdlPersonResponse(doedsdato = LocalDate.now())
+                    } else if (ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON.value == pdlRequest.variables.ident) {
+                        generatePdlPersonResponse(tilrettelagtKommunikasjon = generatePdlTilrettelagtKommunikasjon())
                     } else {
                         personResponseDefault
                     }

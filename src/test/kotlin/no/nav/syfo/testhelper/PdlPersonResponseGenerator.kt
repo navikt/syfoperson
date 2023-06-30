@@ -81,6 +81,7 @@ fun generatePdlHentPerson(
             doedsfall = if (doedsdato == null) emptyList() else {
                 listOf(PdlDoedsfall(doedsdato))
             },
+            tilrettelagtKommunikasjon = emptyList(),
         )
     )
 }

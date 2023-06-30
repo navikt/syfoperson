@@ -10,6 +10,7 @@ object UserConstants {
     val ARBEIDSTAKER_VEILEDER_NO_ACCESS = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "1"))
     val ARBEIDSTAKER_ADRESSEBESKYTTET = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "6"))
     val ARBEIDSTAKER_DOD = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "7"))
+    val ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "8"))
 
     const val PERSON_TLF = "12345678"
     const val PERSON_EMAIL = "test@nav.no"

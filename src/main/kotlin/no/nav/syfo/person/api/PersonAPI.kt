@@ -218,6 +218,7 @@ fun Route.registrerPersonApi(
                     navn = pdlPerson?.getFullName(),
                     kontaktinfo = kontaktinfo,
                     dodsdato = pdlPerson?.getDodsdato(),
+                    tilrettelagtKommunikasjon = pdlPerson?.getTilrettelagtKommunikasjon(),
                 )
                 call.respond(response)
             }

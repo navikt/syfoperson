@@ -1,5 +1,7 @@
 package no.nav.syfo.client.pdl
 
+import no.nav.syfo.person.api.domain.syfomodiaperson.Sprak
+import no.nav.syfo.person.api.domain.syfomodiaperson.TilrettelagtKommunikasjon
 import no.nav.syfo.util.lowerCapitalize
 import java.io.Serializable
 import java.time.LocalDate
@@ -32,7 +34,15 @@ data class PdlErrorExtension(
 
 data class PdlHentPerson(
     val hentPerson: PdlPerson?
-) : Serializable
+) : Serializable {
+    fun getTilrettelagtKommunikasjon(): TilrettelagtKommunikasjon? =
+        hentPerson?.tilrettelagtKommunikasjon?.first()?.let {
+            TilrettelagtKommunikasjon(
+                talesprakTolk = Sprak(it.talespraaktolk.spraak),
+                tegnsprakTolk = Sprak(it.tegnspraaktolk.spraak),
+            )
+        }
+}
 
 data class PdlPerson(
     val navn: List<PdlPersonNavn>,
@@ -41,6 +51,7 @@ data class PdlPerson(
     val kontaktadresse: List<Kontaktadresse>?,
     val oppholdsadresse: List<Oppholdsadresse>?,
     val doedsfall: List<PdlDoedsfall>?,
+    val tilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon>?,
 ) : Serializable
 
 data class PdlPersonNavn(
@@ -52,6 +63,13 @@ data class PdlPersonNavn(
 data class PdlDoedsfall(
     val doedsdato: LocalDate?,
 ) : Serializable
+
+data class PdlTilrettelagtKommunikasjon(
+    val talespraaktolk: PdlSprak,
+    val tegnspraaktolk: PdlSprak
+) : Serializable
+
+data class PdlSprak(val spraak: String) : Serializable
 
 data class Adressebeskyttelse(
     val gradering: Gradering
