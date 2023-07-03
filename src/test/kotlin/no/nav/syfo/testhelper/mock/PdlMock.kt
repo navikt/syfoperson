@@ -65,7 +65,7 @@ fun generatePdlHentPerson(
             doedsfall = if (doedsdato == null) emptyList() else {
                 listOf(PdlDoedsfall(doedsdato))
             },
-            tilrettelagtKommunikasjon = tilrettelagtKommunikasjon?.let { listOf(it) }
+            tilrettelagtKommunikasjon = listOfNotNull(tilrettelagtKommunikasjon)
         )
     )
 }
@@ -73,7 +73,7 @@ fun generatePdlHentPerson(
 private fun generatePdlTilrettelagtKommunikasjon(): PdlTilrettelagtKommunikasjon =
     PdlTilrettelagtKommunikasjon(
         talespraaktolk = PdlSprak(spraak = "Norsk (NO)"),
-        tegnspraaktolk = PdlSprak(spraak = "Norsk (NO)")
+        tegnspraaktolk = PdlSprak(spraak = null),
     )
 
 class PdlMock {

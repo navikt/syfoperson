@@ -99,7 +99,7 @@ class PersonBrukerinfoApiSpek : Spek({
                             val syfomodiapersonBrukerinfo: SyfomodiapersonBrukerinfo =
                                 objectMapper.readValue(response.content!!)
                             syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.talesprakTolk?.value shouldBeEqualTo "Norsk (NO)"
-                            syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.tegnsprakTolk?.value shouldBeEqualTo "Norsk (NO)"
+                            syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.tegnsprakTolk?.value shouldBeEqualTo null
                         }
                     }
                 }

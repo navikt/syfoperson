@@ -51,7 +51,7 @@ data class PdlPerson(
     val kontaktadresse: List<Kontaktadresse>?,
     val oppholdsadresse: List<Oppholdsadresse>?,
     val doedsfall: List<PdlDoedsfall>?,
-    val tilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon>?,
+    val tilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon>,
 ) : Serializable
 
 data class PdlPersonNavn(
@@ -69,7 +69,7 @@ data class PdlTilrettelagtKommunikasjon(
     val tegnspraaktolk: PdlSprak?,
 ) : Serializable
 
-data class PdlSprak(val spraak: String) : Serializable
+data class PdlSprak(val spraak: String?) : Serializable
 
 data class Adressebeskyttelse(
     val gradering: Gradering,
