@@ -57,7 +57,7 @@ data class PdlPerson(
 data class PdlPersonNavn(
     val fornavn: String,
     val mellomnavn: String?,
-    val etternavn: String
+    val etternavn: String,
 ) : Serializable
 
 data class PdlDoedsfall(
@@ -66,20 +66,20 @@ data class PdlDoedsfall(
 
 data class PdlTilrettelagtKommunikasjon(
     val talespraaktolk: PdlSprak,
-    val tegnspraaktolk: PdlSprak
+    val tegnspraaktolk: PdlSprak,
 ) : Serializable
 
 data class PdlSprak(val spraak: String) : Serializable
 
 data class Adressebeskyttelse(
-    val gradering: Gradering
+    val gradering: Gradering,
 ) : Serializable
 
 enum class Gradering : Serializable {
     STRENGT_FORTROLIG_UTLAND,
     STRENGT_FORTROLIG,
     FORTROLIG,
-    UGRADERT
+    UGRADERT,
 }
 
 fun PdlHentPerson.getDiskresjonskode(): String {
