@@ -35,7 +35,7 @@ data class PdlErrorExtension(
 data class PdlHentPerson(
     val hentPerson: PdlPerson?
 ) : Serializable {
-    fun tilrettelagtKommunikasjon(): TilrettelagtKommunikasjon? =
+    val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon? =
         hentPerson?.tilrettelagtKommunikasjon?.firstOrNull()?.let {
             when {
                 it.talespraaktolk?.spraak != null -> TalesprakTolk(it.talespraaktolk.spraak)
