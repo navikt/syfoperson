@@ -36,7 +36,7 @@ data class PdlHentPerson(
     val hentPerson: PdlPerson?
 ) : Serializable {
     val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon? =
-        hentPerson?.tilrettelagtKommunikasjon?.first()?.let {
+        hentPerson?.tilrettelagtKommunikasjon?.firstOrNull()?.let {
             TilrettelagtKommunikasjon(
                 talesprakTolk = Sprak(it.talespraaktolk.spraak),
                 tegnsprakTolk = Sprak(it.tegnspraaktolk.spraak),
