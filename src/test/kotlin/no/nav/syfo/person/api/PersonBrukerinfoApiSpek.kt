@@ -7,6 +7,7 @@ import io.ktor.http.HttpHeaders.Authorization
 import io.ktor.server.testing.*
 import no.nav.syfo.client.pdl.getFullName
 import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonBrukerinfo
+import no.nav.syfo.person.api.domain.syfomodiaperson.TilrettelagtKommunikasjon.*
 import no.nav.syfo.testhelper.*
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOD
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
@@ -98,8 +99,8 @@ class PersonBrukerinfoApiSpek : Spek({
                             response.status() shouldBeEqualTo HttpStatusCode.OK
                             val syfomodiapersonBrukerinfo: SyfomodiapersonBrukerinfo =
                                 objectMapper.readValue(response.content!!)
-                            syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.talesprakTolk?.value shouldBeEqualTo "Norsk (NO)"
-                            syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.tegnsprakTolk?.value shouldBeEqualTo null
+                            (syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon as? TalesprakTolk)?.sprak shouldBeEqualTo "Norsk (NO)"
+                            (syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon as? TegnsprakTolk) shouldBeEqualTo null
                         }
                     }
                 }

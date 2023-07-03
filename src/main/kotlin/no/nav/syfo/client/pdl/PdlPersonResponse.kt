@@ -35,12 +35,13 @@ data class PdlErrorExtension(
 data class PdlHentPerson(
     val hentPerson: PdlPerson?
 ) : Serializable {
-    val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon? =
+    fun tilrettelagtKommunikasjon(): TilrettelagtKommunikasjon? =
         hentPerson?.tilrettelagtKommunikasjon?.firstOrNull()?.let {
-            TilrettelagtKommunikasjon(
-                talesprakTolk = it.talespraaktolk?.spraak?.let { sprak -> Sprak(sprak) },
-                tegnsprakTolk = it.tegnspraaktolk?.spraak?.let { sprak -> Sprak(sprak) },
-            )
+            when {
+                it.talespraaktolk?.spraak != null -> TalesprakTolk(it.talespraaktolk.spraak)
+                it.tegnspraaktolk?.spraak != null -> TegnsprakTolk(it.tegnspraaktolk.spraak)
+                else -> null
+            }
         }
 }
 
