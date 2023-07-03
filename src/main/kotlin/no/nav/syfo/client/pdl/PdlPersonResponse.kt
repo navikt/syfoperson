@@ -1,7 +1,7 @@
 package no.nav.syfo.client.pdl
 
-import no.nav.syfo.person.api.domain.syfomodiaperson.Sprak
 import no.nav.syfo.person.api.domain.syfomodiaperson.TilrettelagtKommunikasjon
+import no.nav.syfo.person.api.domain.syfomodiaperson.TilrettelagtKommunikasjon.*
 import no.nav.syfo.util.lowerCapitalize
 import java.io.Serializable
 import java.time.LocalDate
