@@ -38,8 +38,8 @@ data class PdlHentPerson(
     val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon? =
         hentPerson?.tilrettelagtKommunikasjon?.firstOrNull()?.let {
             TilrettelagtKommunikasjon(
-                talesprakTolk = Sprak(it.talespraaktolk.spraak),
-                tegnsprakTolk = Sprak(it.tegnspraaktolk.spraak),
+                talesprakTolk = it.talespraaktolk?.spraak?.let { sprak -> Sprak(sprak) },
+                tegnsprakTolk = it.tegnspraaktolk?.spraak?.let { sprak -> Sprak(sprak) },
             )
         }
 }
@@ -65,8 +65,8 @@ data class PdlDoedsfall(
 ) : Serializable
 
 data class PdlTilrettelagtKommunikasjon(
-    val talespraaktolk: PdlSprak,
-    val tegnspraaktolk: PdlSprak,
+    val talespraaktolk: PdlSprak?,
+    val tegnspraaktolk: PdlSprak?,
 ) : Serializable
 
 data class PdlSprak(val spraak: String) : Serializable
