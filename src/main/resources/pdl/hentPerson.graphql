@@ -17,6 +17,14 @@ query($ident: ID!, $navnHistorikk: Boolean!){
     doedsfall {
         doedsdato
     }
+    tilrettelagtKommunikasjon {
+        talespraaktolk {
+            spraak
+        }
+        tegnspraaktolk {
+            spraak
+        }
+    }
     bostedsadresse(historikk: false) {
       angittFlyttedato
       gyldigFraOgMed

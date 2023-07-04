@@ -1,5 +1,7 @@
 package no.nav.syfo.client.pdl
 
+import no.nav.syfo.person.api.domain.syfomodiaperson.Sprak
+import no.nav.syfo.person.api.domain.syfomodiaperson.TilrettelagtKommunikasjon
 import no.nav.syfo.util.lowerCapitalize
 import java.io.Serializable
 import java.time.LocalDate
@@ -32,7 +34,15 @@ data class PdlErrorExtension(
 
 data class PdlHentPerson(
     val hentPerson: PdlPerson?
-) : Serializable
+) : Serializable {
+    val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon? =
+        hentPerson?.tilrettelagtKommunikasjon?.firstOrNull()?.let {
+            TilrettelagtKommunikasjon(
+                talesprakTolk = it.talespraaktolk?.spraak?.let { sprak -> Sprak(sprak) },
+                tegnsprakTolk = it.tegnspraaktolk?.spraak?.let { sprak -> Sprak(sprak) },
+            )
+        }
+}
 
 data class PdlPerson(
     val navn: List<PdlPersonNavn>,
@@ -41,27 +51,35 @@ data class PdlPerson(
     val kontaktadresse: List<Kontaktadresse>?,
     val oppholdsadresse: List<Oppholdsadresse>?,
     val doedsfall: List<PdlDoedsfall>?,
+    val tilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon>,
 ) : Serializable
 
 data class PdlPersonNavn(
     val fornavn: String,
     val mellomnavn: String?,
-    val etternavn: String
+    val etternavn: String,
 ) : Serializable
 
 data class PdlDoedsfall(
     val doedsdato: LocalDate?,
 ) : Serializable
 
+data class PdlTilrettelagtKommunikasjon(
+    val talespraaktolk: PdlSprak?,
+    val tegnspraaktolk: PdlSprak?,
+) : Serializable
+
+data class PdlSprak(val spraak: String?) : Serializable
+
 data class Adressebeskyttelse(
-    val gradering: Gradering
+    val gradering: Gradering,
 ) : Serializable
 
 enum class Gradering : Serializable {
     STRENGT_FORTROLIG_UTLAND,
     STRENGT_FORTROLIG,
     FORTROLIG,
-    UGRADERT
+    UGRADERT,
 }
 
 fun PdlHentPerson.getDiskresjonskode(): String {

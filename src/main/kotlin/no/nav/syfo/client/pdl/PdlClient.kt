@@ -42,16 +42,16 @@ class PdlClient(
 
             when (response.status) {
                 HttpStatusCode.OK -> {
-                    val pdlReponse = response.body<PdlPersonResponse>()
-                    return if (!pdlReponse.errors.isNullOrEmpty()) {
+                    val pdlResponse = response.body<PdlPersonResponse>()
+                    return if (!pdlResponse.errors.isNullOrEmpty()) {
                         COUNT_CALL_PDL_PERSON_FAIL.increment()
-                        pdlReponse.errors.forEach {
+                        pdlResponse.errors.forEach {
                             log.error("Error while requesting person from PersonDataLosningen: ${it.errorMessage()}")
                         }
                         null
                     } else {
                         COUNT_CALL_PDL_PERSON_SUCCESS.increment()
-                        pdlReponse.data
+                        pdlResponse.data
                     }
                 }
                 else -> {

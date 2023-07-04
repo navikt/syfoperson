@@ -10,6 +10,7 @@ import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonBrukerinfo
 import no.nav.syfo.testhelper.*
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOD
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VEILEDER_NO_ACCESS
 import no.nav.syfo.testhelper.mock.digitalKontaktinfoBolkKanVarslesTrue
 import no.nav.syfo.util.*
@@ -70,6 +71,7 @@ class PersonBrukerinfoApiSpek : Spek({
                             syfomodiapersonBrukerinfo.kontaktinfo.skalHaVarsel shouldBeEqualTo true
                             syfomodiapersonBrukerinfo.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.getFullName()
                             syfomodiapersonBrukerinfo.dodsdato shouldBe null
+                            syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon shouldBe null
                         }
                     }
                     it("should include dodsdato") {
@@ -84,6 +86,20 @@ class PersonBrukerinfoApiSpek : Spek({
                                 objectMapper.readValue(response.content!!)
                             syfomodiapersonBrukerinfo.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.getFullName()
                             syfomodiapersonBrukerinfo.dodsdato shouldBeEqualTo LocalDate.now()
+                        }
+                    }
+                    it("should include tilrettelagtKommunikasjon") {
+                        with(
+                            handleRequest(HttpMethod.Get, url) {
+                                addHeader(Authorization, bearerHeader(validToken))
+                                addHeader(NAV_PERSONIDENT_HEADER, ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON.value)
+                            }
+                        ) {
+                            response.status() shouldBeEqualTo HttpStatusCode.OK
+                            val syfomodiapersonBrukerinfo: SyfomodiapersonBrukerinfo =
+                                objectMapper.readValue(response.content!!)
+                            syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.talesprakTolk?.value shouldBeEqualTo "Norsk (NO)"
+                            syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.tegnsprakTolk?.value shouldBeEqualTo null
                         }
                     }
                 }
