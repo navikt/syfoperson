@@ -1,5 +1,6 @@
 package no.nav.syfo.person.api
 
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -213,14 +214,18 @@ fun Route.registrerPersonApi(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
                 )
-
-                val response = SyfomodiapersonBrukerinfo(
-                    navn = pdlPerson?.getFullName(),
-                    kontaktinfo = kontaktinfo,
-                    dodsdato = pdlPerson?.getDodsdato(),
-                    tilrettelagtKommunikasjon = pdlPerson?.tilrettelagtKommunikasjon,
-                )
-                call.respond(response)
+                if (pdlPerson != null) {
+                    call.respond(
+                        SyfomodiapersonBrukerinfo(
+                            navn = pdlPerson.getFullName(),
+                            kontaktinfo = kontaktinfo,
+                            dodsdato = pdlPerson.getDodsdato(),
+                            tilrettelagtKommunikasjon = pdlPerson.tilrettelagtKommunikasjon,
+                        )
+                    )
+                } else {
+                    call.respond(HttpStatusCode.NotFound)
+                }
             }
         }
     }
