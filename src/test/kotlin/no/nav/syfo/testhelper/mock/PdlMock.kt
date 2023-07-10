@@ -72,7 +72,7 @@ fun generatePdlHentPerson(
 
 private fun generatePdlTilrettelagtKommunikasjon(): PdlTilrettelagtKommunikasjon =
     PdlTilrettelagtKommunikasjon(
-        talespraaktolk = PdlSprak(spraak = "Norsk (NO)"),
+        talespraaktolk = PdlSprak(spraak = "NO"),
         tegnspraaktolk = PdlSprak(spraak = null),
     )
 

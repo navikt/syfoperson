@@ -33,10 +33,10 @@ data class PdlErrorExtension(
 )
 
 data class PdlHentPerson(
-    val hentPerson: PdlPerson?
+    val hentPerson: PdlPerson
 ) : Serializable {
     val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon? =
-        hentPerson?.tilrettelagtKommunikasjon?.firstOrNull()?.let {
+        hentPerson.tilrettelagtKommunikasjon.firstOrNull()?.let {
             TilrettelagtKommunikasjon(
                 talesprakTolk = it.talespraaktolk?.spraak?.let { sprak -> Sprak(sprak) },
                 tegnsprakTolk = it.tegnspraaktolk?.spraak?.let { sprak -> Sprak(sprak) },
@@ -83,7 +83,7 @@ enum class Gradering : Serializable {
 }
 
 fun PdlHentPerson.getDiskresjonskode(): String {
-    val adressebeskyttelseList = this.hentPerson?.adressebeskyttelse
+    val adressebeskyttelseList = this.hentPerson.adressebeskyttelse
     if (adressebeskyttelseList.isNullOrEmpty()) {
         return ""
     } else {
@@ -92,9 +92,11 @@ fun PdlHentPerson.getDiskresjonskode(): String {
             adressebeskyttelse.isKode6() -> {
                 "6"
             }
+
             adressebeskyttelse.isKode7() -> {
                 "7"
             }
+
             else -> {
                 ""
             }
@@ -103,7 +105,7 @@ fun PdlHentPerson.getDiskresjonskode(): String {
 }
 
 fun PdlHentPerson.isKode6Or7(): Boolean {
-    val adressebeskyttelse = this.hentPerson?.adressebeskyttelse
+    val adressebeskyttelse = this.hentPerson.adressebeskyttelse
     return if (adressebeskyttelse.isNullOrEmpty()) {
         false
     } else {
@@ -122,11 +124,11 @@ fun Adressebeskyttelse.isKode7(): Boolean {
 }
 
 fun PdlHentPerson.getFullName(): String? {
-    val nameList = this.hentPerson?.navn
-    if (nameList.isNullOrEmpty()) {
+    val names = this.hentPerson.navn
+    if (names.isEmpty()) {
         return null
     }
-    nameList[0].let {
+    names[0].let {
         val firstName = it.fornavn.lowerCapitalize()
         val middleName = it.mellomnavn
         val surName = it.etternavn.lowerCapitalize()
@@ -139,10 +141,10 @@ fun PdlHentPerson.getFullName(): String? {
     }
 }
 
-fun PdlHentPerson.getDodsdato() = hentPerson?.doedsfall?.firstOrNull()?.doedsdato
+fun PdlHentPerson.getDodsdato() = hentPerson.doedsfall?.firstOrNull()?.doedsdato
 
 fun PdlHentPerson.bostedsadresse(): Bostedsadresse? {
-    val bostedsadresse = this.hentPerson?.bostedsadresse
+    val bostedsadresse = this.hentPerson.bostedsadresse
     if (bostedsadresse.isNullOrEmpty()) {
         return null
     }
@@ -152,7 +154,7 @@ fun PdlHentPerson.bostedsadresse(): Bostedsadresse? {
 }
 
 fun PdlHentPerson.kontaktadresse(): Kontaktadresse? {
-    val kontaktadresse = this.hentPerson?.kontaktadresse
+    val kontaktadresse = this.hentPerson.kontaktadresse
     if (kontaktadresse.isNullOrEmpty()) {
         return null
     }
@@ -162,7 +164,7 @@ fun PdlHentPerson.kontaktadresse(): Kontaktadresse? {
 }
 
 fun PdlHentPerson.oppholdsadresse(): Oppholdsadresse? {
-    val oppholdsadresse = this.hentPerson?.oppholdsadresse
+    val oppholdsadresse = this.hentPerson.oppholdsadresse
     if (oppholdsadresse.isNullOrEmpty()) {
         return null
     }

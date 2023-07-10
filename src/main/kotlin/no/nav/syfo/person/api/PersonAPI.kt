@@ -1,5 +1,6 @@
 package no.nav.syfo.person.api
 
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -51,23 +52,25 @@ fun Route.registrerPersonApi(
                     token = token,
                 )
                 val response: List<PersonInfo> = grantedAccessList
-                    .map { personIdentNumber ->
+                    .mapNotNull { personIdentNumber ->
                         val person = pdlClient.person(
                             callId = callId,
                             personIdentNumber = personIdentNumber,
                         )
-                        val skjermingskode = skjermingskodeService.hentBrukersSkjermingskode(
-                            callId = callId,
-                            person = person,
-                            personIdent = personIdentNumber,
-                            token = token,
-                        )
-                        PersonInfo(
-                            fnr = personIdentNumber.value,
-                            navn = person?.getFullName() ?: "",
-                            skjermingskode = skjermingskode,
-                            dodsdato = person?.getDodsdato(),
-                        )
+                        person?.let {
+                            val skjermingskode = skjermingskodeService.hentBrukersSkjermingskode(
+                                callId = callId,
+                                person = it,
+                                personIdent = personIdentNumber,
+                                token = token,
+                            )
+                            PersonInfo(
+                                fnr = personIdentNumber.value,
+                                navn = it.getFullName() ?: "",
+                                skjermingskode = skjermingskode,
+                                dodsdato = it.getDodsdato(),
+                            )
+                        }
                     }
                 call.respond(response)
             } catch (ex: Exception) {
@@ -214,13 +217,17 @@ fun Route.registrerPersonApi(
                     personIdentNumber = personIdentNumber,
                 )
 
-                val response = SyfomodiapersonBrukerinfo(
-                    navn = pdlPerson?.getFullName(),
-                    kontaktinfo = kontaktinfo,
-                    dodsdato = pdlPerson?.getDodsdato(),
-                    tilrettelagtKommunikasjon = pdlPerson?.tilrettelagtKommunikasjon,
-                )
-                call.respond(response)
+                if (pdlPerson != null) {
+                    val response = SyfomodiapersonBrukerinfo(
+                        navn = pdlPerson.getFullName(),
+                        kontaktinfo = kontaktinfo,
+                        dodsdato = pdlPerson.getDodsdato(),
+                        tilrettelagtKommunikasjon = pdlPerson.tilrettelagtKommunikasjon,
+                    )
+                    call.respond(response)
+                } else {
+                    call.respond(HttpStatusCode.NotFound)
+                }
             }
         }
     }

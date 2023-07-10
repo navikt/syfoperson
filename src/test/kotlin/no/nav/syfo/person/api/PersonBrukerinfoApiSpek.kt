@@ -98,7 +98,7 @@ class PersonBrukerinfoApiSpek : Spek({
                             response.status() shouldBeEqualTo HttpStatusCode.OK
                             val syfomodiapersonBrukerinfo: SyfomodiapersonBrukerinfo =
                                 objectMapper.readValue(response.content!!)
-                            syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.talesprakTolk?.value shouldBeEqualTo "Norsk (NO)"
+                            syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.talesprakTolk?.value shouldBeEqualTo "NO"
                             syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.tegnsprakTolk?.value shouldBeEqualTo null
                         }
                     }

@@ -11,11 +11,11 @@ class SkjermingskodeService(
 ) {
     suspend fun hentBrukersSkjermingskode(
         callId: String,
-        person: PdlHentPerson?,
+        person: PdlHentPerson,
         personIdent: PersonIdentNumber,
         token: String,
     ): Skjermingskode {
-        if (person?.isKode6Or7() == true)
+        if (person.isKode6Or7())
             return Skjermingskode.DISKRESJONSMERKET
         return if (
             skjermedePersonerPipClient.isSkjermet(
