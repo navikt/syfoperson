@@ -57,7 +57,7 @@ fun Route.registrerPersonApi(
                             callId = callId,
                             personIdentNumber = personIdentNumber,
                         )
-                        person?.let {
+                        person?.hentPerson?.let {
                             val skjermingskode = skjermingskodeService.hentBrukersSkjermingskode(
                                 callId = callId,
                                 person = it,
@@ -66,9 +66,9 @@ fun Route.registrerPersonApi(
                             )
                             PersonInfo(
                                 fnr = personIdentNumber.value,
-                                navn = it.getFullName() ?: "",
+                                navn = it.fullName ?: "",
                                 skjermingskode = skjermingskode,
-                                dodsdato = it.getDodsdato(),
+                                dodsdato = it.dodsdato,
                             )
                         }
                     }
@@ -95,7 +95,7 @@ fun Route.registrerPersonApi(
                 val navn = pdlClient.person(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
-                )?.getFullName() ?: ""
+                )?.hentPerson?.fullName ?: ""
 
                 val response = FnrMedNavn(
                     fnr = personIdentNumber.value,
@@ -141,7 +141,7 @@ fun Route.registrerPersonApi(
                 val response = pdlClient.person(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
-                )?.getDiskresjonskode() ?: ""
+                )?.hentPerson?.diskresjonskode ?: ""
                 call.respond(response)
             }
         }
@@ -157,17 +157,19 @@ fun Route.registrerPersonApi(
 
                 val callId = getCallId()
 
-                val person = pdlClient.person(
+                val pdlPerson = pdlClient.person(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
                 )
-                val response = PersonAdresseResponse(
-                    navn = person?.getFullName() ?: "",
-                    bostedsadresse = person?.bostedsadresse(),
-                    kontaktadresse = person?.kontaktadresse(),
-                    oppholdsadresse = person?.oppholdsadresse()
-                )
-                call.respond(response)
+                pdlPerson?.hentPerson?.let { person ->
+                    val response = PersonAdresseResponse(
+                        navn = person.fullName ?: "",
+                        bostedsadresse = person.getBostedsadresse,
+                        kontaktadresse = person.getKontaktadresse,
+                        oppholdsadresse = person.getOppholdsadresse
+                    )
+                    call.respond(response)
+                } ?: call.respond(HttpStatusCode.NotFound)
             }
         }
 
@@ -217,17 +219,15 @@ fun Route.registrerPersonApi(
                     personIdentNumber = personIdentNumber,
                 )
 
-                if (pdlPerson != null) {
+                pdlPerson?.hentPerson?.let { person ->
                     val response = SyfomodiapersonBrukerinfo(
-                        navn = pdlPerson.getFullName(),
+                        navn = person.fullName,
                         kontaktinfo = kontaktinfo,
-                        dodsdato = pdlPerson.getDodsdato(),
-                        tilrettelagtKommunikasjon = pdlPerson.tilrettelagtKommunikasjon,
+                        dodsdato = person.dodsdato,
+                        tilrettelagtKommunikasjon = person.getTilrettelagtKommunikasjon,
                     )
                     call.respond(response)
-                } else {
-                    call.respond(HttpStatusCode.NotFound)
-                }
+                } ?: call.respond(HttpStatusCode.NotFound)
             }
         }
     }

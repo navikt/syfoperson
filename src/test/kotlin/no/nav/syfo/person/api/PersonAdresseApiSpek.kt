@@ -56,10 +56,10 @@ class PersonAdresseApiSpek : Spek({
                             response.status() shouldBeEqualTo HttpStatusCode.OK
                             val personAdresseResponse: PersonAdresseResponse =
                                 objectMapper.readValue(response.content!!)
-                            personAdresseResponse.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.getFullName()
-                            personAdresseResponse.bostedsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.bostedsadresse()
-                            personAdresseResponse.kontaktadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.kontaktadresse()
-                            personAdresseResponse.oppholdsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.oppholdsadresse()
+                            personAdresseResponse.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.fullName
+                            personAdresseResponse.bostedsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.getBostedsadresse
+                            personAdresseResponse.kontaktadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.getKontaktadresse
+                            personAdresseResponse.oppholdsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.getOppholdsadresse
                         }
                     }
                 }
