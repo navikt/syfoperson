@@ -90,6 +90,16 @@ class PersonAdresseApiSpek : Spek({
                             response.status() shouldBeEqualTo HttpStatusCode.Forbidden
                         }
                     }
+                    it("should return status ${HttpStatusCode.InternalServerError} if person is null from pdl") {
+                        with(
+                            handleRequest(HttpMethod.Get, url) {
+                                addHeader(Authorization, bearerHeader(validToken))
+                                addHeader(NAV_PERSONIDENT_HEADER, UserConstants.ARBEIDSTAKER_PDL_ERROR.value)
+                            }
+                        ) {
+                            response.status() shouldBeEqualTo HttpStatusCode.InternalServerError
+                        }
+                    }
                 }
             }
         }

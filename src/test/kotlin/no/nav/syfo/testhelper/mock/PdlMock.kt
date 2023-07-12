@@ -11,6 +11,7 @@ import no.nav.syfo.client.pdl.*
 import no.nav.syfo.testhelper.UserConstants
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ADRESSEBESKYTTET
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOD
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PDL_ERROR
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON
 import no.nav.syfo.testhelper.getRandomPort
 import java.time.LocalDate
@@ -27,6 +28,11 @@ fun generatePdlPersonResponse(
         doedsdato = doedsdato,
         tilrettelagtKommunikasjon = tilrettelagtKommunikasjon,
     )
+)
+
+fun generatePdlPersonResponseError() = PdlPersonResponse(
+    errors = null,
+    data = null,
 )
 
 fun generatePdlPersonNavn(): PdlPersonNavn {
@@ -97,6 +103,8 @@ class PdlMock {
                         generatePdlPersonResponse(doedsdato = LocalDate.now())
                     } else if (ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON.value == pdlRequest.variables.ident) {
                         generatePdlPersonResponse(tilrettelagtKommunikasjon = generatePdlTilrettelagtKommunikasjon())
+                    } else if (ARBEIDSTAKER_PDL_ERROR.value == pdlRequest.variables.ident) {
+                        generatePdlPersonResponseError()
                     } else {
                         personResponseDefault
                     }
