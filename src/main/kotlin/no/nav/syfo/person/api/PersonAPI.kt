@@ -164,9 +164,9 @@ fun Route.registrerPersonApi(
                 pdlPerson?.hentPerson?.let { person ->
                     val response = PersonAdresseResponse(
                         navn = person.fullName ?: "",
-                        bostedsadresse = person.getBostedsadresse,
-                        kontaktadresse = person.getKontaktadresse,
-                        oppholdsadresse = person.getOppholdsadresse
+                        bostedsadresse = person.getBostedsadresse(),
+                        kontaktadresse = person.getKontaktadresse(),
+                        oppholdsadresse = person.getOppholdsadresse(),
                     )
                     call.respond(response)
                 } ?: call.respond(HttpStatusCode.InternalServerError)

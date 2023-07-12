@@ -73,7 +73,7 @@ data class PdlPerson(
             }
         } ?: ""
 
-    val getBostedsadresse: Bostedsadresse? =
+    fun getBostedsadresse(): Bostedsadresse? =
         bostedsadresse?.filter { it.gyldigFraOgMed != null }?.maxByOrNull { it.gyldigFraOgMed!! }
 
     val getTilrettelagtKommunikasjon: TilrettelagtKommunikasjon? =
@@ -86,10 +86,10 @@ data class PdlPerson(
 
     val dodsdato: LocalDate? = doedsfall?.firstOrNull()?.doedsdato
 
-    val getKontaktadresse: Kontaktadresse? =
+    fun getKontaktadresse(): Kontaktadresse? =
         kontaktadresse?.filter { it.gyldigFraOgMed != null }?.maxByOrNull { it.gyldigFraOgMed!! }
 
-    val getOppholdsadresse: Oppholdsadresse? =
+    fun getOppholdsadresse(): Oppholdsadresse? =
         oppholdsadresse?.filter { it.gyldigFraOgMed != null }?.maxByOrNull { it.gyldigFraOgMed!! }
 }
 

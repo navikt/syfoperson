@@ -57,9 +57,9 @@ class PersonAdresseApiSpek : Spek({
                             val personAdresseResponse: PersonAdresseResponse =
                                 objectMapper.readValue(response.content!!)
                             personAdresseResponse.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.fullName
-                            personAdresseResponse.bostedsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.getBostedsadresse
-                            personAdresseResponse.kontaktadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.getKontaktadresse
-                            personAdresseResponse.oppholdsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.getOppholdsadresse
+                            personAdresseResponse.bostedsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.getBostedsadresse()
+                            personAdresseResponse.kontaktadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.getKontaktadresse()
+                            personAdresseResponse.oppholdsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.getOppholdsadresse()
                         }
                     }
                 }
