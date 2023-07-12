@@ -169,7 +169,7 @@ fun Route.registrerPersonApi(
                         oppholdsadresse = person.getOppholdsadresse
                     )
                     call.respond(response)
-                } ?: call.respond(HttpStatusCode.NotFound)
+                } ?: call.respond(HttpStatusCode.InternalServerError)
             }
         }
 
@@ -227,7 +227,7 @@ fun Route.registrerPersonApi(
                         tilrettelagtKommunikasjon = person.getTilrettelagtKommunikasjon,
                     )
                     call.respond(response)
-                } ?: call.respond(HttpStatusCode.NotFound)
+                } ?: call.respond(HttpStatusCode.InternalServerError)
             }
         }
     }
