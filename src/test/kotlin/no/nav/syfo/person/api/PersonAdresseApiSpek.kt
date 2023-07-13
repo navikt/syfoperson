@@ -5,7 +5,6 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.ktor.http.*
 import io.ktor.http.HttpHeaders.Authorization
 import io.ktor.server.testing.*
-import no.nav.syfo.client.pdl.*
 import no.nav.syfo.person.api.domain.PersonAdresseResponse
 import no.nav.syfo.testhelper.*
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
@@ -57,9 +56,9 @@ class PersonAdresseApiSpek : Spek({
                             val personAdresseResponse: PersonAdresseResponse =
                                 objectMapper.readValue(response.content!!)
                             personAdresseResponse.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.fullName
-                            personAdresseResponse.bostedsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.getBostedsadresse()
-                            personAdresseResponse.kontaktadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.getKontaktadresse()
-                            personAdresseResponse.oppholdsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.getOppholdsadresse()
+                            personAdresseResponse.bostedsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.hentBostedsadresse()
+                            personAdresseResponse.kontaktadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.hentKontaktadresse()
+                            personAdresseResponse.oppholdsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.hentOppholdsadresse()
                         }
                     }
                 }
