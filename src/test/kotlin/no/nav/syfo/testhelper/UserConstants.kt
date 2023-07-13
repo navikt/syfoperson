@@ -11,6 +11,7 @@ object UserConstants {
     val ARBEIDSTAKER_ADRESSEBESKYTTET = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "6"))
     val ARBEIDSTAKER_DOD = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "7"))
     val ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "8"))
+    val ARBEIDSTAKER_PDL_ERROR = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "9"))
 
     const val PERSON_TLF = "12345678"
     const val PERSON_EMAIL = "test@nav.no"

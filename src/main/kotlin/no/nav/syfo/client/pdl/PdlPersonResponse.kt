@@ -34,15 +34,7 @@ data class PdlErrorExtension(
 
 data class PdlHentPerson(
     val hentPerson: PdlPerson?
-) : Serializable {
-    val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon? =
-        hentPerson?.tilrettelagtKommunikasjon?.firstOrNull()?.let {
-            TilrettelagtKommunikasjon(
-                talesprakTolk = it.talespraaktolk?.spraak?.let { sprak -> Sprak(sprak) },
-                tegnsprakTolk = it.tegnspraaktolk?.spraak?.let { sprak -> Sprak(sprak) },
-            )
-        }
-}
+) : Serializable
 
 data class PdlPerson(
     val navn: List<PdlPersonNavn>,
@@ -52,7 +44,54 @@ data class PdlPerson(
     val oppholdsadresse: List<Oppholdsadresse>?,
     val doedsfall: List<PdlDoedsfall>?,
     val tilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon>,
-) : Serializable
+) : Serializable {
+
+    val fullName: String? =
+        navn.firstOrNull()?.let {
+            val firstName = it.fornavn.lowerCapitalize()
+            val middleName = it.mellomnavn
+            val surName = it.etternavn.lowerCapitalize()
+
+            if (middleName.isNullOrBlank()) {
+                "$firstName $surName"
+            } else {
+                "$firstName ${middleName.lowerCapitalize()} $surName"
+            }
+        }
+
+    val isKode6Or7: Boolean =
+        adressebeskyttelse?.any {
+            it.isKode6() || it.isKode7()
+        } ?: false
+
+    val diskresjonskode: String =
+        adressebeskyttelse?.firstOrNull()?.let {
+            when {
+                it.isKode6() -> "6"
+                it.isKode7() -> "7"
+                else -> ""
+            }
+        } ?: ""
+
+    fun hentBostedsadresse(): Bostedsadresse? =
+        bostedsadresse?.filter { it.gyldigFraOgMed != null }?.maxByOrNull { it.gyldigFraOgMed!! }
+
+    fun hentTilrettelagtKommunikasjon(): TilrettelagtKommunikasjon? =
+        tilrettelagtKommunikasjon.firstOrNull()?.let {
+            TilrettelagtKommunikasjon(
+                talesprakTolk = it.talespraaktolk?.spraak?.let { sprak -> Sprak(sprak) },
+                tegnsprakTolk = it.tegnspraaktolk?.spraak?.let { sprak -> Sprak(sprak) },
+            )
+        }
+
+    val dodsdato: LocalDate? = doedsfall?.firstOrNull()?.doedsdato
+
+    fun hentKontaktadresse(): Kontaktadresse? =
+        kontaktadresse?.filter { it.gyldigFraOgMed != null }?.maxByOrNull { it.gyldigFraOgMed!! }
+
+    fun hentOppholdsadresse(): Oppholdsadresse? =
+        oppholdsadresse?.filter { it.gyldigFraOgMed != null }?.maxByOrNull { it.gyldigFraOgMed!! }
+}
 
 data class PdlPersonNavn(
     val fornavn: String,
@@ -73,100 +112,18 @@ data class PdlSprak(val spraak: String?) : Serializable
 
 data class Adressebeskyttelse(
     val gradering: Gradering,
-) : Serializable
+) : Serializable {
+
+    fun isKode6(): Boolean =
+        gradering == Gradering.STRENGT_FORTROLIG || gradering == Gradering.STRENGT_FORTROLIG_UTLAND
+
+    fun isKode7(): Boolean =
+        gradering == Gradering.FORTROLIG
+}
 
 enum class Gradering : Serializable {
     STRENGT_FORTROLIG_UTLAND,
     STRENGT_FORTROLIG,
     FORTROLIG,
     UGRADERT,
-}
-
-fun PdlHentPerson.getDiskresjonskode(): String {
-    val adressebeskyttelseList = this.hentPerson?.adressebeskyttelse
-    if (adressebeskyttelseList.isNullOrEmpty()) {
-        return ""
-    } else {
-        val adressebeskyttelse = adressebeskyttelseList.first()
-        return when {
-            adressebeskyttelse.isKode6() -> {
-                "6"
-            }
-            adressebeskyttelse.isKode7() -> {
-                "7"
-            }
-            else -> {
-                ""
-            }
-        }
-    }
-}
-
-fun PdlHentPerson.isKode6Or7(): Boolean {
-    val adressebeskyttelse = this.hentPerson?.adressebeskyttelse
-    return if (adressebeskyttelse.isNullOrEmpty()) {
-        false
-    } else {
-        return adressebeskyttelse.any {
-            it.isKode6() || it.isKode7()
-        }
-    }
-}
-
-fun Adressebeskyttelse.isKode6(): Boolean {
-    return this.gradering == Gradering.STRENGT_FORTROLIG || this.gradering == Gradering.STRENGT_FORTROLIG_UTLAND
-}
-
-fun Adressebeskyttelse.isKode7(): Boolean {
-    return this.gradering == Gradering.FORTROLIG
-}
-
-fun PdlHentPerson.getFullName(): String? {
-    val nameList = this.hentPerson?.navn
-    if (nameList.isNullOrEmpty()) {
-        return null
-    }
-    nameList[0].let {
-        val firstName = it.fornavn.lowerCapitalize()
-        val middleName = it.mellomnavn
-        val surName = it.etternavn.lowerCapitalize()
-
-        return if (middleName.isNullOrBlank()) {
-            "$firstName $surName"
-        } else {
-            "$firstName ${middleName.lowerCapitalize()} $surName"
-        }
-    }
-}
-
-fun PdlHentPerson.getDodsdato() = hentPerson?.doedsfall?.firstOrNull()?.doedsdato
-
-fun PdlHentPerson.bostedsadresse(): Bostedsadresse? {
-    val bostedsadresse = this.hentPerson?.bostedsadresse
-    if (bostedsadresse.isNullOrEmpty()) {
-        return null
-    }
-    return bostedsadresse.filter {
-        it.gyldigFraOgMed != null
-    }.maxByOrNull { it.gyldigFraOgMed!! }
-}
-
-fun PdlHentPerson.kontaktadresse(): Kontaktadresse? {
-    val kontaktadresse = this.hentPerson?.kontaktadresse
-    if (kontaktadresse.isNullOrEmpty()) {
-        return null
-    }
-    return kontaktadresse.filter {
-        it.gyldigFraOgMed != null
-    }.maxByOrNull { it.gyldigFraOgMed!! }
-}
-
-fun PdlHentPerson.oppholdsadresse(): Oppholdsadresse? {
-    val oppholdsadresse = this.hentPerson?.oppholdsadresse
-    if (oppholdsadresse.isNullOrEmpty()) {
-        return null
-    }
-    return oppholdsadresse.filter {
-        it.gyldigFraOgMed != null
-    }.maxByOrNull { it.gyldigFraOgMed!! }
 }

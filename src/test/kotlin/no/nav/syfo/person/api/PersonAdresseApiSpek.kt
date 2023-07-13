@@ -5,7 +5,6 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.ktor.http.*
 import io.ktor.http.HttpHeaders.Authorization
 import io.ktor.server.testing.*
-import no.nav.syfo.client.pdl.*
 import no.nav.syfo.person.api.domain.PersonAdresseResponse
 import no.nav.syfo.testhelper.*
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
@@ -56,10 +55,10 @@ class PersonAdresseApiSpek : Spek({
                             response.status() shouldBeEqualTo HttpStatusCode.OK
                             val personAdresseResponse: PersonAdresseResponse =
                                 objectMapper.readValue(response.content!!)
-                            personAdresseResponse.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.getFullName()
-                            personAdresseResponse.bostedsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.bostedsadresse()
-                            personAdresseResponse.kontaktadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.kontaktadresse()
-                            personAdresseResponse.oppholdsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.oppholdsadresse()
+                            personAdresseResponse.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.fullName
+                            personAdresseResponse.bostedsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.hentBostedsadresse()
+                            personAdresseResponse.kontaktadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.hentKontaktadresse()
+                            personAdresseResponse.oppholdsadresse shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.hentOppholdsadresse()
                         }
                     }
                 }
@@ -88,6 +87,16 @@ class PersonAdresseApiSpek : Spek({
                             }
                         ) {
                             response.status() shouldBeEqualTo HttpStatusCode.Forbidden
+                        }
+                    }
+                    it("should return status ${HttpStatusCode.InternalServerError} if person is null from pdl") {
+                        with(
+                            handleRequest(HttpMethod.Get, url) {
+                                addHeader(Authorization, bearerHeader(validToken))
+                                addHeader(NAV_PERSONIDENT_HEADER, UserConstants.ARBEIDSTAKER_PDL_ERROR.value)
+                            }
+                        ) {
+                            response.status() shouldBeEqualTo HttpStatusCode.InternalServerError
                         }
                     }
                 }

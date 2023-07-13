@@ -5,10 +5,10 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import io.ktor.http.*
 import io.ktor.http.HttpHeaders.Authorization
 import io.ktor.server.testing.*
-import no.nav.syfo.client.pdl.getFullName
 import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonBrukerinfo
 import no.nav.syfo.testhelper.*
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOD
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PDL_ERROR
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VEILEDER_NO_ACCESS
@@ -69,7 +69,7 @@ class PersonBrukerinfoApiSpek : Spek({
                             syfomodiapersonBrukerinfo.kontaktinfo.epost shouldBeEqualTo digitalKontaktinfoBolkKanVarslesTrue.epostadresse
                             syfomodiapersonBrukerinfo.kontaktinfo.tlf shouldBeEqualTo digitalKontaktinfoBolkKanVarslesTrue.mobiltelefonnummer
                             syfomodiapersonBrukerinfo.kontaktinfo.skalHaVarsel shouldBeEqualTo true
-                            syfomodiapersonBrukerinfo.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.getFullName()
+                            syfomodiapersonBrukerinfo.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.fullName
                             syfomodiapersonBrukerinfo.dodsdato shouldBe null
                             syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon shouldBe null
                         }
@@ -84,7 +84,7 @@ class PersonBrukerinfoApiSpek : Spek({
                             response.status() shouldBeEqualTo HttpStatusCode.OK
                             val syfomodiapersonBrukerinfo: SyfomodiapersonBrukerinfo =
                                 objectMapper.readValue(response.content!!)
-                            syfomodiapersonBrukerinfo.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.getFullName()
+                            syfomodiapersonBrukerinfo.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.fullName
                             syfomodiapersonBrukerinfo.dodsdato shouldBeEqualTo LocalDate.now()
                         }
                     }
@@ -98,7 +98,7 @@ class PersonBrukerinfoApiSpek : Spek({
                             response.status() shouldBeEqualTo HttpStatusCode.OK
                             val syfomodiapersonBrukerinfo: SyfomodiapersonBrukerinfo =
                                 objectMapper.readValue(response.content!!)
-                            syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.talesprakTolk?.value shouldBeEqualTo "Norsk (NO)"
+                            syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.talesprakTolk?.value shouldBeEqualTo "NO"
                             syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.tegnsprakTolk?.value shouldBeEqualTo null
                         }
                     }
@@ -128,6 +128,16 @@ class PersonBrukerinfoApiSpek : Spek({
                             }
                         ) {
                             response.status() shouldBeEqualTo HttpStatusCode.Forbidden
+                        }
+                    }
+                    it("should return status ${HttpStatusCode.InternalServerError} if person is null from pdl") {
+                        with(
+                            handleRequest(HttpMethod.Get, url) {
+                                addHeader(Authorization, bearerHeader(validToken))
+                                addHeader(NAV_PERSONIDENT_HEADER, ARBEIDSTAKER_PDL_ERROR.value)
+                            }
+                        ) {
+                            response.status() shouldBeEqualTo HttpStatusCode.InternalServerError
                         }
                     }
                 }

@@ -1,5 +1,6 @@
 package no.nav.syfo.person.api
 
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -51,23 +52,25 @@ fun Route.registrerPersonApi(
                     token = token,
                 )
                 val response: List<PersonInfo> = grantedAccessList
-                    .map { personIdentNumber ->
+                    .mapNotNull { personIdentNumber ->
                         val person = pdlClient.person(
                             callId = callId,
                             personIdentNumber = personIdentNumber,
                         )
-                        val skjermingskode = skjermingskodeService.hentBrukersSkjermingskode(
-                            callId = callId,
-                            person = person,
-                            personIdent = personIdentNumber,
-                            token = token,
-                        )
-                        PersonInfo(
-                            fnr = personIdentNumber.value,
-                            navn = person?.getFullName() ?: "",
-                            skjermingskode = skjermingskode,
-                            dodsdato = person?.getDodsdato(),
-                        )
+                        person?.hentPerson?.let {
+                            val skjermingskode = skjermingskodeService.hentBrukersSkjermingskode(
+                                callId = callId,
+                                person = it,
+                                personIdent = personIdentNumber,
+                                token = token,
+                            )
+                            PersonInfo(
+                                fnr = personIdentNumber.value,
+                                navn = it.fullName ?: "",
+                                skjermingskode = skjermingskode,
+                                dodsdato = it.dodsdato,
+                            )
+                        }
                     }
                 call.respond(response)
             } catch (ex: Exception) {
@@ -92,7 +95,7 @@ fun Route.registrerPersonApi(
                 val navn = pdlClient.person(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
-                )?.getFullName() ?: ""
+                )?.hentPerson?.fullName ?: ""
 
                 val response = FnrMedNavn(
                     fnr = personIdentNumber.value,
@@ -138,7 +141,7 @@ fun Route.registrerPersonApi(
                 val response = pdlClient.person(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
-                )?.getDiskresjonskode() ?: ""
+                )?.hentPerson?.diskresjonskode ?: ""
                 call.respond(response)
             }
         }
@@ -154,17 +157,19 @@ fun Route.registrerPersonApi(
 
                 val callId = getCallId()
 
-                val person = pdlClient.person(
+                val pdlPerson = pdlClient.person(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
                 )
-                val response = PersonAdresseResponse(
-                    navn = person?.getFullName() ?: "",
-                    bostedsadresse = person?.bostedsadresse(),
-                    kontaktadresse = person?.kontaktadresse(),
-                    oppholdsadresse = person?.oppholdsadresse()
-                )
-                call.respond(response)
+                pdlPerson?.hentPerson?.let { person ->
+                    val response = PersonAdresseResponse(
+                        navn = person.fullName ?: "",
+                        bostedsadresse = person.hentBostedsadresse(),
+                        kontaktadresse = person.hentKontaktadresse(),
+                        oppholdsadresse = person.hentOppholdsadresse(),
+                    )
+                    call.respond(response)
+                } ?: call.respond(HttpStatusCode.InternalServerError)
             }
         }
 
@@ -214,13 +219,15 @@ fun Route.registrerPersonApi(
                     personIdentNumber = personIdentNumber,
                 )
 
-                val response = SyfomodiapersonBrukerinfo(
-                    navn = pdlPerson?.getFullName(),
-                    kontaktinfo = kontaktinfo,
-                    dodsdato = pdlPerson?.getDodsdato(),
-                    tilrettelagtKommunikasjon = pdlPerson?.tilrettelagtKommunikasjon,
-                )
-                call.respond(response)
+                pdlPerson?.hentPerson?.let { person ->
+                    val response = SyfomodiapersonBrukerinfo(
+                        navn = person.fullName,
+                        kontaktinfo = kontaktinfo,
+                        dodsdato = person.dodsdato,
+                        tilrettelagtKommunikasjon = person.hentTilrettelagtKommunikasjon(),
+                    )
+                    call.respond(response)
+                } ?: call.respond(HttpStatusCode.InternalServerError)
             }
         }
     }

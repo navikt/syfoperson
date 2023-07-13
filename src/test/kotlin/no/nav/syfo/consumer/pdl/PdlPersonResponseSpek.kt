@@ -13,7 +13,7 @@ import java.time.LocalDate
 class PdlPersonResponseSpek : Spek({
     describe(PersonNavnApiSpek::class.java.simpleName) {
 
-        it("getFullName") {
+        it("fullName") {
             val pdlPersonResponse = generatePdlHentPerson(
                 PdlPersonNavn(
                     UserConstants.PERSON_NAME_FIRST,
@@ -22,13 +22,13 @@ class PdlPersonResponseSpek : Spek({
                 ),
                 null,
             )
-            val result = pdlPersonResponse.getFullName()
+            val result = pdlPersonResponse.hentPerson?.fullName
             val expected =
                 "${UserConstants.PERSON_NAME_FIRST} ${UserConstants.PERSON_NAME_MIDDLE} ${UserConstants.PERSON_NAME_LAST}"
             result shouldBeEqualTo expected
         }
 
-        it("getFullName with no middle name") {
+        it("fullName with no middle name") {
             val pdlPersonResponse = generatePdlHentPerson(
                 PdlPersonNavn(
                     UserConstants.PERSON_NAME_FIRST,
@@ -37,7 +37,7 @@ class PdlPersonResponseSpek : Spek({
                 ),
                 null,
             )
-            val result = pdlPersonResponse.getFullName()
+            val result = pdlPersonResponse.hentPerson?.fullName
             val expected = "${UserConstants.PERSON_NAME_FIRST} ${UserConstants.PERSON_NAME_LAST}"
             result shouldBeEqualTo expected
         }
@@ -52,7 +52,7 @@ class PdlPersonResponseSpek : Spek({
                 null,
                 doedsdato = LocalDate.now(),
             )
-            val result = pdlPersonResponse.getDodsdato()
+            val result = pdlPersonResponse.hentPerson?.dodsdato
             result shouldBeEqualTo LocalDate.now()
         }
 
@@ -66,7 +66,7 @@ class PdlPersonResponseSpek : Spek({
                 null,
                 doedsdato = null,
             )
-            val result = pdlPersonResponse.getDodsdato()
+            val result = pdlPersonResponse.hentPerson?.dodsdato
             result shouldBe null
         }
 
@@ -75,7 +75,7 @@ class PdlPersonResponseSpek : Spek({
                 null,
                 Adressebeskyttelse(gradering = Gradering.FORTROLIG),
             ).copy()
-            val result = pdlPersonResponse.isKode6Or7()
+            val result = pdlPersonResponse.hentPerson?.isKode6Or7
             val expected = true
             result shouldBeEqualTo expected
         }
@@ -85,7 +85,7 @@ class PdlPersonResponseSpek : Spek({
                 null,
                 Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG),
             ).copy()
-            val result = pdlPersonResponse.isKode6Or7()
+            val result = pdlPersonResponse.hentPerson?.isKode6Or7
             val expected = true
             result shouldBeEqualTo expected
         }
@@ -95,7 +95,7 @@ class PdlPersonResponseSpek : Spek({
                 null,
                 Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG_UTLAND),
             )
-            val result = pdlPersonResponse.isKode6Or7()
+            val result = pdlPersonResponse.hentPerson?.isKode6Or7
             val expected = true
             result shouldBeEqualTo expected
         }
@@ -105,7 +105,7 @@ class PdlPersonResponseSpek : Spek({
                 null,
                 Adressebeskyttelse(gradering = Gradering.UGRADERT),
             )
-            val result = pdlPersonResponse.isKode6Or7()
+            val result = pdlPersonResponse.hentPerson?.isKode6Or7
             val expected = false
             result shouldBeEqualTo expected
         }
