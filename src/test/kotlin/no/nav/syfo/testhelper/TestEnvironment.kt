@@ -9,7 +9,7 @@ fun testEnvironment(
     krrUrl: String = "krr",
     pdlUrl: String = "pdl",
     skjermedePersonerPipUrl: String = "skjermedepersonerpip",
-    syfotilgangskontrollUrl: String = "tilgangskontroll",
+    istilgangskontrollUrl: String = "tilgangskontroll",
 ) = Environment(
     azureAppClientId = "syfoperson-client-id",
     azureAppClientSecret = "syfoperson-secret",
@@ -21,8 +21,8 @@ fun testEnvironment(
     pdlUrl = pdlUrl,
     skjermedePersonerPipClientId = "dev-gcp.nom.skjermede-personer-pip",
     skjermedePersonerPipUrl = skjermedePersonerPipUrl,
-    syfotilgangskontrollClientId = "dev-fss.teamsykefravr.syfo-tilgangskontroll",
-    syfotilgangskontrollUrl = syfotilgangskontrollUrl,
+    istilgangskontrollClientId = "dev-fss.teamsykefravr.istilgangskontroll",
+    istilgangskontrollUrl = istilgangskontrollUrl,
     redisHost = "localhost",
     redisSecret = "password",
 )
