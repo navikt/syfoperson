@@ -41,7 +41,7 @@ class VeilederTilgangskontrollClient(
                 accept(ContentType.Application.Json)
             }
             COUNT_CALL_TILGANGSKONTROLL_PERSON_SUCCESS.increment()
-            response.body<Tilgang>().harTilgang
+            response.body<Tilgang>().erGodkjent
         } catch (e: ClientRequestException) {
             if (e.response.status == HttpStatusCode.Forbidden) {
                 COUNT_CALL_TILGANGSKONTROLL_PERSON_FORBIDDEN.increment()
@@ -53,7 +53,7 @@ class VeilederTilgangskontrollClient(
             handleUnexpectedResponseException(e.response, callId)
             false
         } catch (e: ClosedReceiveChannelException) {
-            log.error("ClosedReceiveChannelException while requesting access to person from syfo-tilgangskontroll", e)
+            log.error("ClosedReceiveChannelException while requesting access to person from istilgangskontroll", e)
             COUNT_CALL_TILGANGSKONTROLL_PERSON_FAIL.increment()
             false
         }
@@ -85,7 +85,7 @@ class VeilederTilgangskontrollClient(
             }
         } catch (e: ClosedReceiveChannelException) {
             log.error(
-                "ClosedReceiveChannelException while requesting access to personlist from syfo-tilgangskontroll",
+                "ClosedReceiveChannelException while requesting access to personlist from istilgangskontroll",
                 e
             )
             COUNT_CALL_TILGANGSKONTROLL_PERSON_FAIL.increment()
@@ -95,7 +95,7 @@ class VeilederTilgangskontrollClient(
                 COUNT_CALL_TILGANGSKONTROLL_PERSON_FORBIDDEN.increment()
             } else {
                 log.error(
-                    "Error while requesting access to person from syfo-tilgangskontroll with {}, {}, {}",
+                    "Error while requesting access to person from istilgangskontroll with {}, {}, {}",
                     StructuredArguments.keyValue("statusCode", e.response.status.value.toString()),
                     StructuredArguments.keyValue("message", e.message),
                     callIdArgument(callId),
@@ -111,7 +111,7 @@ class VeilederTilgangskontrollClient(
         callId: String,
     ) {
         log.error(
-            "Error while requesting access to person from syfo-tilgangskontroll with {}, {}",
+            "Error while requesting access to person from istilgangskontroll with {}, {}",
             StructuredArguments.keyValue("statusCode", response.status.value.toString()),
             callIdArgument(callId)
         )
@@ -121,7 +121,7 @@ class VeilederTilgangskontrollClient(
     companion object {
         private val log = LoggerFactory.getLogger(VeilederTilgangskontrollClient::class.java)
 
-        const val TILGANGSKONTROLL_COMMON_PATH = "/syfo-tilgangskontroll/api/tilgang/navident"
+        const val TILGANGSKONTROLL_COMMON_PATH = "/api/tilgang/navident"
         const val TILGANGSKONTROLL_PERSON_PATH = "$TILGANGSKONTROLL_COMMON_PATH/person"
         const val TILGANGSKONTROLL_PERSON_LIST_PATH = "$TILGANGSKONTROLL_COMMON_PATH/brukere"
     }

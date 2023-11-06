@@ -25,7 +25,7 @@ class ExternalMockEnvironment {
         krrUrl = krrMock.url,
         pdlUrl = pdlMock.url,
         skjermedePersonerPipUrl = skjermedPersonerPipMock.url,
-        syfotilgangskontrollUrl = veilederTilgangskontrollMock.url,
+        istilgangskontrollUrl = veilederTilgangskontrollMock.url,
     )
 
     val redisServer = testRedis(

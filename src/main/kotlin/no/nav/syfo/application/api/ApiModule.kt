@@ -74,8 +74,8 @@ fun Application.apiModule(
     )
     val veilederTilgangskontrollClient = VeilederTilgangskontrollClient(
         azureAdClient = azureAdClient,
-        baseUrl = environment.syfotilgangskontrollUrl,
-        clientId = environment.syfotilgangskontrollClientId,
+        baseUrl = environment.istilgangskontrollUrl,
+        clientId = environment.istilgangskontrollClientId,
     )
 
     routing {

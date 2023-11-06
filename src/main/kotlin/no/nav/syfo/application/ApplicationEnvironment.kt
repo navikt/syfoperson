@@ -15,8 +15,8 @@ data class Environment(
     val skjermedePersonerPipClientId: String = getEnvVar("SKJERMEDEPERSONERPIP_CLIENT_ID"),
     val skjermedePersonerPipUrl: String = getEnvVar("SKJERMEDEPERSONERPIP_URL"),
 
-    val syfotilgangskontrollUrl: String = getEnvVar("SYFOTILGANGSKONTROLL_URL"),
-    val syfotilgangskontrollClientId: String = getEnvVar("SYFOTILGANGSKONTROLL_CLIENT_ID"),
+    val istilgangskontrollUrl: String = getEnvVar("ISTILGANGSKONTROLL_URL"),
+    val istilgangskontrollClientId: String = getEnvVar("ISTILGANGSKONTROLL_CLIENT_ID"),
 
     val redisHost: String = getEnvVar("REDIS_HOST"),
     val redisPort: Int = getEnvVar("REDIS_PORT", "6379").toInt(),
