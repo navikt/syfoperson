@@ -53,22 +53,15 @@ fun Route.registrerPersonApi(
                 )
                 val response: List<PersonInfo> = grantedAccessList
                     .mapNotNull { personIdentNumber ->
-                        val person = pdlClient.person(
+                        val skjermingskode = skjermingskodeService.hentBrukersSkjermingskode(
                             callId = callId,
-                            personIdentNumber = personIdentNumber,
+                            personIdent = personIdentNumber,
+                            token = token,
                         )
-                        person?.hentPerson?.let {
-                            val skjermingskode = skjermingskodeService.hentBrukersSkjermingskode(
-                                callId = callId,
-                                person = it,
-                                personIdent = personIdentNumber,
-                                token = token,
-                            )
+                        skjermingskode?.let {
                             PersonInfo(
                                 fnr = personIdentNumber.value,
-                                navn = it.fullName ?: "",
                                 skjermingskode = skjermingskode,
-                                dodsdato = it.dodsdato,
                             )
                         }
                     }

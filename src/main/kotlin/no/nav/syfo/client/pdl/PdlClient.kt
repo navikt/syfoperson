@@ -7,6 +7,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import net.logstash.logback.argument.StructuredArguments
+import no.nav.syfo.application.cache.RedisStore
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.httpClientDefault
 import no.nav.syfo.domain.PersonIdentNumber
@@ -15,10 +16,34 @@ import org.slf4j.LoggerFactory
 
 class PdlClient(
     private val azureAdClient: AzureAdClient,
+    private val redisStore: RedisStore,
     private val baseUrl: String,
     private val clientId: String,
 ) {
     private val httpClient = httpClientDefault()
+
+    suspend fun hasAdressebeskyttelse(
+        callId: String,
+        personIdent: PersonIdentNumber,
+    ): Boolean? {
+        val cacheKey = "$CACHE_ADRESSEBESKYTTELSE_PERSON_KEY_PREFIX${personIdent.value}"
+        val cachedValue: Boolean? = redisStore.getObject(cacheKey)
+        return if (cachedValue != null) {
+            COUNT_CALL_PDL_ADRESSEBESKYTTELSE_CACHE_HIT.increment()
+            cachedValue
+        } else {
+            COUNT_CALL_PDL_ADRESSEBESKYTTELSE_CACHE_MISS.increment()
+            val hasAdressebeskyttelse = person(callId = callId, personIdentNumber = personIdent)?.hentPerson?.isKode6Or7
+            if (hasAdressebeskyttelse != null) {
+                redisStore.setObject(
+                    expireSeconds = CACHE_ADRESSEBESKYTTELSE_PERSON_EXPIRE_SECONDS,
+                    key = cacheKey,
+                    value = hasAdressebeskyttelse,
+                )
+            }
+            hasAdressebeskyttelse
+        }
+    }
 
     suspend fun person(
         callId: String,
@@ -82,6 +107,9 @@ class PdlClient(
     }
 
     companion object {
+        const val CACHE_ADRESSEBESKYTTELSE_PERSON_KEY_PREFIX = "adressebeskyttelse-person-"
+        const val CACHE_ADRESSEBESKYTTELSE_PERSON_EXPIRE_SECONDS = 60 * 60L
+
         private val log = LoggerFactory.getLogger(PdlClient::class.java)
     }
 }

@@ -13,6 +13,7 @@ import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient.Compani
 import no.nav.syfo.testhelper.UserConstants
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ADRESSEBESKYTTET
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PDL_ERROR
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
 import no.nav.syfo.testhelper.getRandomPort
 import no.nav.syfo.util.NAV_PERSONIDENT_HEADER
@@ -53,6 +54,7 @@ class VeilederTilgangskontrollMock {
                         ARBEIDSTAKER_PERSONIDENT.value,
                         ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT.value,
                         ARBEIDSTAKER_ADRESSEBESKYTTET.value,
+                        ARBEIDSTAKER_PDL_ERROR.value,
                     )
                 )
             }
