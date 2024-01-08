@@ -7,10 +7,12 @@ import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.azuread.AzureAdToken
 import no.nav.syfo.testhelper.ExternalMockEnvironment
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ADRESSEBESKYTTET
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PDL_ERROR
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
 import no.nav.syfo.testhelper.startExternalMocks
 import no.nav.syfo.testhelper.stopExternalMocks
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeNull
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 import java.time.LocalDateTime
@@ -99,6 +101,20 @@ class PdlClientSpek : Spek({
             }
             verify(exactly = 1) { cacheMock.getObject<Boolean>(any()) }
             verify(exactly = 1) { cacheMock.setObject<Boolean>(any(), any(), any()) }
+        }
+
+        it("hasAdressebeskyttelse returns null and doesnt cache when arbeidstaker returns error from pdl") {
+            every { cacheMock.getObject<Boolean>(any()) } returns null
+            justRun { cacheMock.setObject<Boolean>(any(), any(), any()) }
+
+            runBlocking {
+                pdlClient.hasAdressebeskyttelse(
+                    personIdent = ARBEIDSTAKER_PDL_ERROR,
+                    callId = "callId",
+                ).shouldBeNull()
+            }
+            verify(exactly = 1) { cacheMock.getObject<Boolean>(any()) }
+            verify(exactly = 0) { cacheMock.setObject<Boolean>(any(), any(), any()) }
         }
     }
 })

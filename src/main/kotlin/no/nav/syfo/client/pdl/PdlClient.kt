@@ -108,7 +108,7 @@ class PdlClient(
 
     companion object {
         const val CACHE_ADRESSEBESKYTTELSE_PERSON_KEY_PREFIX = "adressebeskyttelse-person-"
-        const val CACHE_ADRESSEBESKYTTELSE_PERSON_EXPIRE_SECONDS = 60 * 60L
+        const val CACHE_ADRESSEBESKYTTELSE_PERSON_EXPIRE_SECONDS = 12 * 60 * 60L
 
         private val log = LoggerFactory.getLogger(PdlClient::class.java)
     }
