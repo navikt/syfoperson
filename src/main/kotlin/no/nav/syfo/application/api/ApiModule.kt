@@ -60,6 +60,7 @@ fun Application.apiModule(
     )
     val pdlClient = PdlClient(
         azureAdClient = azureAdClient,
+        redisStore = redisStore,
         baseUrl = environment.pdlUrl,
         clientId = environment.pdlClientId,
     )
@@ -71,6 +72,7 @@ fun Application.apiModule(
     )
     val skjermingskodeService = SkjermingskodeService(
         skjermedePersonerPipClient = skjermedePersonerPipClient,
+        pdlClient = pdlClient,
     )
     val veilederTilgangskontrollClient = VeilederTilgangskontrollClient(
         azureAdClient = azureAdClient,
