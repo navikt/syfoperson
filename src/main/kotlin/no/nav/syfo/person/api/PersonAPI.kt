@@ -5,6 +5,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.krr.toSyfomodiapersonKontaktinfo
 import no.nav.syfo.client.pdl.*
@@ -33,6 +34,7 @@ fun Route.registrerPersonApi(
     skjermingskodeService: SkjermingskodeService,
     skjermedePersonerPipClient: SkjermedePersonerPipClient,
     veilederTilgangskontrollClient: VeilederTilgangskontrollClient,
+    kodeverkClient: KodeverkClient,
 ) {
     route(apiPersonBasePath) {
         post(apiPersonInfoPath) {

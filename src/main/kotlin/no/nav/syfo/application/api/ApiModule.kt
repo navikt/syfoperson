@@ -9,6 +9,7 @@ import no.nav.syfo.application.api.authentication.*
 import no.nav.syfo.application.cache.RedisStore
 import no.nav.syfo.application.metric.api.registerMetricApi
 import no.nav.syfo.client.azuread.AzureAdClient
+import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
@@ -80,6 +81,11 @@ fun Application.apiModule(
         clientId = environment.istilgangskontrollClientId,
     )
 
+    val kodeverkClient = KodeverkClient(
+        redisStore = redisStore,
+        baseUrl = environment.kodeverkUrl,
+    )
+
     routing {
         registerPodApi(
             applicationState = applicationState,
@@ -92,6 +98,7 @@ fun Application.apiModule(
                 skjermingskodeService = skjermingskodeService,
                 skjermedePersonerPipClient = skjermedePersonerPipClient,
                 veilederTilgangskontrollClient = veilederTilgangskontrollClient,
+                kodeverkClient = kodeverkClient,
             )
         }
     }
