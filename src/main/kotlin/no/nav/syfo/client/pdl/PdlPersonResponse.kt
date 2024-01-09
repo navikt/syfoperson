@@ -128,6 +128,9 @@ data class PdlSikkerhetstiltak(
     val gyldigTilOgMed: LocalDate,
 )
 
+/**
+ * Tiltakstyper fra PDL: FYUS=Fysisk utestengelse, TFUS=Telefonisk utestengelse, FTUS=Fysisk/telefonisk utestengelse, DIUS=Digital utestengelse, TOAN=To ansatte i samtale
+ */
 enum class SikkerhetstiltaksType {
     DIUS,
     FYUS,
