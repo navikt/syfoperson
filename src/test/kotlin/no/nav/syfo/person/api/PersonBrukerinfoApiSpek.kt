@@ -10,12 +10,14 @@ import no.nav.syfo.testhelper.*
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOD
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PDL_ERROR
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_SIKKERHETSTILTAK
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VEILEDER_NO_ACCESS
 import no.nav.syfo.testhelper.mock.digitalKontaktinfoBolkKanVarslesTrue
 import no.nav.syfo.util.*
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldNotBeEmpty
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
 import java.time.LocalDate
@@ -100,6 +102,26 @@ class PersonBrukerinfoApiSpek : Spek({
                                 objectMapper.readValue(response.content!!)
                             syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.talesprakTolk?.value shouldBeEqualTo "NO"
                             syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon?.tegnsprakTolk?.value shouldBeEqualTo null
+                        }
+                    }
+                    it("includes sikkerhetstiltak") {
+                        val expectedSikkerhetstiltak = generatePdlSikkerhetsiltak()
+
+                        with(
+                            handleRequest(HttpMethod.Get, url) {
+                                addHeader(Authorization, bearerHeader(validToken))
+                                addHeader(NAV_PERSONIDENT_HEADER, ARBEIDSTAKER_SIKKERHETSTILTAK.value)
+                            }
+                        ) {
+                            response.status() shouldBeEqualTo HttpStatusCode.OK
+                            val brukerinfo: SyfomodiapersonBrukerinfo = objectMapper.readValue(response.content!!)
+                            brukerinfo.sikkerhetstiltak.shouldNotBeEmpty()
+
+                            val sikkerhetstiltak = brukerinfo.sikkerhetstiltak.first()
+                            sikkerhetstiltak.type.shouldBeEqualTo(expectedSikkerhetstiltak.tiltakstype)
+                            sikkerhetstiltak.beskrivelse.shouldBeEqualTo(expectedSikkerhetstiltak.beskrivelse)
+                            sikkerhetstiltak.gyldigFom.shouldBeEqualTo(expectedSikkerhetstiltak.gyldigFraOgMed)
+                            sikkerhetstiltak.gyldigTom.shouldBeEqualTo(expectedSikkerhetstiltak.gyldigTilOgMed)
                         }
                     }
                 }

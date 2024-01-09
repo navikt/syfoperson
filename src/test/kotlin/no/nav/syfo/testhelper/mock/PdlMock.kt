@@ -8,79 +8,13 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import no.nav.syfo.application.api.installContentNegotiation
 import no.nav.syfo.client.pdl.*
-import no.nav.syfo.testhelper.UserConstants
+import no.nav.syfo.testhelper.*
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ADRESSEBESKYTTET
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOD
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PDL_ERROR
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_SIKKERHETSTILTAK
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON
-import no.nav.syfo.testhelper.getRandomPort
 import java.time.LocalDate
-
-fun generatePdlPersonResponse(
-    gradering: Gradering? = null,
-    doedsdato: LocalDate? = null,
-    tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
-) = PdlPersonResponse(
-    errors = null,
-    data = generatePdlHentPerson(
-        pdlPersonNavn = generatePdlPersonNavn(),
-        adressebeskyttelse = generateAdressebeskyttelse(gradering = gradering),
-        doedsdato = doedsdato,
-        tilrettelagtKommunikasjon = tilrettelagtKommunikasjon,
-    )
-)
-
-fun generatePdlPersonResponseError() = PdlPersonResponse(
-    errors = null,
-    data = null,
-)
-
-fun generatePdlPersonNavn(): PdlPersonNavn {
-    return PdlPersonNavn(
-        fornavn = UserConstants.PERSON_NAME_FIRST,
-        mellomnavn = UserConstants.PERSON_NAME_MIDDLE,
-        etternavn = UserConstants.PERSON_NAME_LAST,
-    )
-}
-
-fun generateAdressebeskyttelse(
-    gradering: Gradering? = null
-): Adressebeskyttelse {
-    return Adressebeskyttelse(
-        gradering = gradering ?: Gradering.UGRADERT
-    )
-}
-
-fun generatePdlHentPerson(
-    pdlPersonNavn: PdlPersonNavn?,
-    adressebeskyttelse: Adressebeskyttelse? = null,
-    doedsdato: LocalDate? = null,
-    tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
-): PdlHentPerson {
-    return PdlHentPerson(
-        hentPerson = PdlPerson(
-            navn = listOf(
-                pdlPersonNavn ?: generatePdlPersonNavn()
-            ),
-            adressebeskyttelse = listOf(
-                adressebeskyttelse ?: generateAdressebeskyttelse()
-            ),
-            bostedsadresse = null,
-            kontaktadresse = null,
-            oppholdsadresse = null,
-            doedsfall = if (doedsdato == null) emptyList() else {
-                listOf(PdlDoedsfall(doedsdato))
-            },
-            tilrettelagtKommunikasjon = listOfNotNull(tilrettelagtKommunikasjon)
-        )
-    )
-}
-
-private fun generatePdlTilrettelagtKommunikasjon(): PdlTilrettelagtKommunikasjon =
-    PdlTilrettelagtKommunikasjon(
-        talespraaktolk = PdlSprak(spraak = "NO"),
-        tegnspraaktolk = PdlSprak(spraak = null),
-    )
 
 class PdlMock {
     private val port = getRandomPort()
@@ -103,6 +37,8 @@ class PdlMock {
                         generatePdlPersonResponse(doedsdato = LocalDate.now())
                     } else if (ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON.value == pdlRequest.variables.ident) {
                         generatePdlPersonResponse(tilrettelagtKommunikasjon = generatePdlTilrettelagtKommunikasjon())
+                    } else if (ARBEIDSTAKER_SIKKERHETSTILTAK.value == pdlRequest.variables.ident) {
+                        generatePdlPersonResponse(sikkerhetstiltak = generatePdlSikkerhetsiltak())
                     } else if (ARBEIDSTAKER_PDL_ERROR.value == pdlRequest.variables.ident) {
                         generatePdlPersonResponseError()
                     } else {

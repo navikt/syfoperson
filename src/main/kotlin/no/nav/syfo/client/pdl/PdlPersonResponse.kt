@@ -1,5 +1,6 @@
 package no.nav.syfo.client.pdl
 
+import no.nav.syfo.person.api.domain.syfomodiaperson.Sikkerhetstiltak
 import no.nav.syfo.person.api.domain.syfomodiaperson.Sprak
 import no.nav.syfo.person.api.domain.syfomodiaperson.TilrettelagtKommunikasjon
 import no.nav.syfo.util.lowerCapitalize
@@ -44,6 +45,7 @@ data class PdlPerson(
     val oppholdsadresse: List<Oppholdsadresse>?,
     val doedsfall: List<PdlDoedsfall>?,
     val tilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon>,
+    val sikkerhetstiltak: List<PdlSikkerhetstiltak>,
 ) : Serializable {
 
     val fullName: String? =
@@ -84,6 +86,15 @@ data class PdlPerson(
             )
         }
 
+    fun hentSikkerhetstiltak(): List<Sikkerhetstiltak> = sikkerhetstiltak.map {
+        Sikkerhetstiltak(
+            type = it.tiltakstype,
+            beskrivelse = it.beskrivelse,
+            gyldigFom = it.gyldigFraOgMed,
+            gyldigTom = it.gyldigTilOgMed
+        )
+    }
+
     val dodsdato: LocalDate? = doedsfall?.firstOrNull()?.doedsdato
 
     fun hentKontaktadresse(): Kontaktadresse? =
@@ -109,6 +120,13 @@ data class PdlTilrettelagtKommunikasjon(
 ) : Serializable
 
 data class PdlSprak(val spraak: String?) : Serializable
+
+data class PdlSikkerhetstiltak(
+    val tiltakstype: String,
+    val beskrivelse: String,
+    val gyldigFraOgMed: LocalDate,
+    val gyldigTilOgMed: LocalDate,
+)
 
 data class Adressebeskyttelse(
     val gradering: Gradering,

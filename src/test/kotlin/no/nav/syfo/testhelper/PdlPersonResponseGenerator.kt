@@ -56,10 +56,43 @@ fun generateOppholdsadresse(): Oppholdsadresse {
     )
 }
 
+fun generatePdlPersonResponse(
+    gradering: Gradering? = null,
+    doedsdato: LocalDate? = null,
+    tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
+    sikkerhetstiltak: PdlSikkerhetstiltak? = null,
+) = PdlPersonResponse(
+    errors = null,
+    data = generatePdlHentPerson(
+        pdlPersonNavn = generatePdlPersonNavn(),
+        adressebeskyttelse = generateAdressebeskyttelse(gradering = gradering),
+        doedsdato = doedsdato,
+        tilrettelagtKommunikasjon = tilrettelagtKommunikasjon,
+        sikkerhetstiltak = if (sikkerhetstiltak == null) emptyList() else {
+            listOf(sikkerhetstiltak)
+        },
+    )
+)
+
+fun generatePdlPersonResponseError() = PdlPersonResponse(
+    errors = null,
+    data = null,
+)
+
+fun generateAdressebeskyttelse(
+    gradering: Gradering? = null
+): Adressebeskyttelse {
+    return Adressebeskyttelse(
+        gradering = gradering ?: Gradering.UGRADERT
+    )
+}
+
 fun generatePdlHentPerson(
     pdlPersonNavn: PdlPersonNavn?,
-    adressebeskyttelse: Adressebeskyttelse?,
+    adressebeskyttelse: Adressebeskyttelse? = null,
     doedsdato: LocalDate? = null,
+    tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
+    sikkerhetstiltak: List<PdlSikkerhetstiltak>,
 ): PdlHentPerson {
     return PdlHentPerson(
         hentPerson = PdlPerson(
@@ -81,7 +114,21 @@ fun generatePdlHentPerson(
             doedsfall = if (doedsdato == null) emptyList() else {
                 listOf(PdlDoedsfall(doedsdato))
             },
-            tilrettelagtKommunikasjon = emptyList(),
+            tilrettelagtKommunikasjon = listOfNotNull(tilrettelagtKommunikasjon),
+            sikkerhetstiltak = sikkerhetstiltak,
         )
     )
 }
+
+fun generatePdlTilrettelagtKommunikasjon(): PdlTilrettelagtKommunikasjon =
+    PdlTilrettelagtKommunikasjon(
+        talespraaktolk = PdlSprak(spraak = "NO"),
+        tegnspraaktolk = PdlSprak(spraak = null),
+    )
+
+fun generatePdlSikkerhetsiltak(): PdlSikkerhetstiltak = PdlSikkerhetstiltak(
+    tiltakstype = "FYUS",
+    beskrivelse = "Fysisk utestengelse",
+    gyldigFraOgMed = LocalDate.now().minusWeeks(1),
+    gyldigTilOgMed = LocalDate.now().plusWeeks(3),
+)

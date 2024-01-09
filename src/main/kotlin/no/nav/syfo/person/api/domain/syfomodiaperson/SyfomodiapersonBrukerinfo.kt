@@ -8,4 +8,5 @@ data class SyfomodiapersonBrukerinfo(
     val arbeidssituasjon: String = "ARBEIDSTAKER",
     val dodsdato: LocalDate? = null,
     val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon? = null,
+    val sikkerhetstiltak: List<Sikkerhetstiltak>,
 )

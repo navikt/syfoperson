@@ -21,6 +21,9 @@ class PdlPersonResponseSpek : Spek({
                     UserConstants.PERSON_NAME_LAST,
                 ),
                 null,
+                null,
+                null,
+                emptyList()
             )
             val result = pdlPersonResponse.hentPerson?.fullName
             val expected =
@@ -36,6 +39,9 @@ class PdlPersonResponseSpek : Spek({
                     UserConstants.PERSON_NAME_LAST,
                 ),
                 null,
+                null,
+                null,
+                emptyList()
             )
             val result = pdlPersonResponse.hentPerson?.fullName
             val expected = "${UserConstants.PERSON_NAME_FIRST} ${UserConstants.PERSON_NAME_LAST}"
@@ -51,6 +57,8 @@ class PdlPersonResponseSpek : Spek({
                 ),
                 null,
                 doedsdato = LocalDate.now(),
+                tilrettelagtKommunikasjon = null,
+                sikkerhetstiltak = emptyList()
             )
             val result = pdlPersonResponse.hentPerson?.dodsdato
             result shouldBeEqualTo LocalDate.now()
@@ -65,6 +73,8 @@ class PdlPersonResponseSpek : Spek({
                 ),
                 null,
                 doedsdato = null,
+                tilrettelagtKommunikasjon = null,
+                sikkerhetstiltak = emptyList()
             )
             val result = pdlPersonResponse.hentPerson?.dodsdato
             result shouldBe null
@@ -74,6 +84,9 @@ class PdlPersonResponseSpek : Spek({
             val pdlPersonResponse = generatePdlHentPerson(
                 null,
                 Adressebeskyttelse(gradering = Gradering.FORTROLIG),
+                null,
+                null,
+                emptyList()
             ).copy()
             val result = pdlPersonResponse.hentPerson?.isKode6Or7
             val expected = true
@@ -84,6 +97,9 @@ class PdlPersonResponseSpek : Spek({
             val pdlPersonResponse = generatePdlHentPerson(
                 null,
                 Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG),
+                null,
+                null,
+                emptyList()
             ).copy()
             val result = pdlPersonResponse.hentPerson?.isKode6Or7
             val expected = true
@@ -94,6 +110,9 @@ class PdlPersonResponseSpek : Spek({
             val pdlPersonResponse = generatePdlHentPerson(
                 null,
                 Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG_UTLAND),
+                null,
+                null,
+                emptyList()
             )
             val result = pdlPersonResponse.hentPerson?.isKode6Or7
             val expected = true
@@ -104,6 +123,9 @@ class PdlPersonResponseSpek : Spek({
             val pdlPersonResponse = generatePdlHentPerson(
                 null,
                 Adressebeskyttelse(gradering = Gradering.UGRADERT),
+                null,
+                null,
+                emptyList()
             )
             val result = pdlPersonResponse.hentPerson?.isKode6Or7
             val expected = false

@@ -17,6 +17,12 @@ query($ident: ID!, $navnHistorikk: Boolean!){
     doedsfall {
         doedsdato
     }
+    sikkerhetstiltak {
+        tiltakstype
+        beskrivelse
+        gyldigFraOgMed
+        gyldigTilOgMed
+    }
     tilrettelagtKommunikasjon {
         talespraaktolk {
             spraak
