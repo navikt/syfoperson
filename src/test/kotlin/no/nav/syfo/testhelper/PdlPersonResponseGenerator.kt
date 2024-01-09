@@ -127,7 +127,7 @@ fun generatePdlTilrettelagtKommunikasjon(): PdlTilrettelagtKommunikasjon =
     )
 
 fun generatePdlSikkerhetsiltak(): PdlSikkerhetstiltak = PdlSikkerhetstiltak(
-    tiltakstype = "FYUS",
+    tiltakstype = SikkerhetstiltaksType.FYUS,
     beskrivelse = "Fysisk utestengelse",
     gyldigFraOgMed = LocalDate.now().minusWeeks(1),
     gyldigTilOgMed = LocalDate.now().plusWeeks(3),

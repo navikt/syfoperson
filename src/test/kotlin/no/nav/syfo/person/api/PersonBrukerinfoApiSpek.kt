@@ -118,7 +118,7 @@ class PersonBrukerinfoApiSpek : Spek({
                             brukerinfo.sikkerhetstiltak.shouldNotBeEmpty()
 
                             val sikkerhetstiltak = brukerinfo.sikkerhetstiltak.first()
-                            sikkerhetstiltak.type.shouldBeEqualTo(expectedSikkerhetstiltak.tiltakstype)
+                            sikkerhetstiltak.type.shouldBeEqualTo(expectedSikkerhetstiltak.tiltakstype.name)
                             sikkerhetstiltak.beskrivelse.shouldBeEqualTo(expectedSikkerhetstiltak.beskrivelse)
                             sikkerhetstiltak.gyldigFom.shouldBeEqualTo(expectedSikkerhetstiltak.gyldigFraOgMed)
                             sikkerhetstiltak.gyldigTom.shouldBeEqualTo(expectedSikkerhetstiltak.gyldigTilOgMed)

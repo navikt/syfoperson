@@ -88,7 +88,7 @@ data class PdlPerson(
 
     fun hentSikkerhetstiltak(): List<Sikkerhetstiltak> = sikkerhetstiltak.map {
         Sikkerhetstiltak(
-            type = it.tiltakstype,
+            type = it.tiltakstype.name,
             beskrivelse = it.beskrivelse,
             gyldigFom = it.gyldigFraOgMed,
             gyldigTom = it.gyldigTilOgMed
@@ -122,11 +122,19 @@ data class PdlTilrettelagtKommunikasjon(
 data class PdlSprak(val spraak: String?) : Serializable
 
 data class PdlSikkerhetstiltak(
-    val tiltakstype: String,
+    val tiltakstype: SikkerhetstiltaksType,
     val beskrivelse: String,
     val gyldigFraOgMed: LocalDate,
     val gyldigTilOgMed: LocalDate,
 )
+
+enum class SikkerhetstiltaksType {
+    DIUS,
+    FYUS,
+    FTUS,
+    TFUS,
+    TOAN,
+}
 
 data class Adressebeskyttelse(
     val gradering: Gradering,
