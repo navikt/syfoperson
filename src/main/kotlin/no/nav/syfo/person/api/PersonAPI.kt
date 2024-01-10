@@ -218,6 +218,7 @@ fun Route.registrerPersonApi(
                         kontaktinfo = kontaktinfo,
                         dodsdato = person.dodsdato,
                         tilrettelagtKommunikasjon = person.hentTilrettelagtKommunikasjon(),
+                        sikkerhetstiltak = person.hentSikkerhetstiltak(),
                     )
                     call.respond(response)
                 } ?: call.respond(HttpStatusCode.InternalServerError)
