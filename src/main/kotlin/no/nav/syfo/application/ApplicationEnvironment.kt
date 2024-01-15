@@ -18,6 +18,8 @@ data class Environment(
     val istilgangskontrollUrl: String = getEnvVar("ISTILGANGSKONTROLL_URL"),
     val istilgangskontrollClientId: String = getEnvVar("ISTILGANGSKONTROLL_CLIENT_ID"),
 
+    val kodeverkUrl: String = getEnvVar("KODEVERK_URL"),
+
     val redisHost: String = getEnvVar("REDIS_HOST"),
     val redisPort: Int = getEnvVar("REDIS_PORT", "6379").toInt(),
     val redisSecret: String = getEnvVar("REDIS_PASSWORD"),

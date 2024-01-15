@@ -10,6 +10,7 @@ fun testEnvironment(
     pdlUrl: String = "pdl",
     skjermedePersonerPipUrl: String = "skjermedepersonerpip",
     istilgangskontrollUrl: String = "tilgangskontroll",
+    kodeverkUrl: String = "kodeverk",
 ) = Environment(
     azureAppClientId = "syfoperson-client-id",
     azureAppClientSecret = "syfoperson-secret",
@@ -23,6 +24,7 @@ fun testEnvironment(
     skjermedePersonerPipUrl = skjermedePersonerPipUrl,
     istilgangskontrollClientId = "dev-gcp.teamsykefravr.istilgangskontroll",
     istilgangskontrollUrl = istilgangskontrollUrl,
+    kodeverkUrl = kodeverkUrl,
     redisHost = "localhost",
     redisSecret = "password",
 )

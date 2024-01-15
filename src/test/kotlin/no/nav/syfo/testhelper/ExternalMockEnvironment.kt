@@ -11,6 +11,7 @@ class ExternalMockEnvironment {
     val pdlMock = PdlMock()
     val skjermedPersonerPipMock = SkjermedePersonerPipMock()
     val veilederTilgangskontrollMock = VeilederTilgangskontrollMock()
+    val kodeverkMock = KodeverkMock()
 
     val externalApplicationMockMap = hashMapOf(
         azureAdMock.name to azureAdMock.server,
@@ -18,6 +19,7 @@ class ExternalMockEnvironment {
         pdlMock.name to pdlMock.server,
         skjermedPersonerPipMock.name to skjermedPersonerPipMock.server,
         veilederTilgangskontrollMock.name to veilederTilgangskontrollMock.server,
+        kodeverkMock.name to kodeverkMock.server,
     )
 
     val environment = testEnvironment(
@@ -26,6 +28,7 @@ class ExternalMockEnvironment {
         pdlUrl = pdlMock.url,
         skjermedePersonerPipUrl = skjermedPersonerPipMock.url,
         istilgangskontrollUrl = veilederTilgangskontrollMock.url,
+        kodeverkUrl = kodeverkMock.url,
     )
 
     val redisServer = testRedis(
