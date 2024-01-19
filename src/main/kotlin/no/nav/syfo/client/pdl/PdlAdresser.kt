@@ -3,57 +3,57 @@ package no.nav.syfo.client.pdl
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-data class Bostedsadresse(
+data class PdlBostedsadresse(
     val angittFlyttedato: LocalDate?,
     val gyldigFraOgMed: LocalDateTime?,
     val gyldigTilOgMed: LocalDateTime?,
     val coAdressenavn: String?,
-    val vegadresse: Vegadresse?,
-    val matrikkeladresse: Matrikkeladresse?,
-    val utenlandskAdresse: UtenlandskAdresse?,
-    val ukjentBosted: UkjentBosted?
+    val vegadresse: PdlVegadresse?,
+    val matrikkeladresse: PdlMatrikkeladresse?,
+    val utenlandskAdresse: PdlUtenlandskAdresse?,
+    val ukjentBosted: PdlUkjentBosted?
 )
 
-data class Kontaktadresse(
+data class PdlKontaktadresse(
     val gyldigFraOgMed: LocalDateTime?,
     val gyldigTilOgMed: LocalDateTime?,
-    val type: KontaktadresseType,
+    val type: PdlKontaktadresseType,
     val coAdressenavn: String?,
-    val postboksadresse: Postboksadresse?,
-    val vegadresse: Vegadresse?,
-    val postadresseIFrittFormat: PostadresseIFrittFormat?,
-    val utenlandskAdresse: UtenlandskAdresse?,
-    val utenlandskAdresseIFrittFormat: UtenlandskAdresseIFrittFormat?
+    val postboksadresse: PdlPostboksadresse?,
+    val vegadresse: PdlVegadresse?,
+    val postadresseIFrittFormat: PdlPostadresseIFrittFormat?,
+    val utenlandskAdresse: PdlUtenlandskAdresse?,
+    val utenlandskAdresseIFrittFormat: PdlUtenlandskAdresseIFrittFormat?
 )
 
-enum class KontaktadresseType {
+enum class PdlKontaktadresseType {
     Innland, Utland
 }
 
-data class Oppholdsadresse(
+data class PdlOppholdsadresse(
     val gyldigFraOgMed: LocalDateTime?,
     val gyldigTilOgMed: LocalDateTime?,
     val coAdressenavn: String?,
-    val utenlandskAdresse: UtenlandskAdresse?,
-    val vegadresse: Vegadresse?,
-    val matrikkeladresse: Matrikkeladresse?,
+    val utenlandskAdresse: PdlUtenlandskAdresse?,
+    val vegadresse: PdlVegadresse?,
+    val matrikkeladresse: PdlMatrikkeladresse?,
     val oppholdAnnetSted: String?
 )
 
-data class PostadresseIFrittFormat(
+data class PdlPostadresseIFrittFormat(
     val adresselinje1: String?,
     val adresselinje2: String?,
     val adresselinje3: String?,
     val postnummer: String?
 )
 
-data class Postboksadresse(
+data class PdlPostboksadresse(
     val postbokseier: String?,
     val postboks: String,
     val postnummer: String?
 )
 
-data class UtenlandskAdresse(
+data class PdlUtenlandskAdresse(
     val adressenavnNummer: String?,
     val bygningEtasjeLeilighet: String?,
     val postboksNummerNavn: String?,
@@ -63,7 +63,7 @@ data class UtenlandskAdresse(
     val landkode: String
 )
 
-data class UtenlandskAdresseIFrittFormat(
+data class PdlUtenlandskAdresseIFrittFormat(
     val adresselinje1: String?,
     val adresselinje2: String?,
     val adresselinje3: String?,
@@ -72,7 +72,7 @@ data class UtenlandskAdresseIFrittFormat(
     val landkode: String
 )
 
-data class Vegadresse(
+data class PdlVegadresse(
     val matrikkelId: Long?,
     val husnummer: String?,
     val husbokstav: String?,
@@ -84,7 +84,7 @@ data class Vegadresse(
     val postnummer: String?
 )
 
-data class Matrikkeladresse(
+data class PdlMatrikkeladresse(
     val matrikkelId: Long?,
     val bruksenhetsnummer: String?,
     val tilleggsnavn: String?,
@@ -92,6 +92,6 @@ data class Matrikkeladresse(
     val kommunenummer: String?
 )
 
-data class UkjentBosted(
+data class PdlUkjentBosted(
     val bostedskommune: String?
 )

@@ -2,5 +2,8 @@ package no.nav.syfo.client.kodeverk
 
 data class Postinformasjon(
     val postnummer: String,
-    val poststed: String?, // TODO: Skal vi godta at denne er null?
+    val poststed: String?,
 )
+
+fun List<Postinformasjon>.getPoststedByPostnummer(postnummer: String?): String? =
+    this.firstOrNull { it.postnummer == postnummer }?.poststed

@@ -40,9 +40,9 @@ data class PdlHentPerson(
 data class PdlPerson(
     val navn: List<PdlPersonNavn>,
     val adressebeskyttelse: List<Adressebeskyttelse>?,
-    val bostedsadresse: List<Bostedsadresse>?,
-    val kontaktadresse: List<Kontaktadresse>?,
-    val oppholdsadresse: List<Oppholdsadresse>?,
+    val bostedsadresse: List<PdlBostedsadresse>?,
+    val kontaktadresse: List<PdlKontaktadresse>?,
+    val oppholdsadresse: List<PdlOppholdsadresse>?,
     val doedsfall: List<PdlDoedsfall>?,
     val tilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon>,
     val sikkerhetstiltak: List<PdlSikkerhetstiltak>,
@@ -75,7 +75,7 @@ data class PdlPerson(
             }
         } ?: ""
 
-    fun hentBostedsadresse(): Bostedsadresse? =
+    fun hentPdlBostedsadresse(): PdlBostedsadresse? =
         bostedsadresse?.filter { it.gyldigFraOgMed != null }?.maxByOrNull { it.gyldigFraOgMed!! }
 
     fun hentTilrettelagtKommunikasjon(): TilrettelagtKommunikasjon? =
@@ -97,10 +97,10 @@ data class PdlPerson(
 
     val dodsdato: LocalDate? = doedsfall?.firstOrNull()?.doedsdato
 
-    fun hentKontaktadresse(): Kontaktadresse? =
+    fun hentPdlKontaktadresse(): PdlKontaktadresse? =
         kontaktadresse?.filter { it.gyldigFraOgMed != null }?.maxByOrNull { it.gyldigFraOgMed!! }
 
-    fun hentOppholdsadresse(): Oppholdsadresse? =
+    fun hentPdlOppholdsadresse(): PdlOppholdsadresse? =
         oppholdsadresse?.filter { it.gyldigFraOgMed != null }?.maxByOrNull { it.gyldigFraOgMed!! }
 }
 
