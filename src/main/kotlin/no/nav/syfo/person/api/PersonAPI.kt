@@ -8,7 +8,7 @@ import io.ktor.server.routing.*
 import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.krr.toSyfomodiapersonKontaktinfo
-import no.nav.syfo.client.pdl.*
+import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
 import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
 import no.nav.syfo.domain.PersonIdentNumber
@@ -152,6 +152,8 @@ fun Route.registrerPersonApi(
 
                 val callId = getCallId()
 
+                val postinformasjonList = kodeverkClient.getPostinformasjon(callId)
+
                 val pdlPerson = pdlClient.person(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
@@ -159,9 +161,12 @@ fun Route.registrerPersonApi(
                 pdlPerson?.hentPerson?.let { person ->
                     val response = PersonAdresseResponse(
                         navn = person.fullName ?: "",
-                        bostedsadresse = person.hentBostedsadresse(),
-                        kontaktadresse = person.hentKontaktadresse(),
-                        oppholdsadresse = person.hentOppholdsadresse(),
+                        bostedsadresse = person.hentPdlBostedsadresse()
+                            ?.let { Bostedsadresse(it, postinformasjonList) },
+                        kontaktadresse = person.hentPdlKontaktadresse()
+                            ?.let { Kontaktadresse(it, postinformasjonList) },
+                        oppholdsadresse = person.hentPdlOppholdsadresse()
+                            ?.let { Oppholdsadresse(it, postinformasjonList) },
                     )
                     call.respond(response)
                 } ?: call.respond(HttpStatusCode.InternalServerError)

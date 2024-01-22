@@ -2,6 +2,7 @@ package no.nav.syfo.testhelper
 
 import no.nav.syfo.client.pdl.*
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 fun generatePdlPersonNavn(): PdlPersonNavn {
     return PdlPersonNavn(
@@ -17,40 +18,54 @@ fun generateAdressebeskyttelse(): Adressebeskyttelse {
     )
 }
 
-fun generateBostedsadress(): Bostedsadresse {
-    return Bostedsadresse(
+fun generatePdlBostedsadress(): PdlBostedsadresse {
+    return PdlBostedsadresse(
         angittFlyttedato = null,
-        gyldigFraOgMed = null,
+        gyldigFraOgMed = LocalDateTime.now().minusDays(1),
         gyldigTilOgMed = null,
         coAdressenavn = null,
-        vegadresse = null,
+        vegadresse = generatePdlVegadresse(),
         matrikkeladresse = null,
         utenlandskAdresse = null,
         ukjentBosted = null
     )
 }
 
-fun generateKontaktadressee(): Kontaktadresse {
-    return Kontaktadresse(
-        gyldigFraOgMed = null,
+fun generatePdlVegadresse(): PdlVegadresse {
+    return PdlVegadresse(
+        matrikkelId = null,
+        husnummer = null,
+        husbokstav = null,
+        bruksenhetsnummer = null,
+        adressenavn = null,
+        kommunenummer = null,
+        bydelsnummer = null,
+        tilleggsnavn = null,
+        postnummer = "1001",
+    )
+}
+
+fun generatePdlKontaktadressee(): PdlKontaktadresse {
+    return PdlKontaktadresse(
+        gyldigFraOgMed = LocalDateTime.now().minusDays(1),
         gyldigTilOgMed = null,
-        type = KontaktadresseType.Innland,
+        type = PdlKontaktadresseType.Innland,
         coAdressenavn = null,
         postboksadresse = null,
-        vegadresse = null,
+        vegadresse = generatePdlVegadresse(),
         postadresseIFrittFormat = null,
         utenlandskAdresse = null,
         utenlandskAdresseIFrittFormat = null
     )
 }
 
-fun generateOppholdsadresse(): Oppholdsadresse {
-    return Oppholdsadresse(
-        gyldigFraOgMed = null,
+fun generatePdlOppholdsadresse(): PdlOppholdsadresse {
+    return PdlOppholdsadresse(
+        gyldigFraOgMed = LocalDateTime.now().minusDays(1),
         gyldigTilOgMed = null,
         coAdressenavn = null,
         utenlandskAdresse = null,
-        vegadresse = null,
+        vegadresse = generatePdlVegadresse(),
         matrikkeladresse = null,
         oppholdAnnetSted = null
     )
@@ -103,13 +118,13 @@ fun generatePdlHentPerson(
                 adressebeskyttelse ?: generateAdressebeskyttelse()
             ),
             bostedsadresse = listOf(
-                generateBostedsadress()
+                generatePdlBostedsadress()
             ),
             kontaktadresse = listOf(
-                generateKontaktadressee()
+                generatePdlKontaktadressee()
             ),
             oppholdsadresse = listOf(
-                generateOppholdsadresse()
+                generatePdlOppholdsadresse()
             ),
             doedsfall = if (doedsdato == null) emptyList() else {
                 listOf(PdlDoedsfall(doedsdato))
