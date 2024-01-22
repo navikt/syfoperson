@@ -164,14 +164,12 @@ data class Matrikkeladresse(
     val tilleggsnavn: String?,
     val postnummer: String?,
     val poststed: String?,
-    val kommunenummer: String?,
 ) {
     constructor(pdlMatrikkeladresse: PdlMatrikkeladresse, postinformasjonListe: List<Postinformasjon>) : this(
         bruksenhetsnummer = pdlMatrikkeladresse.bruksenhetsnummer,
         tilleggsnavn = pdlMatrikkeladresse.tilleggsnavn,
         postnummer = pdlMatrikkeladresse.postnummer,
         poststed = postinformasjonListe.getPoststedByPostnummer(pdlMatrikkeladresse.postnummer),
-        kommunenummer = pdlMatrikkeladresse.kommunenummer,
     )
 }
 
