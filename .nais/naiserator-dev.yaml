@@ -45,7 +45,7 @@ spec:
     outbound:
       external:
         - host: "pdl-api.dev-fss-pub.nais.io"
-        - host: "kodeverk.dev-fss-pub.nais.io"
+        - host: "kodeverk-api.nav.no"
       rules:
         - application: syfoperson-redis
         - application: istilgangskontroll
@@ -83,4 +83,4 @@ spec:
     - name: ISTILGANGSKONTROLL_URL
       value: "http://istilgangskontroll"
     - name: KODEVERK_URL
-      value: "https://kodeverk.dev-fss-pub.nais.io"
+      value: "https://kodeverk-api.nav.no"

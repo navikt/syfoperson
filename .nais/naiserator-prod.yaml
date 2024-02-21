@@ -45,7 +45,6 @@ spec:
     outbound:
       external:
         - host: "pdl-api.prod-fss-pub.nais.io"
-        - host: "kodeverk.prod-fss-pub.nais.io"
       rules:
         - application: syfoperson-redis
         - application: istilgangskontroll
@@ -53,6 +52,8 @@ spec:
           namespace: team-rocket
         - application: skjermede-personer-pip
           namespace: nom
+        - application: kodeverk-api
+          namespace: team-rocket
   azure:
     application:
       allowAllUsers: true
@@ -83,4 +84,4 @@ spec:
     - name: ISTILGANGSKONTROLL_URL
       value: "http://istilgangskontroll"
     - name: KODEVERK_URL
-      value: "https://kodeverk.prod-fss-pub.nais.io"
+      value: "http://kodeverk-api.team-rocket"
