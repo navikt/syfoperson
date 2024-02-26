@@ -60,7 +60,7 @@ class PdlClient(
             val response: HttpResponse = httpClient.post(baseUrl) {
                 contentType(ContentType.Application.Json)
                 header(HttpHeaders.Authorization, bearerHeader(systemToken.accessToken))
-                header(TEMA_HEADER, ALLE_TEMA_HEADERVERDI)
+                header(BEHANDLINGSNUMMER_HEADER_KEY, BEHANDLINGSNUMMER_HEADER_VALUE)
                 header(NAV_CALL_ID_HEADER, callId)
                 setBody(request)
             }
@@ -79,6 +79,7 @@ class PdlClient(
                         pdlResponse.data
                     }
                 }
+
                 else -> {
                     COUNT_CALL_PDL_PERSON_FAIL.increment()
                     log.error("Request with url: $baseUrl failed with reponse code ${response.status.value}")
@@ -111,5 +112,10 @@ class PdlClient(
         const val CACHE_ADRESSEBESKYTTELSE_PERSON_EXPIRE_SECONDS = 12 * 60 * 60L
 
         private val log = LoggerFactory.getLogger(PdlClient::class.java)
+
+        // Se behandlingskatalog https://behandlingskatalog.intern.nav.no/
+        // Behandling: Sykefraværsoppfølging: Vurdere behov for oppfølging og rett til sykepenger etter §§ 8-4 og 8-8
+        private const val BEHANDLINGSNUMMER_HEADER_KEY = "behandlingsnummer"
+        private const val BEHANDLINGSNUMMER_HEADER_VALUE = "B426"
     }
 }
