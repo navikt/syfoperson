@@ -6,6 +6,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import net.logstash.logback.argument.StructuredArguments
+import no.nav.syfo.application.cache.RedisStore
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.httpClientDefault
 import no.nav.syfo.domain.PersonIdentNumber
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory
 
 class KRRClient(
     private val azureAdClient: AzureAdClient,
+    private val redisStore: RedisStore,
     baseUrl: String,
     private val clientId: String,
 ) {
@@ -27,29 +29,42 @@ class KRRClient(
         personIdentNumber: PersonIdentNumber,
         token: String,
     ): DigitalKontaktinfo {
-        val oboToken = azureAdClient.getOnBehalfOfToken(
-            scopeClientId = clientId,
-            token = token,
-        )?.accessToken ?: throw RuntimeException("Failed to request get response from KRR: Failed to get OBO token")
+        val cacheKey = "$cacheKeyPrefix-${personIdentNumber.value}"
+        val cachedKontaktinfo: DigitalKontaktinfo? = redisStore.getObject(cacheKey)
+        return if (cachedKontaktinfo != null) {
+            COUNT_CALL_KRR_KONTAKTINFORMASJON_CACHE_HIT.increment()
+            cachedKontaktinfo
+        } else {
+            COUNT_CALL_KRR_KONTAKTINFORMASJON_CACHE_MISS.increment()
+            val oboToken = azureAdClient.getOnBehalfOfToken(
+                scopeClientId = clientId,
+                token = token,
+            )?.accessToken ?: throw RuntimeException("Failed to request get response from KRR: Failed to get OBO token")
 
-        val digitalKontaktinfoBolk = digitalKontaktinfoBolk(
-            callId = callId,
-            personIdentList = listOf(personIdentNumber),
-            oboToken = oboToken,
-        )
-        val kontaktinfo = digitalKontaktinfoBolk.personer?.get(personIdentNumber.value)
-        val feil = digitalKontaktinfoBolk.feil?.get(personIdentNumber.value)
-        when {
-            kontaktinfo != null -> {
-                return kontaktinfo
-            }
+            val digitalKontaktinfoBolk = digitalKontaktinfoBolk(
+                callId = callId,
+                personIdentList = listOf(personIdentNumber),
+                oboToken = oboToken,
+            )
+            val kontaktinfo = digitalKontaktinfoBolk.personer?.get(personIdentNumber.value)
+            val feil = digitalKontaktinfoBolk.feil?.get(personIdentNumber.value)
+            when {
+                kontaktinfo != null -> {
+                    redisStore.setObject(
+                        expireSeconds = cacheExpireSeconds,
+                        key = cacheKey,
+                        value = kontaktinfo,
+                    )
+                    kontaktinfo
+                }
 
-            feil != null -> {
-                throw KRRRequestFailedException(feil)
-            }
+                feil != null -> {
+                    throw KRRRequestFailedException(feil)
+                }
 
-            else -> {
-                throw KRRRequestFailedException("Kontaktinfo is null")
+                else -> {
+                    throw KRRRequestFailedException("Kontaktinfo is null")
+                }
             }
         }
     }
@@ -96,6 +111,8 @@ class KRRClient(
 
     companion object {
         private val log = LoggerFactory.getLogger(KRRClient::class.java)
+        private val cacheKeyPrefix = "KRR_KONTAKTINFO"
+        private val cacheExpireSeconds = 12 * 60 * 60L
 
         const val KRR_KONTAKTINFORMASJON_BOLK_PATH = "/rest/v1/personer"
     }

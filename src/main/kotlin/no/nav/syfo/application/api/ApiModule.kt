@@ -56,6 +56,7 @@ fun Application.apiModule(
 
     val krrClient = KRRClient(
         azureAdClient = azureAdClient,
+        redisStore = redisStore,
         baseUrl = environment.krrUrl,
         clientId = environment.krrClientId,
     )
