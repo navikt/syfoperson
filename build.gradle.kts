@@ -4,23 +4,23 @@ group = "no.nav.syfo"
 version = "1.0.0"
 
 object Versions {
-    const val jacksonDataType = "2.15.2"
-    const val jedis = "5.0.1"
-    const val ktor = "2.3.7"
+    const val jacksonDataType = "2.17.2"
+    const val jedis = "5.1.3"
+    const val ktor = "2.3.12"
     const val kluent = "1.73"
-    const val logback = "1.4.14"
+    const val logback = "1.5.6"
     const val logstashEncoder = "7.4"
-    const val mockk = "1.13.5"
-    const val nimbusJoseJwt = "9.37.2"
-    const val micrometerRegistry = "1.12.0"
+    const val mockk = "1.13.12"
+    const val nimbusJoseJwt = "9.40"
+    const val micrometerRegistry = "1.12.7"
     const val redisEmbedded = "0.7.3"
     const val spek = "2.0.19"
 }
 
 plugins {
-    kotlin("jvm") version "1.9.22"
+    kotlin("jvm") version "2.0.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("org.jlleitschuh.gradle.ktlint") version "11.4.2"
+    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
 }
 
 repositories {
@@ -69,7 +69,7 @@ dependencies {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 tasks {
