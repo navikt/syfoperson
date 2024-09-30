@@ -5,7 +5,7 @@ val jacksonDataTypeVersion = "2.17.2"
 val jedisVersion = "5.1.3"
 val ktorVersion = "2.3.12"
 val kluentVersion = "1.73"
-val logbackVersion = "1.5.6"
+val logbackVersion = "1.5.7"
 val logstashEncoderVersion = "7.4"
 val mockkVersion = "1.13.12"
 val nimbusJoseJwtVersion = "9.40"
@@ -15,7 +15,7 @@ val spekVersion = "2.0.19"
 
 plugins {
     kotlin("jvm") version "2.0.20"
-    id("com.gradleup.shadow") version "8.3.0"
+    id("com.gradleup.shadow") version "8.3.1"
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
 }
 
