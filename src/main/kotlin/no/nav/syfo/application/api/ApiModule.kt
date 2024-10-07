@@ -83,8 +83,10 @@ fun Application.apiModule(
     )
 
     val kodeverkClient = KodeverkClient(
+        azureAdClient = azureAdClient,
         redisStore = redisStore,
         baseUrl = environment.kodeverkUrl,
+        clientId = environment.istilgangskontrollClientId,
     )
 
     routing {

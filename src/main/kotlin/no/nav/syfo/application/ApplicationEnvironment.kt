@@ -15,9 +15,10 @@ data class Environment(
     val skjermedePersonerPipClientId: String = getEnvVar("SKJERMEDEPERSONERPIP_CLIENT_ID"),
     val skjermedePersonerPipUrl: String = getEnvVar("SKJERMEDEPERSONERPIP_URL"),
 
-    val istilgangskontrollUrl: String = getEnvVar("ISTILGANGSKONTROLL_URL"),
     val istilgangskontrollClientId: String = getEnvVar("ISTILGANGSKONTROLL_CLIENT_ID"),
+    val istilgangskontrollUrl: String = getEnvVar("ISTILGANGSKONTROLL_URL"),
 
+    val kodeverkClientId: String = getEnvVar("KODEVERK_CLIENT_ID"),
     val kodeverkUrl: String = getEnvVar("KODEVERK_URL"),
 
     val redisHost: String = getEnvVar("REDIS_HOST"),

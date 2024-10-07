@@ -8,14 +8,17 @@ import io.ktor.http.*
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import net.logstash.logback.argument.StructuredArguments
 import no.nav.syfo.application.cache.RedisStore
+import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.httpClientDefault
 import no.nav.syfo.util.*
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
 
 class KodeverkClient(
+    private val azureAdClient: AzureAdClient,
     private val redisStore: RedisStore,
     private val baseUrl: String,
+    private val clientId: String,
 ) {
     private val httpClient = httpClientDefault()
 
@@ -46,11 +49,15 @@ class KodeverkClient(
         callId: String,
     ): List<Postinformasjon> {
         val postnummerUrl = "$baseUrl$KODEVERK_POSTNUMMER_BETYDNINGER_PATH"
+        val systemToken = azureAdClient.getSystemToken(
+            scopeClientId = clientId,
+        ) ?: throw RuntimeException("Failed to send request to kodeverk-api: No token was found")
         return try {
             val response: HttpResponse = httpClient.get(postnummerUrl) {
                 parameter(KODEVERK_EKSKLUDER_UGYLDIGE_PARAM, true)
                 parameter(KODEVERK_OPPSLAGSDATO_PARAM, "${LocalDate.now()}")
                 parameter(KODEVERK_SPRAK_PARAM, "nb")
+                header(HttpHeaders.Authorization, bearerHeader(systemToken.accessToken))
                 header(NAV_CALL_ID_HEADER, callId)
                 header(NAV_CONSUMER_ID_HEADER, "srvsyfoperson")
                 accept(ContentType.Application.Json)

@@ -82,5 +82,7 @@ spec:
       value: "dev-gcp.teamsykefravr.istilgangskontroll"
     - name: ISTILGANGSKONTROLL_URL
       value: "http://istilgangskontroll"
+    - name: KODEVERK_CLIENT_ID
+      value: "dev-gcp.team-rocket.kodeverk-api"
     - name: KODEVERK_URL
       value: "https://kodeverk-api.nav.no"

@@ -3,18 +3,32 @@ package no.nav.syfo.client.kodeverk
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import no.nav.syfo.application.cache.RedisStore
+import no.nav.syfo.client.azuread.AzureAdClient
+import no.nav.syfo.client.azuread.AzureAdToken
 import no.nav.syfo.testhelper.*
 import org.amshove.kluent.shouldBeEqualTo
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
+import java.time.LocalDateTime
 
 class KodeverkClientSpek : Spek({
 
     val externalMockEnvironment = ExternalMockEnvironment()
     val redisStore = mockk<RedisStore>(relaxed = true)
+    val azureAdClient = mockk<AzureAdClient>()
+
     val kodeverkClient = KodeverkClient(
+        azureAdClient = azureAdClient,
         redisStore = redisStore,
         baseUrl = externalMockEnvironment.kodeverkMock.url,
+        clientId = externalMockEnvironment.environment.kodeverkClientId,
+    )
+
+    coEvery {
+        azureAdClient.getSystemToken(any())
+    } returns AzureAdToken(
+        accessToken = "token",
+        expires = LocalDateTime.now().plusDays(1)
     )
 
     beforeEachTest {
