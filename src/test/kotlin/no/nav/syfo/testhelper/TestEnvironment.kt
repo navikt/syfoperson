@@ -24,6 +24,7 @@ fun testEnvironment(
     skjermedePersonerPipUrl = skjermedePersonerPipUrl,
     istilgangskontrollClientId = "dev-gcp.teamsykefravr.istilgangskontroll",
     istilgangskontrollUrl = istilgangskontrollUrl,
+    kodeverkClientId = "dev-gcp.team-rocket.kodeverk-api",
     kodeverkUrl = kodeverkUrl,
     redisHost = "localhost",
     redisSecret = "password",
