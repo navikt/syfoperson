@@ -64,6 +64,7 @@ class KodeverkClient(
             }
             COUNT_CALL_KODEVERK_POSTNUMMER_SUCCESS.increment()
             val body = response.body<KodeverkBetydninger>()
+            log.info("PostInformasjonListe hentet fra kodeverk-api")
             body.toPostInformasjonListe()
         } catch (e: ClientRequestException) {
             handleUnexpectedResponseException(e.response, callId)
