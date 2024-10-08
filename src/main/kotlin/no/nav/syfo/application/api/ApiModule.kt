@@ -86,7 +86,7 @@ fun Application.apiModule(
         azureAdClient = azureAdClient,
         redisStore = redisStore,
         baseUrl = environment.kodeverkUrl,
-        clientId = environment.istilgangskontrollClientId,
+        clientId = environment.kodeverkClientId,
     )
 
     routing {
