@@ -61,7 +61,7 @@ class VeilederTilgangskontrollClient(
 
     suspend fun hasVeilederAccessToPersonList(
         callId: String,
-        personIdentNumberList: List<PersonIdentNumber>,
+        personidenter: List<PersonIdentNumber>,
         token: String,
     ): List<PersonIdentNumber> {
         val oboToken = azureAdClient.getOnBehalfOfToken(
@@ -70,7 +70,7 @@ class VeilederTilgangskontrollClient(
         )?.accessToken ?: throw RuntimeException("Failed to request access to Person: Failed to get OBO token")
 
         return try {
-            val requestBody = personIdentNumberList.map { it.value }
+            val requestBody = personidenter.map { it.value }
 
             val response: HttpResponse = httpClient.post(tilgangskontrollPersonListUrl) {
                 accept(ContentType.Application.Json)
