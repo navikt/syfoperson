@@ -39,8 +39,10 @@ fun Route.registrerPersonApi(
     route(apiPersonBasePath) {
         post(apiPersonInfoPath) {
             try {
-                val personidenterRequestBody = call.receive<List<PersonInfoRequest>>()
-                val personidenter = personidenterRequestBody.map { PersonIdentNumber(it.fnr) }
+                val list = call.receive<List<PersonInfoRequest>>()
+                val personIdentNumberList = list.map { personIdent ->
+                    PersonIdentNumber(personIdent.fnr)
+                }
 
                 val callId = getCallId()
                 val token = getBearerHeader()
@@ -48,14 +50,23 @@ fun Route.registrerPersonApi(
 
                 val grantedAccessList = veilederTilgangskontrollClient.hasVeilederAccessToPersonList(
                     callId = callId,
-                    personidenter = personidenter,
+                    personIdentNumberList = personIdentNumberList,
                     token = token,
                 )
-                val response: List<PersonInfo> = skjermingskodeService.hentSkjermingskodeForPersonidenter(
-                    callId = callId,
-                    personidenter = grantedAccessList,
-                    token = token,
-                )
+                val response: List<PersonInfo> = grantedAccessList
+                    .mapNotNull { personIdentNumber ->
+                        val skjermingskode = skjermingskodeService.hentBrukersSkjermingskode(
+                            callId = callId,
+                            personIdent = personIdentNumber,
+                            token = token,
+                        )
+                        skjermingskode?.let {
+                            PersonInfo(
+                                fnr = personIdentNumber.value,
+                                skjermingskode = skjermingskode,
+                            )
+                        }
+                    }
                 call.respond(response)
             } catch (ex: Exception) {
                 handleApiError(
