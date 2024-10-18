@@ -40,7 +40,7 @@ class SkjermingskodeService(
         personident: PersonIdentNumber,
         token: String,
     ): Deferred<Skjermingskode?> =
-        CoroutineScope(Dispatchers.IO).async {
+        CoroutineScope(DISPATCHER).async {
             val hasAdressebeskyttelse = pdlClient.hasAdressebeskyttelse(callId = callId, personIdent = personident)
             hasAdressebeskyttelse?.let {
                 if (hasAdressebeskyttelse) {
@@ -55,4 +55,8 @@ class SkjermingskodeService(
                 }
             }
         }
+
+    companion object {
+        private val DISPATCHER = Dispatchers.IO.limitedParallelism(20)
+    }
 }
