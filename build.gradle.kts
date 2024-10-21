@@ -1,21 +1,21 @@
 group = "no.nav.syfo"
 version = "1.0.0"
 
-val jacksonDataTypeVersion = "2.17.2"
-val jedisVersion = "5.1.3"
+val jacksonDataTypeVersion = "2.18.0"
+val jedisVersion = "5.2.0"
 val ktorVersion = "2.3.12"
 val kluentVersion = "1.73"
-val logbackVersion = "1.5.7"
+val logbackVersion = "1.5.11"
 val logstashEncoderVersion = "7.4"
-val mockkVersion = "1.13.12"
-val nimbusJoseJwtVersion = "9.40"
-val micrometerRegistryVersion = "1.12.7"
+val mockkVersion = "1.13.13"
+val nimbusJoseJwtVersion = "9.41.2"
+val micrometerRegistryVersion = "1.13.6"
 val redisEmbeddedVersion = "0.7.3"
 val spekVersion = "2.0.19"
 
 plugins {
-    kotlin("jvm") version "2.0.20"
-    id("com.gradleup.shadow") version "8.3.1"
+    kotlin("jvm") version "2.0.21"
+    id("com.gradleup.shadow") version "8.3.3"
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
 }
 
