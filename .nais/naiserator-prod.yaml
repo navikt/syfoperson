@@ -64,6 +64,10 @@ spec:
           - "NAVident"
   envFrom:
     - secret: syfoperson-redis-password
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: java
   env:
     - name: KRR_CLIENT_ID
       value: "prod-gcp.team-rocket.digdir-krr-proxy"
