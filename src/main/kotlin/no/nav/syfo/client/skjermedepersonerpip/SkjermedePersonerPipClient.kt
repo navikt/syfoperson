@@ -25,17 +25,16 @@ class SkjermedePersonerPipClient(
         personIdentNumber: PersonIdentNumber,
         token: String,
     ): Boolean {
-        val oboToken = azureAdClient.getOnBehalfOfToken(
-            scopeClientId = clientId,
-            token = token,
-        )?.accessToken ?: throw RuntimeException("Failed to request access to Person: Failed to get OBO token")
-
         val cacheKey = "$CACHE_SKJERMET_PERSONIDENT_KEY_PREFIX${personIdentNumber.value}"
         val cachedValue: Boolean? = redisStore.getObject(key = cacheKey)
         if (cachedValue != null) {
             return cachedValue
         } else {
             try {
+                val oboToken = azureAdClient.getOnBehalfOfToken(
+                    scopeClientId = clientId,
+                    token = token,
+                )?.accessToken ?: throw RuntimeException("Failed to request access to Person: Failed to get OBO token")
                 val url = getSkjermedePersonerPipUrl(personIdentNumber)
                 val skjermedePersonerResponse: Boolean = httpClient.get(url) {
                     header(io.ktor.http.HttpHeaders.Authorization, bearerHeader(oboToken))
@@ -76,7 +75,7 @@ class SkjermedePersonerPipClient(
 
     companion object {
         const val CACHE_SKJERMET_PERSONIDENT_KEY_PREFIX = "skjermet-personident"
-        const val CACHE_SKJERMET_PERSONIDENT_EXPIRE_SECONDS = 60 * 60L
+        const val CACHE_SKJERMET_PERSONIDENT_EXPIRE_SECONDS = 12 * 60 * 60L
 
         private val log = LoggerFactory.getLogger(SkjermedePersonerPipClient::class.java)
     }
