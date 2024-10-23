@@ -18,12 +18,13 @@ class SkjermingskodeService(
         callId: String,
         personidenter: List<PersonIdentNumber>,
         token: String,
-    ) =
-        personidenter.map { personident ->
+    ): List<PersonInfo> {
+        val pipOboToken = skjermedePersonerPipClient.getOnBehalfOfToken(token)
+        return personidenter.map { personident ->
             val skjermingskode = hentBrukersSkjermingskode(
                 callId = callId,
                 personident = personident,
-                token = token,
+                oboToken = pipOboToken,
             )
             Pair(personident, skjermingskode)
         }.mapNotNull { (personident, skjermingskode) ->
@@ -34,11 +35,12 @@ class SkjermingskodeService(
                 )
             }
         }
+    }
 
     private suspend fun hentBrukersSkjermingskode(
         callId: String,
         personident: PersonIdentNumber,
-        token: String,
+        oboToken: String,
     ): Deferred<Skjermingskode?> =
         CoroutineScope(DISPATCHER).async {
             val hasAdressebeskyttelse = pdlClient.hasAdressebeskyttelse(callId = callId, personIdent = personident)
@@ -49,7 +51,7 @@ class SkjermingskodeService(
                     val isSkjermet = skjermedePersonerPipClient.isSkjermet(
                         callId = callId,
                         personIdentNumber = personident,
-                        token = token,
+                        oboToken = oboToken,
                     )
                     if (isSkjermet) Skjermingskode.EGEN_ANSATT else Skjermingskode.INGEN
                 }

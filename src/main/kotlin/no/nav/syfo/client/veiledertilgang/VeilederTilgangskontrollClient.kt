@@ -68,10 +68,8 @@ class VeilederTilgangskontrollClient(
             scopeClientId = clientId,
             token = token,
         )?.accessToken ?: throw RuntimeException("Failed to request access to Person: Failed to get OBO token")
-
         return try {
             val requestBody = personidenter.map { it.value }
-
             val response: HttpResponse = httpClient.post(tilgangskontrollPersonListUrl) {
                 accept(ContentType.Application.Json)
                 contentType(ContentType.Application.Json)

@@ -81,7 +81,6 @@ fun Application.apiModule(
         baseUrl = environment.istilgangskontrollUrl,
         clientId = environment.istilgangskontrollClientId,
     )
-
     val kodeverkClient = KodeverkClient(
         azureAdClient = azureAdClient,
         redisStore = redisStore,
