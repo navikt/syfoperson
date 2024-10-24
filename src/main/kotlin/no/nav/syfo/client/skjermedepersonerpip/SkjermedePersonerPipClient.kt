@@ -23,7 +23,7 @@ class SkjermedePersonerPipClient(
     suspend fun isSkjermet(
         callId: String,
         personIdentNumber: PersonIdentNumber,
-        token: String,
+        oboToken: String,
     ): Boolean {
         val cacheKey = "$CACHE_SKJERMET_PERSONIDENT_KEY_PREFIX${personIdentNumber.value}"
         val cachedValue: Boolean? = redisStore.getObject(key = cacheKey)
@@ -31,10 +31,6 @@ class SkjermedePersonerPipClient(
             return cachedValue
         } else {
             try {
-                val oboToken = azureAdClient.getOnBehalfOfToken(
-                    scopeClientId = clientId,
-                    token = token,
-                )?.accessToken ?: throw RuntimeException("Failed to request access to Person: Failed to get OBO token")
                 val url = getSkjermedePersonerPipUrl(personIdentNumber)
                 val skjermedePersonerResponse: Boolean = httpClient.get(url) {
                     header(io.ktor.http.HttpHeaders.Authorization, bearerHeader(oboToken))
@@ -68,6 +64,12 @@ class SkjermedePersonerPipClient(
             }
         }
     }
+
+    suspend fun getOnBehalfOfToken(token: String): String =
+        azureAdClient.getOnBehalfOfToken(
+            scopeClientId = clientId,
+            token = token,
+        )?.accessToken ?: throw RuntimeException("Failed to request access to Person: Failed to get OBO token")
 
     private fun getSkjermedePersonerPipUrl(personIdent: PersonIdentNumber): String {
         return "$baseUrl/skjermet?personident=${personIdent.value}"

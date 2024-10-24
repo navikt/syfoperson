@@ -105,7 +105,7 @@ fun Route.registrerPersonApi(
                 val isSkjermet = skjermedePersonerPipClient.isSkjermet(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
-                    token = token
+                    oboToken = skjermedePersonerPipClient.getOnBehalfOfToken(token),
                 )
                 call.respond(isSkjermet)
             }
