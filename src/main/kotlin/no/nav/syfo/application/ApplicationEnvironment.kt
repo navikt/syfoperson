@@ -1,5 +1,8 @@
 package no.nav.syfo.application
 
+import no.nav.syfo.application.cache.RedisConfig
+import java.net.URI
+
 data class Environment(
     val azureAppClientId: String = getEnvVar("AZURE_APP_CLIENT_ID"),
     val azureAppClientSecret: String = getEnvVar("AZURE_APP_CLIENT_SECRET"),
@@ -20,10 +23,12 @@ data class Environment(
 
     val kodeverkClientId: String = getEnvVar("KODEVERK_CLIENT_ID"),
     val kodeverkUrl: String = getEnvVar("KODEVERK_URL"),
-
-    val redisHost: String = getEnvVar("REDIS_HOST"),
-    val redisPort: Int = getEnvVar("REDIS_PORT", "6379").toInt(),
-    val redisSecret: String = getEnvVar("REDIS_PASSWORD"),
+    val redisConfig: RedisConfig = RedisConfig(
+        redisUri = URI(getEnvVar("REDIS_URI_SYFOVEILEDER")),
+        redisDB = 1,
+        redisUsername = getEnvVar("REDIS_USERNAME_SYFOVEILEDER"),
+        redisPassword = getEnvVar("REDIS_PASSWORD_SYFOVEILEDER"),
+    ),
 )
 
 fun getEnvVar(
