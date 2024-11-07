@@ -62,8 +62,9 @@ spec:
       claims:
         extra:
           - "NAVident"
-  envFrom:
-    - secret: redis-teamsykefravr-syfoveileder
+  redis:
+    - instance: syfoveileder
+      access: readwrite
   observability:
     autoInstrumentation:
       enabled: true
