@@ -24,10 +24,10 @@ data class Environment(
     val kodeverkClientId: String = getEnvVar("KODEVERK_CLIENT_ID"),
     val kodeverkUrl: String = getEnvVar("KODEVERK_URL"),
     val redisConfig: RedisConfig = RedisConfig(
-        redisUri = URI(getEnvVar("REDIS_URI_SYFOVEILEDER")),
-        redisDB = 1,
-        redisUsername = getEnvVar("REDIS_USERNAME_SYFOVEILEDER"),
-        redisPassword = getEnvVar("REDIS_PASSWORD_SYFOVEILEDER"),
+        redisUri = URI(getEnvVar("REDIS_URI_CACHE")),
+        redisDB = 23, // se https://github.com/navikt/istilgangskontroll/blob/master/README.md
+        redisUsername = getEnvVar("REDIS_USERNAME_CACHE"),
+        redisPassword = getEnvVar("REDIS_PASSWORD_CACHE"),
     ),
 )
 

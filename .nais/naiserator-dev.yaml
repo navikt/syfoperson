@@ -62,7 +62,7 @@ spec:
         extra:
           - "NAVident"
   redis:
-    - instance: syfoveileder
+    - instance: cache
       access: readwrite
   observability:
     autoInstrumentation:
