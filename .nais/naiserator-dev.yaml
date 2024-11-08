@@ -61,8 +61,9 @@ spec:
       claims:
         extra:
           - "NAVident"
-  envFrom:
-    - secret: syfoperson-redis-password
+  redis:
+    - instance: cache
+      access: readwrite
   observability:
     autoInstrumentation:
       enabled: true
@@ -76,8 +77,6 @@ spec:
       value: "dev-fss.pdl.pdl-api"
     - name: PDL_URL
       value: "https://pdl-api.dev-fss-pub.nais.io/graphql"
-    - name: REDIS_HOST
-      value: "syfoperson-redis.teamsykefravr.svc.cluster.local"
     - name: SKJERMEDEPERSONERPIP_CLIENT_ID
       value: "dev-gcp.nom.skjermede-personer-pip"
     - name: SKJERMEDEPERSONERPIP_URL

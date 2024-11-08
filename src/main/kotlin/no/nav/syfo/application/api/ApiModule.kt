@@ -17,12 +17,12 @@ import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
 import no.nav.syfo.client.wellknown.WellKnown
 import no.nav.syfo.person.api.registrerPersonApi
 import no.nav.syfo.person.skjermingskode.SkjermingskodeService
-import redis.clients.jedis.*
 
 fun Application.apiModule(
     applicationState: ApplicationState,
     environment: Environment,
     wellKnownInternalAzureAD: WellKnown,
+    redisStore: RedisStore,
 ) {
     installMetrics()
     installCallId()
@@ -37,15 +37,6 @@ fun Application.apiModule(
         ),
     )
     installStatusPages()
-    val redisStore = RedisStore(
-        jedisPool = JedisPool(
-            JedisPoolConfig(),
-            environment.redisHost,
-            environment.redisPort,
-            Protocol.DEFAULT_TIMEOUT,
-            environment.redisSecret
-        )
-    )
 
     val azureAdClient = AzureAdClient(
         azureAppClientId = environment.azureAppClientId,
