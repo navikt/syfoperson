@@ -46,7 +46,6 @@ spec:
       external:
         - host: "pdl-api.prod-fss-pub.nais.io"
       rules:
-        - application: syfoperson-redis
         - application: istilgangskontroll
         - application: digdir-krr-proxy
           namespace: team-rocket
