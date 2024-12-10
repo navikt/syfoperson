@@ -5,10 +5,10 @@ import io.ktor.server.auth.*
 import io.ktor.server.routing.*
 import no.nav.syfo.application.ApplicationState
 import no.nav.syfo.application.Environment
-import no.nav.syfo.application.api.authentication.*
-import no.nav.syfo.application.cache.RedisStore
+import no.nav.syfo.application.api.authentication.JwtIssuer
+import no.nav.syfo.application.api.authentication.JwtIssuerType
+import no.nav.syfo.application.api.authentication.installJwtAuthentication
 import no.nav.syfo.application.metric.api.registerMetricApi
-import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.pdl.PdlClient
@@ -22,7 +22,11 @@ fun Application.apiModule(
     applicationState: ApplicationState,
     environment: Environment,
     wellKnownInternalAzureAD: WellKnown,
-    redisStore: RedisStore,
+    krrClient: KRRClient,
+    pdlClient: PdlClient,
+    skjermedePersonerPipClient: SkjermedePersonerPipClient,
+    kodeverkClient: KodeverkClient,
+    veilederTilgangskontrollClient: VeilederTilgangskontrollClient,
 ) {
     installMetrics()
     installCallId()
@@ -38,45 +42,9 @@ fun Application.apiModule(
     )
     installStatusPages()
 
-    val azureAdClient = AzureAdClient(
-        azureAppClientId = environment.azureAppClientId,
-        azureAppClientSecret = environment.azureAppClientSecret,
-        azureOpenidConfigTokenEndpoint = environment.azureOpenidConfigTokenEndpoint,
-        redisStore = redisStore,
-    )
-
-    val krrClient = KRRClient(
-        azureAdClient = azureAdClient,
-        redisStore = redisStore,
-        baseUrl = environment.krrUrl,
-        clientId = environment.krrClientId,
-    )
-    val pdlClient = PdlClient(
-        azureAdClient = azureAdClient,
-        redisStore = redisStore,
-        baseUrl = environment.pdlUrl,
-        clientId = environment.pdlClientId,
-    )
-    val skjermedePersonerPipClient = SkjermedePersonerPipClient(
-        azureAdClient = azureAdClient,
-        redisStore = redisStore,
-        baseUrl = environment.skjermedePersonerPipUrl,
-        clientId = environment.skjermedePersonerPipClientId,
-    )
     val skjermingskodeService = SkjermingskodeService(
         skjermedePersonerPipClient = skjermedePersonerPipClient,
         pdlClient = pdlClient,
-    )
-    val veilederTilgangskontrollClient = VeilederTilgangskontrollClient(
-        azureAdClient = azureAdClient,
-        baseUrl = environment.istilgangskontrollUrl,
-        clientId = environment.istilgangskontrollClientId,
-    )
-    val kodeverkClient = KodeverkClient(
-        azureAdClient = azureAdClient,
-        redisStore = redisStore,
-        baseUrl = environment.kodeverkUrl,
-        clientId = environment.kodeverkClientId,
     )
 
     routing {

@@ -55,7 +55,7 @@ class PersonNavnApiSpek : Spek({
                             response.status() shouldBeEqualTo HttpStatusCode.OK
                             val fnrMedNavn: FnrMedNavn = objectMapper.readValue(response.content!!)
                             fnrMedNavn.fnr shouldBeEqualTo ARBEIDSTAKER_PERSONIDENT.value
-                            fnrMedNavn.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.fullName
+                            fnrMedNavn.navn shouldBeEqualTo generatePdlPersonResponse().data?.hentPerson?.fullName
                         }
                     }
                 }

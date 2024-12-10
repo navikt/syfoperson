@@ -1,5 +1,6 @@
 package no.nav.syfo.client.kodeverk
 
+import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
@@ -19,8 +20,8 @@ class KodeverkClient(
     private val redisStore: RedisStore,
     private val baseUrl: String,
     private val clientId: String,
+    private val httpClient: HttpClient = httpClientDefault(),
 ) {
-    private val httpClient = httpClientDefault()
 
     suspend fun getPostinformasjon(
         callId: String,

@@ -9,6 +9,12 @@ import no.nav.syfo.application.ApplicationState
 import no.nav.syfo.application.Environment
 import no.nav.syfo.application.api.apiModule
 import no.nav.syfo.application.cache.RedisStore
+import no.nav.syfo.client.azuread.AzureAdClient
+import no.nav.syfo.client.kodeverk.KodeverkClient
+import no.nav.syfo.client.krr.KRRClient
+import no.nav.syfo.client.pdl.PdlClient
+import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
+import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
 import no.nav.syfo.client.wellknown.getWellKnown
 import org.slf4j.LoggerFactory
 import redis.clients.jedis.DefaultJedisClientConfig
@@ -35,6 +41,41 @@ fun main() {
                 .build()
         )
     )
+    val azureAdClient = AzureAdClient(
+        azureAppClientId = environment.azureAppClientId,
+        azureAppClientSecret = environment.azureAppClientSecret,
+        azureOpenidConfigTokenEndpoint = environment.azureOpenidConfigTokenEndpoint,
+        redisStore = cache,
+    )
+    val krrClient = KRRClient(
+        azureAdClient = azureAdClient,
+        redisStore = cache,
+        baseUrl = environment.krrUrl,
+        clientId = environment.krrClientId,
+    )
+    val pdlClient = PdlClient(
+        azureAdClient = azureAdClient,
+        redisStore = cache,
+        baseUrl = environment.pdlUrl,
+        clientId = environment.pdlClientId,
+    )
+    val skjermedePersonerPipClient = SkjermedePersonerPipClient(
+        azureAdClient = azureAdClient,
+        redisStore = cache,
+        baseUrl = environment.skjermedePersonerPipUrl,
+        clientId = environment.skjermedePersonerPipClientId,
+    )
+    val veilederTilgangskontrollClient = VeilederTilgangskontrollClient(
+        azureAdClient = azureAdClient,
+        baseUrl = environment.istilgangskontrollUrl,
+        clientId = environment.istilgangskontrollClientId,
+    )
+    val kodeverkClient = KodeverkClient(
+        azureAdClient = azureAdClient,
+        redisStore = cache,
+        baseUrl = environment.kodeverkUrl,
+        clientId = environment.kodeverkClientId,
+    )
 
     val server = embeddedServer(
         Netty,
@@ -55,7 +96,11 @@ fun main() {
                     applicationState = applicationState,
                     environment = environment,
                     wellKnownInternalAzureAD = wellKnownInternalAzureAD,
-                    redisStore = cache,
+                    krrClient = krrClient,
+                    pdlClient = pdlClient,
+                    skjermedePersonerPipClient = skjermedePersonerPipClient,
+                    kodeverkClient = kodeverkClient,
+                    veilederTilgangskontrollClient = veilederTilgangskontrollClient,
                 )
             }
         }

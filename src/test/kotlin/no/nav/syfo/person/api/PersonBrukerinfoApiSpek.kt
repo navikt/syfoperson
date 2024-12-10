@@ -71,7 +71,7 @@ class PersonBrukerinfoApiSpek : Spek({
                             syfomodiapersonBrukerinfo.kontaktinfo.epost shouldBeEqualTo digitalKontaktinfoBolkKanVarslesTrue.epostadresse
                             syfomodiapersonBrukerinfo.kontaktinfo.tlf shouldBeEqualTo digitalKontaktinfoBolkKanVarslesTrue.mobiltelefonnummer
                             syfomodiapersonBrukerinfo.kontaktinfo.skalHaVarsel shouldBeEqualTo true
-                            syfomodiapersonBrukerinfo.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.fullName
+                            syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse().data?.hentPerson?.fullName
                             syfomodiapersonBrukerinfo.dodsdato shouldBe null
                             syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon shouldBe null
                         }
@@ -86,7 +86,7 @@ class PersonBrukerinfoApiSpek : Spek({
                             response.status() shouldBeEqualTo HttpStatusCode.OK
                             val syfomodiapersonBrukerinfo: SyfomodiapersonBrukerinfo =
                                 objectMapper.readValue(response.content!!)
-                            syfomodiapersonBrukerinfo.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.fullName
+                            syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse().data?.hentPerson?.fullName
                             syfomodiapersonBrukerinfo.dodsdato shouldBeEqualTo LocalDate.now()
                         }
                     }

@@ -1,5 +1,6 @@
 package no.nav.syfo.client.krr
 
+import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
@@ -19,8 +20,8 @@ class KRRClient(
     private val redisStore: RedisStore,
     baseUrl: String,
     private val clientId: String,
+    private val httpClient: HttpClient = httpClientDefault(),
 ) {
-    private val httpClient = httpClientDefault()
 
     private val krrKontaktinfoUrl: String = "$baseUrl$KRR_KONTAKTINFORMASJON_BOLK_PATH"
 

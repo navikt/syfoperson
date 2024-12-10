@@ -20,8 +20,9 @@ class KodeverkClientSpek : Spek({
     val kodeverkClient = KodeverkClient(
         azureAdClient = azureAdClient,
         redisStore = redisStore,
-        baseUrl = externalMockEnvironment.kodeverkMock.url,
+        baseUrl = externalMockEnvironment.environment.kodeverkUrl,
         clientId = externalMockEnvironment.environment.kodeverkClientId,
+        httpClient = externalMockEnvironment.mockHttpClient,
     )
 
     coEvery {

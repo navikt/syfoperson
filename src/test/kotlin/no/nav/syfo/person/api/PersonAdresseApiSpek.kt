@@ -55,7 +55,7 @@ class PersonAdresseApiSpek : Spek({
                             response.status() shouldBeEqualTo HttpStatusCode.OK
                             val personAdresseResponse: PersonAdresseResponse =
                                 objectMapper.readValue(response.content!!)
-                            personAdresseResponse.navn shouldBeEqualTo externalMockEnvironment.pdlMock.personResponseDefault.data?.hentPerson?.fullName
+                            personAdresseResponse.navn shouldBeEqualTo generatePdlPersonResponse().data?.hentPerson?.fullName
                             personAdresseResponse.bostedsadresse shouldBeEqualTo generatePersonAdresseResponse().bostedsadresse
                             personAdresseResponse.kontaktadresse shouldBeEqualTo generatePersonAdresseResponse().kontaktadresse
                             personAdresseResponse.oppholdsadresse shouldBeEqualTo generatePersonAdresseResponse().oppholdsadresse

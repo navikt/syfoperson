@@ -1,67 +1,43 @@
 package no.nav.syfo.testhelper
 
-import io.ktor.server.netty.*
 import no.nav.syfo.application.ApplicationState
 import no.nav.syfo.application.cache.RedisStore
 import no.nav.syfo.testhelper.mock.*
+import redis.clients.jedis.DefaultJedisClientConfig
+import redis.clients.jedis.HostAndPort
+import redis.clients.jedis.JedisPool
+import redis.clients.jedis.JedisPoolConfig
 
 class ExternalMockEnvironment {
     val applicationState: ApplicationState = testAppState()
-    val azureAdMock = AzureAdMock()
-    val krrMock = KrrMock()
-    val pdlMock = PdlMock()
-    val skjermedPersonerPipMock = SkjermedePersonerPipMock()
-    val veilederTilgangskontrollMock = VeilederTilgangskontrollMock()
-    val kodeverkMock = KodeverkMock()
 
-    val externalApplicationMockMap = hashMapOf(
-        azureAdMock.name to azureAdMock.server,
-        krrMock.name to krrMock.server,
-        pdlMock.name to pdlMock.server,
-        skjermedPersonerPipMock.name to skjermedPersonerPipMock.server,
-        veilederTilgangskontrollMock.name to veilederTilgangskontrollMock.server,
-        kodeverkMock.name to kodeverkMock.server,
+    val environment = testEnvironment()
+    val mockHttpClient = getMockHttpClient(env = environment)
+
+    val redisConfig = environment.redisConfig
+    val redisCache = RedisStore(
+        JedisPool(
+            JedisPoolConfig(),
+            HostAndPort(redisConfig.host, redisConfig.port),
+            DefaultJedisClientConfig.builder()
+                .ssl(redisConfig.ssl)
+                .password(redisConfig.redisPassword)
+                .database(redisConfig.redisDB)
+                .build()
+        )
     )
-
-    val environment = testEnvironment(
-        azureOpenIdTokenEndpoint = azureAdMock.url,
-        krrUrl = krrMock.url,
-        pdlUrl = pdlMock.url,
-        skjermedePersonerPipUrl = skjermedPersonerPipMock.url,
-        istilgangskontrollUrl = veilederTilgangskontrollMock.url,
-        kodeverkUrl = kodeverkMock.url,
-    )
-
     val redisServer = testRedis(
         port = environment.redisConfig.redisUri.port,
         secret = environment.redisConfig.redisPassword,
     )
 
     val wellKnownInternalAzureAD = wellKnownInternalAzureAD()
-    lateinit var redisCache: RedisStore
 }
 
 fun ExternalMockEnvironment.startExternalMocks() {
-    this.externalApplicationMockMap.start()
     this.redisServer.start()
 }
 
 fun ExternalMockEnvironment.stopExternalMocks() {
-    this.externalApplicationMockMap.stop()
     this.redisServer.stop()
-}
-
-fun HashMap<String, NettyApplicationEngine>.start() {
-    this.forEach {
-        it.value.start()
-    }
-}
-
-fun HashMap<String, NettyApplicationEngine>.stop(
-    gracePeriodMillis: Long = 1L,
-    timeoutMillis: Long = 10L,
-) {
-    this.forEach {
-        it.value.stop(gracePeriodMillis, timeoutMillis)
-    }
 }

@@ -25,8 +25,9 @@ class PdlClientSpek : Spek({
     val pdlClient = PdlClient(
         azureAdClient = azureAdClient,
         redisStore = cacheMock,
-        baseUrl = externalMockEnvironment.pdlMock.url,
+        baseUrl = externalMockEnvironment.environment.pdlUrl,
         clientId = externalMockEnvironment.environment.pdlClientId,
+        httpClient = externalMockEnvironment.mockHttpClient,
     )
 
     coEvery {
