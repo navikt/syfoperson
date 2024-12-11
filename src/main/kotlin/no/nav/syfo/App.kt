@@ -77,38 +77,41 @@ fun main() {
         clientId = environment.kodeverkClientId,
     )
 
+    val applicationEngineEnvironment = applicationEnvironment {
+        log = LoggerFactory.getLogger("ktor.application")
+        config = HoconApplicationConfig(ConfigFactory.load())
+    }
     val server = embeddedServer(
         Netty,
-        applicationEngineEnvironment {
-            log = LoggerFactory.getLogger("ktor.application")
-            config = HoconApplicationConfig(ConfigFactory.load())
-
+        environment = applicationEngineEnvironment,
+        configure = {
             connector {
                 port = applicationPort
             }
-
+            connectionGroupSize = 8
+            workerGroupSize = 8
+            callGroupSize = 16
+        },
+        module = {
             val wellKnownInternalAzureAD = getWellKnown(
                 wellKnownUrl = environment.azureAppWellKnownUrl
             )
-
-            module {
-                apiModule(
-                    applicationState = applicationState,
-                    environment = environment,
-                    wellKnownInternalAzureAD = wellKnownInternalAzureAD,
-                    krrClient = krrClient,
-                    pdlClient = pdlClient,
-                    skjermedePersonerPipClient = skjermedePersonerPipClient,
-                    kodeverkClient = kodeverkClient,
-                    veilederTilgangskontrollClient = veilederTilgangskontrollClient,
-                )
+            apiModule(
+                applicationState = applicationState,
+                environment = environment,
+                wellKnownInternalAzureAD = wellKnownInternalAzureAD,
+                krrClient = krrClient,
+                pdlClient = pdlClient,
+                skjermedePersonerPipClient = skjermedePersonerPipClient,
+                kodeverkClient = kodeverkClient,
+                veilederTilgangskontrollClient = veilederTilgangskontrollClient,
+            )
+            monitor.subscribe(ApplicationStarted) { application ->
+                applicationState.ready = true
+                application.environment.log.info("Application is ready, running Java VM ${Runtime.version()}")
             }
         }
-    ) {
-        connectionGroupSize = 8
-        workerGroupSize = 8
-        callGroupSize = 16
-    }
+    )
 
     Runtime.getRuntime().addShutdownHook(
         Thread {
@@ -116,9 +119,5 @@ fun main() {
         }
     )
 
-    server.environment.monitor.subscribe(ApplicationStarted) { application ->
-        applicationState.ready = true
-        application.environment.log.info("Application is ready, running Java VM ${Runtime.version()}")
-    }
     server.start(wait = true)
 }
