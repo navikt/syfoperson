@@ -4,7 +4,7 @@ import io.ktor.client.plugins.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
-import io.ktor.util.pipeline.*
+import io.ktor.server.routing.*
 import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
 import no.nav.syfo.domain.PersonIdentNumber
 import org.slf4j.Logger
@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
 
 private val log: Logger = LoggerFactory.getLogger("no.nav.syfo")
 
-fun PipelineContext<out Unit, ApplicationCall>.getBearerHeader(): String? {
+fun RoutingContext.getBearerHeader(): String? {
     return this.call.request.headers[HttpHeaders.Authorization]?.removePrefix("Bearer ")
 }
 
@@ -20,7 +20,7 @@ fun ApplicationCall.getCallId(): String {
     return this.request.headers[NAV_CALL_ID_HEADER].toString()
 }
 
-fun PipelineContext<out Unit, ApplicationCall>.getCallId(): String {
+fun RoutingContext.getCallId(): String {
     return this.call.getCallId()
 }
 
@@ -28,11 +28,11 @@ fun ApplicationCall.getConsumerId(): String {
     return this.request.headers[NAV_CONSUMER_ID_HEADER].toString()
 }
 
-fun PipelineContext<out Unit, ApplicationCall>.getPersonIdent(): String? {
+fun RoutingContext.getPersonIdent(): String? {
     return this.call.request.headers[NAV_PERSONIDENT_HEADER]
 }
 
-suspend fun PipelineContext<out Unit, ApplicationCall>.personRequestHandler(
+suspend fun RoutingContext.personRequestHandler(
     resource: String,
     veilederTilgangskontrollClient: VeilederTilgangskontrollClient,
     requestBlock: suspend () -> Unit,
@@ -63,7 +63,7 @@ suspend fun PipelineContext<out Unit, ApplicationCall>.personRequestHandler(
     }
 }
 
-suspend fun PipelineContext<out Unit, ApplicationCall>.handleApiError(
+suspend fun RoutingContext.handleApiError(
     ex: Exception,
     resource: String,
 ) {
