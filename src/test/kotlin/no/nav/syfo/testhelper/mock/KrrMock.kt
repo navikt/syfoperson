@@ -1,15 +1,11 @@
 package no.nav.syfo.testhelper.mock
 
-import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-import no.nav.syfo.application.api.installContentNegotiation
-import no.nav.syfo.client.krr.*
+import io.ktor.client.engine.mock.*
+import io.ktor.client.request.*
+import no.nav.syfo.client.krr.DigitalKontaktinfo
+import no.nav.syfo.client.krr.DigitalKontaktinfoBolk
+import no.nav.syfo.client.krr.DigitalKontaktinfoBolkRequestBody
 import no.nav.syfo.testhelper.UserConstants
-import no.nav.syfo.testhelper.getRandomPort
 
 fun digitalKontaktinfoBolkKanVarslesTrue(personIdentNumber: String) = DigitalKontaktinfoBolk(
     personer = mapOf(
@@ -24,25 +20,11 @@ fun digitalKontaktinfoBolkKanVarslesTrue(personIdentNumber: String) = DigitalKon
     ),
 )
 
-class KrrMock {
-    private val port = getRandomPort()
-    val url = "http://localhost:$port"
-
-    val name = "krr"
-    val server = embeddedServer(
-        factory = Netty,
-        port = port,
-    ) {
-        installContentNegotiation()
-        routing {
-            post(KRRClient.KRR_KONTAKTINFORMASJON_BOLK_PATH) {
-                val krrRequestBody = call.receive<DigitalKontaktinfoBolkRequestBody>()
-                call.respond(
-                    digitalKontaktinfoBolkKanVarslesTrue(
-                        personIdentNumber = krrRequestBody.personidenter.first(),
-                    )
-                )
-            }
-        }
-    }
+suspend fun MockRequestHandleScope.krrMockResponse(request: HttpRequestData): HttpResponseData {
+    val krrRequestBody = request.receiveBody<DigitalKontaktinfoBolkRequestBody>()
+    return respond(
+        digitalKontaktinfoBolkKanVarslesTrue(
+            personIdentNumber = krrRequestBody.personidenter.first(),
+        )
+    )
 }
