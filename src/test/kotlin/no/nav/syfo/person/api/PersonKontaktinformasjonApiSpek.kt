@@ -4,11 +4,10 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import no.nav.syfo.client.krr.DigitalKontaktinfo
+import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonKontaktinfo
 import no.nav.syfo.testhelper.*
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VEILEDER_NO_ACCESS
-import no.nav.syfo.testhelper.mock.digitalKontaktinfoBolkKanVarslesTrue
 import no.nav.syfo.util.NAV_PERSONIDENT_HEADER
 import org.amshove.kluent.shouldBeEqualTo
 import org.spekframework.spek2.Spek
@@ -45,11 +44,11 @@ class PersonKontaktinformasjonApiSpek : Spek({
                         }
 
                         response.status shouldBeEqualTo HttpStatusCode.OK
-                        val digitalKontaktinfo = response.body<DigitalKontaktinfo>()
-                        digitalKontaktinfo.personident shouldBeEqualTo ARBEIDSTAKER_PERSONIDENT.value
-                        digitalKontaktinfo shouldBeEqualTo digitalKontaktinfoBolkKanVarslesTrue(
-                            personIdentNumber = ARBEIDSTAKER_PERSONIDENT.value,
-                        ).personer?.get(ARBEIDSTAKER_PERSONIDENT.value)
+                        val digitalKontaktinfo = response.body<SyfomodiapersonKontaktinfo>()
+                        digitalKontaktinfo.fnr shouldBeEqualTo ARBEIDSTAKER_PERSONIDENT.value
+                        digitalKontaktinfo.skalHaVarsel shouldBeEqualTo true
+                        digitalKontaktinfo.tlf shouldBeEqualTo UserConstants.PERSON_TLF
+                        digitalKontaktinfo.epost shouldBeEqualTo UserConstants.PERSON_EMAIL
                     }
                 }
             }
