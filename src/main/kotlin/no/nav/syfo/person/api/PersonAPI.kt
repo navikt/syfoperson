@@ -179,7 +179,7 @@ fun Route.registrerPersonApi(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
                     token = token,
-                )
+                ).toSyfomodiapersonKontaktinfo()
                 call.respond(response)
             }
         }
