@@ -1,7 +1,6 @@
 package no.nav.syfo.person.api
 
 import io.ktor.http.*
-import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -194,15 +193,6 @@ fun Route.registrerPersonApi(
                 } ?: throw IllegalArgumentException("No personIdentNumber supplied in header")
 
                 val callId = getCallId()
-                val token = getBearerHeader()
-                    ?: throw IllegalArgumentException("No Authorization header supplied")
-
-                val kontaktinfo = krrClient.digitalKontaktinfo(
-                    callId = callId,
-                    personIdentNumber = personIdentNumber,
-                    token = token
-                ).toSyfomodiapersonKontaktinfo()
-
                 val pdlPerson = pdlClient.person(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
@@ -211,7 +201,6 @@ fun Route.registrerPersonApi(
                 pdlPerson?.hentPerson?.let { person ->
                     val response = SyfomodiapersonBrukerinfo(
                         navn = person.fullName,
-                        kontaktinfo = kontaktinfo,
                         dodsdato = person.dodsdato,
                         tilrettelagtKommunikasjon = person.hentTilrettelagtKommunikasjon(),
                         sikkerhetstiltak = person.hentSikkerhetstiltak(),
