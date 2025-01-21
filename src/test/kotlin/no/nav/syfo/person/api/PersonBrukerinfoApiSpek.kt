@@ -11,7 +11,6 @@ import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_SIKKERHETSTILTAK
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VEILEDER_NO_ACCESS
-import no.nav.syfo.testhelper.mock.digitalKontaktinfoBolkKanVarslesTrue
 import no.nav.syfo.util.NAV_PERSONIDENT_HEADER
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
@@ -42,10 +41,6 @@ class PersonBrukerinfoApiSpek : Spek({
 
             describe("Happy path") {
                 it("should return OK if request is successful") {
-                    val digitalKontaktinfoBolkKanVarslesTrue = digitalKontaktinfoBolkKanVarslesTrue(
-                        personIdentNumber = ARBEIDSTAKER_PERSONIDENT.value,
-                    ).personer?.get(ARBEIDSTAKER_PERSONIDENT.value)!!
-
                     testApplication {
                         val client = setupApiAndClient(externalMockEnvironment)
                         val response = client.get(url) {
@@ -55,10 +50,6 @@ class PersonBrukerinfoApiSpek : Spek({
 
                         response.status shouldBeEqualTo HttpStatusCode.OK
                         val syfomodiapersonBrukerinfo = response.body<SyfomodiapersonBrukerinfo>()
-                        syfomodiapersonBrukerinfo.kontaktinfo.fnr shouldBeEqualTo ARBEIDSTAKER_PERSONIDENT.value
-                        syfomodiapersonBrukerinfo.kontaktinfo.epost shouldBeEqualTo digitalKontaktinfoBolkKanVarslesTrue.epostadresse
-                        syfomodiapersonBrukerinfo.kontaktinfo.tlf shouldBeEqualTo digitalKontaktinfoBolkKanVarslesTrue.mobiltelefonnummer
-                        syfomodiapersonBrukerinfo.kontaktinfo.skalHaVarsel shouldBeEqualTo true
                         syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse().data?.hentPerson?.fullName
                         syfomodiapersonBrukerinfo.dodsdato shouldBe null
                         syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon shouldBe null
