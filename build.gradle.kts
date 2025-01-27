@@ -9,12 +9,12 @@ val logbackVersion = "1.5.16"
 val logstashEncoderVersion = "8.0"
 val mockkVersion = "1.13.16"
 val nimbusJoseJwtVersion = "10.0.1"
-val micrometerRegistryVersion = "1.12.13"
+val micrometerRegistryVersion = "1.14.3"
 val redisEmbeddedVersion = "0.7.3"
 val spekVersion = "2.0.19"
 
 plugins {
-    kotlin("jvm") version "2.1.0"
+    kotlin("jvm") version "2.1.10"
     id("com.gradleup.shadow") version "8.3.5"
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
 }
