@@ -7,7 +7,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import net.logstash.logback.argument.StructuredArguments
-import no.nav.syfo.application.cache.RedisStore
+import no.nav.syfo.application.cache.ValkeyStore
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.httpClientDefault
 import no.nav.syfo.domain.PersonIdentNumber
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory
 
 class KRRClient(
     private val azureAdClient: AzureAdClient,
-    private val redisStore: RedisStore,
+    private val valkeyStore: ValkeyStore,
     baseUrl: String,
     private val clientId: String,
     private val httpClient: HttpClient = httpClientDefault(),
@@ -31,7 +31,7 @@ class KRRClient(
         token: String,
     ): DigitalKontaktinfo {
         val cacheKey = "$cacheKeyPrefix-${personIdentNumber.value}"
-        val cachedKontaktinfo: DigitalKontaktinfo? = redisStore.getObject(cacheKey)
+        val cachedKontaktinfo: DigitalKontaktinfo? = valkeyStore.getObject(cacheKey)
         return if (cachedKontaktinfo != null) {
             COUNT_CALL_KRR_KONTAKTINFORMASJON_CACHE_HIT.increment()
             cachedKontaktinfo
@@ -51,7 +51,7 @@ class KRRClient(
             val feil = digitalKontaktinfoBolk.feil?.get(personIdentNumber.value)
             when {
                 kontaktinfo != null -> {
-                    redisStore.setObject(
+                    valkeyStore.setObject(
                         expireSeconds = cacheExpireSeconds,
                         key = cacheKey,
                         value = kontaktinfo,

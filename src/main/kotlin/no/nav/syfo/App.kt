@@ -8,7 +8,7 @@ import io.ktor.server.netty.*
 import no.nav.syfo.application.ApplicationState
 import no.nav.syfo.application.Environment
 import no.nav.syfo.application.api.apiModule
-import no.nav.syfo.application.cache.RedisStore
+import no.nav.syfo.application.cache.ValkeyStore
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
@@ -28,16 +28,16 @@ const val applicationPort = 8080
 fun main() {
     val applicationState = ApplicationState()
     val environment = Environment()
-    val redisConfig = environment.redisConfig
-    val cache = RedisStore(
+    val valkeyConfig = environment.valkeyConfig
+    val cache = ValkeyStore(
         JedisPool(
             JedisPoolConfig(),
-            HostAndPort(redisConfig.host, redisConfig.port),
+            HostAndPort(valkeyConfig.host, valkeyConfig.port),
             DefaultJedisClientConfig.builder()
-                .ssl(redisConfig.ssl)
-                .user(redisConfig.redisUsername)
-                .password(redisConfig.redisPassword)
-                .database(redisConfig.redisDB)
+                .ssl(valkeyConfig.ssl)
+                .user(valkeyConfig.valkeyUsername)
+                .password(valkeyConfig.valkeyPassword)
+                .database(valkeyConfig.valkeyDB)
                 .build()
         )
     )
@@ -45,23 +45,23 @@ fun main() {
         azureAppClientId = environment.azureAppClientId,
         azureAppClientSecret = environment.azureAppClientSecret,
         azureOpenidConfigTokenEndpoint = environment.azureOpenidConfigTokenEndpoint,
-        redisStore = cache,
+        valkeyStore = cache,
     )
     val krrClient = KRRClient(
         azureAdClient = azureAdClient,
-        redisStore = cache,
+        valkeyStore = cache,
         baseUrl = environment.krrUrl,
         clientId = environment.krrClientId,
     )
     val pdlClient = PdlClient(
         azureAdClient = azureAdClient,
-        redisStore = cache,
+        valkeyStore = cache,
         baseUrl = environment.pdlUrl,
         clientId = environment.pdlClientId,
     )
     val skjermedePersonerPipClient = SkjermedePersonerPipClient(
         azureAdClient = azureAdClient,
-        redisStore = cache,
+        valkeyStore = cache,
         baseUrl = environment.skjermedePersonerPipUrl,
         clientId = environment.skjermedePersonerPipClientId,
     )
@@ -72,7 +72,7 @@ fun main() {
     )
     val kodeverkClient = KodeverkClient(
         azureAdClient = azureAdClient,
-        redisStore = cache,
+        valkeyStore = cache,
         baseUrl = environment.kodeverkUrl,
         clientId = environment.kodeverkClientId,
     )

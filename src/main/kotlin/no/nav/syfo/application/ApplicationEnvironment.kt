@@ -1,6 +1,6 @@
 package no.nav.syfo.application
 
-import no.nav.syfo.application.cache.RedisConfig
+import no.nav.syfo.application.cache.ValkeyConfig
 import java.net.URI
 
 data class Environment(
@@ -23,11 +23,11 @@ data class Environment(
 
     val kodeverkClientId: String = getEnvVar("KODEVERK_CLIENT_ID"),
     val kodeverkUrl: String = getEnvVar("KODEVERK_URL"),
-    val redisConfig: RedisConfig = RedisConfig(
-        redisUri = URI(getEnvVar("REDIS_URI_CACHE")),
-        redisDB = 23, // se https://github.com/navikt/istilgangskontroll/blob/master/README.md
-        redisUsername = getEnvVar("REDIS_USERNAME_CACHE"),
-        redisPassword = getEnvVar("REDIS_PASSWORD_CACHE"),
+    val valkeyConfig: ValkeyConfig = ValkeyConfig(
+        valkeyUri = URI(getEnvVar("VALKEY_URI_CACHE")),
+        valkeyDB = 23, // se https://github.com/navikt/istilgangskontroll/blob/master/README.md
+        valkeyUsername = getEnvVar("VALKEY_USERNAME_CACHE"),
+        valkeyPassword = getEnvVar("VALKEY_PASSWORD_CACHE"),
     ),
 )
 

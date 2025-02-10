@@ -12,16 +12,17 @@ The information retrieved by Syfoperson is available for frontend applications w
 * Gradle
 * Kotlin
 * Ktor
-* Redis
+* Valkey
 
 ##### Test Libraries:
 
 * Kluent
 * Mockk
 * Spek
+
 #### Requirements
 
-* JDK 17
+* JDK 21
 
 ### Build
 
@@ -33,8 +34,7 @@ Commits to Master-branch is deployed automatically to dev-gcp and prod-gcp.
 Commits to non-master-branch is built without automatic deploy.
 
 ### Cache
-This application uses Redis for caching. A single Redis pod is responsible for caching. Redis is deployed automatically on changes to workflow or config on master
-branch. For manual deploy, run: `kubectl apply -f .nais/redis-config.yaml`
+This application uses Valkey on Aiven for caching.
 
 ### Lint (Ktlint)
 ##### Command line
