@@ -2,7 +2,7 @@ package no.nav.syfo.client.pdl
 
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
-import no.nav.syfo.application.cache.RedisStore
+import no.nav.syfo.application.cache.ValkeyStore
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.azuread.AzureAdToken
 import no.nav.syfo.testhelper.ExternalMockEnvironment
@@ -20,11 +20,11 @@ import java.time.LocalDateTime
 class PdlClientSpek : Spek({
 
     val externalMockEnvironment = ExternalMockEnvironment()
-    val cacheMock = mockk<RedisStore>(relaxed = true)
+    val cacheMock = mockk<ValkeyStore>(relaxed = true)
     val azureAdClient = mockk<AzureAdClient>()
     val pdlClient = PdlClient(
         azureAdClient = azureAdClient,
-        redisStore = cacheMock,
+        valkeyStore = cacheMock,
         baseUrl = externalMockEnvironment.environment.pdlUrl,
         clientId = externalMockEnvironment.environment.pdlClientId,
         httpClient = externalMockEnvironment.mockHttpClient,

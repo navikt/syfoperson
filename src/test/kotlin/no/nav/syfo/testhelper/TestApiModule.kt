@@ -16,26 +16,26 @@ fun Application.testApiModule(
         azureAppClientId = externalMockEnvironment.environment.azureAppClientId,
         azureAppClientSecret = externalMockEnvironment.environment.azureAppClientSecret,
         azureOpenidConfigTokenEndpoint = externalMockEnvironment.environment.azureOpenidConfigTokenEndpoint,
-        redisStore = externalMockEnvironment.redisCache,
+        valkeyStore = externalMockEnvironment.redisCache,
         httpClient = externalMockEnvironment.mockHttpClient,
     )
     val krrClient = KRRClient(
         azureAdClient = azureAdClient,
-        redisStore = externalMockEnvironment.redisCache,
+        valkeyStore = externalMockEnvironment.redisCache,
         baseUrl = externalMockEnvironment.environment.krrUrl,
         clientId = externalMockEnvironment.environment.krrClientId,
         httpClient = externalMockEnvironment.mockHttpClient,
     )
     val pdlClient = PdlClient(
         azureAdClient = azureAdClient,
-        redisStore = externalMockEnvironment.redisCache,
+        valkeyStore = externalMockEnvironment.redisCache,
         baseUrl = externalMockEnvironment.environment.pdlUrl,
         clientId = externalMockEnvironment.environment.pdlClientId,
         httpClient = externalMockEnvironment.mockHttpClient,
     )
     val skjermedePersonerPipClient = SkjermedePersonerPipClient(
         azureAdClient = azureAdClient,
-        redisStore = externalMockEnvironment.redisCache,
+        valkeyStore = externalMockEnvironment.redisCache,
         baseUrl = externalMockEnvironment.environment.skjermedePersonerPipUrl,
         clientId = externalMockEnvironment.environment.skjermedePersonerPipClientId,
         httpClient = externalMockEnvironment.mockHttpClient,
@@ -48,7 +48,7 @@ fun Application.testApiModule(
     )
     val kodeverkClient = KodeverkClient(
         azureAdClient = azureAdClient,
-        redisStore = externalMockEnvironment.redisCache,
+        valkeyStore = externalMockEnvironment.redisCache,
         baseUrl = externalMockEnvironment.environment.kodeverkUrl,
         clientId = externalMockEnvironment.environment.kodeverkClientId,
         httpClient = externalMockEnvironment.mockHttpClient,

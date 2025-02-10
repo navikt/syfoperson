@@ -8,7 +8,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import net.logstash.logback.argument.StructuredArguments
-import no.nav.syfo.application.cache.RedisStore
+import no.nav.syfo.application.cache.ValkeyStore
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.httpClientDefault
 import no.nav.syfo.util.*
@@ -17,7 +17,7 @@ import java.time.LocalDate
 
 class KodeverkClient(
     private val azureAdClient: AzureAdClient,
-    private val redisStore: RedisStore,
+    private val valkeyStore: ValkeyStore,
     private val baseUrl: String,
     private val clientId: String,
     private val httpClient: HttpClient = httpClientDefault(),
@@ -26,7 +26,7 @@ class KodeverkClient(
     suspend fun getPostinformasjon(
         callId: String,
     ): List<Postinformasjon> {
-        val cachedValue = redisStore.getListObject<Postinformasjon>(CACHE_POSTINFORMASJON_KEY)
+        val cachedValue = valkeyStore.getListObject<Postinformasjon>(CACHE_POSTINFORMASJON_KEY)
 
         if (!cachedValue.isNullOrEmpty()) {
             return cachedValue
@@ -35,7 +35,7 @@ class KodeverkClient(
                 callId = callId,
             )
             if (postinformasjon.isNotEmpty()) {
-                redisStore.setObject(
+                valkeyStore.setObject(
                     expireSeconds = CACHE_KODEVERK_POSTINFORMASJON_EXPIRE_SECONDS,
                     key = CACHE_POSTINFORMASJON_KEY,
                     value = postinformasjon,
