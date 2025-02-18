@@ -89,6 +89,23 @@ fun generatePdlPersonResponse(
     )
 )
 
+fun generatePdlIdentResponse(
+    ident: String,
+) = PdlIdentResponse(
+    errors = null,
+    data = PdlHentIdenter(
+        hentIdenter = PdlIdenter(
+            identer = listOf(
+                PdlIdent(
+                    ident = ident,
+                    historisk = false,
+                    gruppe = IdentGruppe.FOLKEREGISTERIDENT,
+                )
+            )
+        )
+    ),
+)
+
 fun generatePdlPersonResponseError() = PdlPersonResponse(
     errors = null,
     data = null,

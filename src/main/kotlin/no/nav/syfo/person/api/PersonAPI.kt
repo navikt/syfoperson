@@ -190,9 +190,17 @@ fun Route.registrerPersonApi(
             ) {
                 val personIdentNumber = getPersonIdent()?.let { requestedPersonIdent ->
                     PersonIdentNumber(requestedPersonIdent)
-                } ?: throw IllegalArgumentException("No personIdentNumber supplied in header")
+                } ?: throw IllegalArgumentException("No $NAV_PERSONIDENT_HEADER supplied in header")
 
                 val callId = getCallId()
+
+                val pdlIdenter = pdlClient.hentIdenter(
+                    callId = callId,
+                    personIdentNumber = personIdentNumber,
+                )
+                if (pdlIdenter?.aktivIdent != personIdentNumber.value) {
+                    throw IllegalArgumentException("$NAV_PERSONIDENT_HEADER is not the same as aktivIdent")
+                }
                 val pdlPerson = pdlClient.person(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
