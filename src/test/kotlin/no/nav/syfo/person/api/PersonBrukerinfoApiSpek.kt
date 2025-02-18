@@ -127,7 +127,7 @@ class PersonBrukerinfoApiSpek : Spek({
                         response.status shouldBeEqualTo HttpStatusCode.BadRequest
                     }
                 }
-                it("should return status ${HttpStatusCode.BadRequest} if not PersonIdent outdated") {
+                it("should return status ${HttpStatusCode.BadRequest} if PersonIdent is outdated") {
                     testApplication {
                         val client = setupApiAndClient(externalMockEnvironment)
                         val response = client.get(url) {
