@@ -102,6 +102,48 @@ class PdlClient(
         }
     }
 
+    suspend fun hentIdenter(
+        personIdentNumber: PersonIdentNumber,
+        callId: String?,
+    ): PdlIdenter? {
+        val systemToken = azureAdClient.getSystemToken(clientId)
+            ?: throw RuntimeException("Failed to send request to PDL: No token was found")
+        val request = PdlRequest(
+            query = getPdlQuery("/pdl/hentIdenter.graphql"),
+            variables = Variables(personIdentNumber.value),
+        )
+        val response: HttpResponse = httpClient.post(baseUrl) {
+            setBody(request)
+            header(HttpHeaders.ContentType, "application/json")
+            header(HttpHeaders.Authorization, bearerHeader(systemToken.accessToken))
+            header(BEHANDLINGSNUMMER_HEADER_KEY, BEHANDLINGSNUMMER_HEADER_VALUE)
+            header(NAV_CALL_ID_HEADER, callId)
+        }
+
+        return when (response.status) {
+            HttpStatusCode.OK -> {
+                val pdlIdenterReponse = response.body<PdlIdentResponse>()
+                if (!pdlIdenterReponse.errors.isNullOrEmpty()) {
+                    pdlIdenterReponse.errors.forEach { error ->
+                        if (error.isNotFound()) {
+                            log.warn("Error while requesting ident from PersonDataLosningen: ${error.errorMessage()}")
+                        } else {
+                            log.error("Error while requesting ident from PersonDataLosningen: ${error.errorMessage()}")
+                        }
+                    }
+                    null
+                } else {
+                    pdlIdenterReponse.data?.hentIdenter
+                }
+            }
+            else -> {
+                val message = "Request with url: $baseUrl failed with reponse code ${response.status.value}"
+                log.error(message)
+                throw RuntimeException(message)
+            }
+        }
+    }
+
     private fun getPdlQuery(queryFilePath: String): String {
         return this::class.java.getResource(queryFilePath)
             .readText()

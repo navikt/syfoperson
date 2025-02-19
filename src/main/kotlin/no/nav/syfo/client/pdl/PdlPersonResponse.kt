@@ -17,7 +17,9 @@ data class PdlError(
     val locations: List<PdlErrorLocation>,
     val path: List<String>?,
     val extensions: PdlErrorExtension
-)
+) {
+    fun isNotFound() = this.extensions.code == "not_found"
+}
 
 fun PdlError.errorMessage(): String {
     return "${this.message} with code: ${extensions.code} and classification: ${extensions.classification}"

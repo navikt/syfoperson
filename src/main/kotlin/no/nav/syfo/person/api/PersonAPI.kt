@@ -190,16 +190,26 @@ fun Route.registrerPersonApi(
             ) {
                 val personIdentNumber = getPersonIdent()?.let { requestedPersonIdent ->
                     PersonIdentNumber(requestedPersonIdent)
-                } ?: throw IllegalArgumentException("No personIdentNumber supplied in header")
+                } ?: throw IllegalArgumentException("No $NAV_PERSONIDENT_HEADER supplied in header")
 
                 val callId = getCallId()
-                val pdlPerson = pdlClient.person(
+
+                val pdlIdenter = pdlClient.hentIdenter(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
+                )
+                val aktivPersonident = pdlIdenter?.aktivIdent?.let { PersonIdentNumber(it) }
+                if (aktivPersonident == null) {
+                    throw IllegalArgumentException("Found no aktiv personident for supplied $NAV_PERSONIDENT_HEADER")
+                }
+                val pdlPerson = pdlClient.person(
+                    callId = callId,
+                    personIdentNumber = aktivPersonident,
                 )
 
                 pdlPerson?.hentPerson?.let { person ->
                     val response = SyfomodiapersonBrukerinfo(
+                        aktivPersonident = aktivPersonident.value,
                         navn = person.fullName,
                         dodsdato = person.dodsdato,
                         tilrettelagtKommunikasjon = person.hentTilrettelagtKommunikasjon(),

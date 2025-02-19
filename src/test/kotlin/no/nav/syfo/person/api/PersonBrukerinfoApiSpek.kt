@@ -8,6 +8,7 @@ import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonBrukerinfo
 import no.nav.syfo.testhelper.*
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOD
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT_CHANGED
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_SIKKERHETSTILTAK
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VEILEDER_NO_ACCESS
@@ -50,6 +51,23 @@ class PersonBrukerinfoApiSpek : Spek({
 
                         response.status shouldBeEqualTo HttpStatusCode.OK
                         val syfomodiapersonBrukerinfo = response.body<SyfomodiapersonBrukerinfo>()
+                        syfomodiapersonBrukerinfo.aktivPersonident shouldBeEqualTo ARBEIDSTAKER_PERSONIDENT.value
+                        syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse().data?.hentPerson?.fullName
+                        syfomodiapersonBrukerinfo.dodsdato shouldBe null
+                        syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon shouldBe null
+                    }
+                }
+                it("should include aktiv ident") {
+                    testApplication {
+                        val client = setupApiAndClient(externalMockEnvironment)
+                        val response = client.get(url) {
+                            bearerAuth(validToken)
+                            header(NAV_PERSONIDENT_HEADER, ARBEIDSTAKER_PERSONIDENT_CHANGED.value)
+                        }
+
+                        response.status shouldBeEqualTo HttpStatusCode.OK
+                        val syfomodiapersonBrukerinfo = response.body<SyfomodiapersonBrukerinfo>()
+                        syfomodiapersonBrukerinfo.aktivPersonident shouldBeEqualTo ARBEIDSTAKER_PERSONIDENT.value
                         syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse().data?.hentPerson?.fullName
                         syfomodiapersonBrukerinfo.dodsdato shouldBe null
                         syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon shouldBe null
