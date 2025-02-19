@@ -198,16 +198,18 @@ fun Route.registrerPersonApi(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
                 )
-                if (pdlIdenter?.aktivIdent != personIdentNumber.value) {
-                    throw IllegalArgumentException("$NAV_PERSONIDENT_HEADER is not the same as aktivIdent")
+                val aktivPersonident = pdlIdenter?.aktivIdent?.let { PersonIdentNumber(it) }
+                if (aktivPersonident == null) {
+                    throw IllegalArgumentException("Found no aktiv personident for supplied $NAV_PERSONIDENT_HEADER")
                 }
                 val pdlPerson = pdlClient.person(
                     callId = callId,
-                    personIdentNumber = personIdentNumber,
+                    personIdentNumber = aktivPersonident,
                 )
 
                 pdlPerson?.hentPerson?.let { person ->
                     val response = SyfomodiapersonBrukerinfo(
+                        aktivPersonident = aktivPersonident.value,
                         navn = person.fullName,
                         dodsdato = person.dodsdato,
                         tilrettelagtKommunikasjon = person.hentTilrettelagtKommunikasjon(),
