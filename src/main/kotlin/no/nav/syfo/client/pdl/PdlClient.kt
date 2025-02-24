@@ -72,6 +72,7 @@ class PdlClient(
                                         key = cacheKey,
                                         value = pdlHentPerson,
                                     )
+                                    COUNT_CALL_PDL_HENTPERSON_CACHE_MISS.increment()
                                 }
                             }
                         }
