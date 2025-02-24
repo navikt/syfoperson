@@ -16,6 +16,8 @@ import no.nav.syfo.person.api.domain.*
 import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonBrukerinfo
 import no.nav.syfo.person.skjermingskode.SkjermingskodeService
 import no.nav.syfo.util.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 const val apiPersonBasePath = "/syfoperson/api/v2/person"
 
@@ -27,6 +29,9 @@ const val apiPersonKontaktinformasjonPath = "/kontaktinformasjon"
 const val apiPersonNavnPath = "/navn"
 
 const val apiPersonBrukerinfoPath = "/brukerinfo"
+
+private val log: Logger = LoggerFactory.getLogger("no.nav.syfo")
+
 
 fun Route.registrerPersonApi(
     krrClient: KRRClient,
@@ -207,6 +212,9 @@ fun Route.registrerPersonApi(
 
                 if (aktivPersonident == null) {
                     throw RuntimeException("Found no aktiv personident for supplied $NAV_PERSONIDENT_HEADER")
+                }
+                if (aktivPersonident.value != personIdentNumber.value) {
+                    log.warn("Found aktiv personident does not match supplied $NAV_PERSONIDENT_HEADER")
                 }
 
                 pdlPerson?.hentPerson?.let { person ->
