@@ -32,7 +32,6 @@ const val apiPersonBrukerinfoPath = "/brukerinfo"
 
 private val log: Logger = LoggerFactory.getLogger("no.nav.syfo")
 
-
 fun Route.registrerPersonApi(
     krrClient: KRRClient,
     pdlClient: PdlClient,
