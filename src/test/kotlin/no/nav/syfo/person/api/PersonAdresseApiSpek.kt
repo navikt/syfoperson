@@ -45,7 +45,7 @@ class PersonAdresseApiSpek : Spek({
 
                         response.status shouldBeEqualTo HttpStatusCode.OK
                         val personAdresseResponse = response.body<PersonAdresseResponse>()
-                        personAdresseResponse.navn shouldBeEqualTo generatePdlPersonResponse().data?.hentPerson?.fullName
+                        personAdresseResponse.navn shouldBeEqualTo generatePdlPersonResponse(ARBEIDSTAKER_PERSONIDENT).data?.hentPerson?.fullName
                         personAdresseResponse.bostedsadresse shouldBeEqualTo generatePersonAdresseResponse().bostedsadresse
                         personAdresseResponse.kontaktadresse shouldBeEqualTo generatePersonAdresseResponse().kontaktadresse
                         personAdresseResponse.oppholdsadresse shouldBeEqualTo generatePersonAdresseResponse().oppholdsadresse

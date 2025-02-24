@@ -41,6 +41,7 @@ data class PdlHentPerson(
 
 data class PdlPerson(
     val navn: List<PdlPersonNavn>,
+    val folkeregisteridentifikator: List<FolkeregisterIdentifikator>,
     val adressebeskyttelse: List<Adressebeskyttelse>?,
     val bostedsadresse: List<PdlBostedsadresse>?,
     val kontaktadresse: List<PdlKontaktadresse>?,
@@ -111,6 +112,16 @@ data class PdlPersonNavn(
     val mellomnavn: String?,
     val etternavn: String,
 ) : Serializable
+
+data class FolkeregisterIdentifikator(
+    val identifikasjonsnummer: String,
+    val status: FolkeregisterIdentStatus,
+)
+
+enum class FolkeregisterIdentStatus {
+    I_BRUK,
+    OPPHOERT,
+}
 
 data class PdlDoedsfall(
     val doedsdato: LocalDate?,

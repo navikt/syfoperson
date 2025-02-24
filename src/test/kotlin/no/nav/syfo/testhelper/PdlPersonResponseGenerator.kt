@@ -1,6 +1,7 @@
 package no.nav.syfo.testhelper
 
 import no.nav.syfo.client.pdl.*
+import no.nav.syfo.domain.PersonIdentNumber
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -72,6 +73,7 @@ fun generatePdlOppholdsadresse(): PdlOppholdsadresse {
 }
 
 fun generatePdlPersonResponse(
+    personident: PersonIdentNumber,
     gradering: Gradering? = null,
     doedsdato: LocalDate? = null,
     tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
@@ -80,6 +82,7 @@ fun generatePdlPersonResponse(
     errors = null,
     data = generatePdlHentPerson(
         pdlPersonNavn = generatePdlPersonNavn(),
+        personident = personident,
         adressebeskyttelse = generateAdressebeskyttelse(gradering = gradering),
         doedsdato = doedsdato,
         tilrettelagtKommunikasjon = tilrettelagtKommunikasjon,
@@ -87,23 +90,6 @@ fun generatePdlPersonResponse(
             listOf(sikkerhetstiltak)
         },
     )
-)
-
-fun generatePdlIdentResponse(
-    ident: String,
-) = PdlIdentResponse(
-    errors = null,
-    data = PdlHentIdenter(
-        hentIdenter = PdlIdenter(
-            identer = listOf(
-                PdlIdent(
-                    ident = ident,
-                    historisk = false,
-                    gruppe = IdentGruppe.FOLKEREGISTERIDENT,
-                )
-            )
-        )
-    ),
 )
 
 fun generatePdlPersonResponseError() = PdlPersonResponse(
@@ -119,8 +105,15 @@ fun generateAdressebeskyttelse(
     )
 }
 
+fun generateFolkeregisteridentifikator(personident: PersonIdentNumber) =
+    FolkeregisterIdentifikator(
+        identifikasjonsnummer = personident.value,
+        status = FolkeregisterIdentStatus.I_BRUK
+    )
+
 fun generatePdlHentPerson(
     pdlPersonNavn: PdlPersonNavn?,
+    personident: PersonIdentNumber? = UserConstants.ARBEIDSTAKER_PERSONIDENT,
     adressebeskyttelse: Adressebeskyttelse? = null,
     doedsdato: LocalDate? = null,
     tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
@@ -130,6 +123,9 @@ fun generatePdlHentPerson(
         hentPerson = PdlPerson(
             navn = listOf(
                 pdlPersonNavn ?: generatePdlPersonNavn()
+            ),
+            folkeregisteridentifikator = listOf(
+                generateFolkeregisteridentifikator(personident!!),
             ),
             adressebeskyttelse = listOf(
                 adressebeskyttelse ?: generateAdressebeskyttelse()

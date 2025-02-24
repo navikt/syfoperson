@@ -7,6 +7,7 @@ import io.ktor.server.routing.*
 import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.krr.toSyfomodiapersonKontaktinfo
+import no.nav.syfo.client.pdl.FolkeregisterIdentStatus
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
 import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
@@ -193,19 +194,20 @@ fun Route.registrerPersonApi(
                 } ?: throw IllegalArgumentException("No $NAV_PERSONIDENT_HEADER supplied in header")
 
                 val callId = getCallId()
-
-                val pdlIdenter = pdlClient.hentIdenter(
+                val pdlPerson = pdlClient.person(
                     callId = callId,
                     personIdentNumber = personIdentNumber,
                 )
-                val aktivPersonident = pdlIdenter?.aktivIdent?.let { PersonIdentNumber(it) }
-                if (aktivPersonident == null) {
-                    throw IllegalArgumentException("Found no aktiv personident for supplied $NAV_PERSONIDENT_HEADER")
+
+                val aktivPersonident = pdlPerson?.hentPerson?.folkeregisteridentifikator?.firstOrNull {
+                    it.status == FolkeregisterIdentStatus.I_BRUK
+                }?.let {
+                    PersonIdentNumber(it.identifikasjonsnummer)
                 }
-                val pdlPerson = pdlClient.person(
-                    callId = callId,
-                    personIdentNumber = aktivPersonident,
-                )
+
+                if (aktivPersonident == null) {
+                    throw RuntimeException("Found no aktiv personident for supplied $NAV_PERSONIDENT_HEADER")
+                }
 
                 pdlPerson?.hentPerson?.let { person ->
                     val response = SyfomodiapersonBrukerinfo(

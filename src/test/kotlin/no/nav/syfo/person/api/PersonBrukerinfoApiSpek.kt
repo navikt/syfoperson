@@ -52,7 +52,7 @@ class PersonBrukerinfoApiSpek : Spek({
                         response.status shouldBeEqualTo HttpStatusCode.OK
                         val syfomodiapersonBrukerinfo = response.body<SyfomodiapersonBrukerinfo>()
                         syfomodiapersonBrukerinfo.aktivPersonident shouldBeEqualTo ARBEIDSTAKER_PERSONIDENT.value
-                        syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse().data?.hentPerson?.fullName
+                        syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse(ARBEIDSTAKER_PERSONIDENT).data?.hentPerson?.fullName
                         syfomodiapersonBrukerinfo.dodsdato shouldBe null
                         syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon shouldBe null
                     }
@@ -68,7 +68,7 @@ class PersonBrukerinfoApiSpek : Spek({
                         response.status shouldBeEqualTo HttpStatusCode.OK
                         val syfomodiapersonBrukerinfo = response.body<SyfomodiapersonBrukerinfo>()
                         syfomodiapersonBrukerinfo.aktivPersonident shouldBeEqualTo ARBEIDSTAKER_PERSONIDENT.value
-                        syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse().data?.hentPerson?.fullName
+                        syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse(ARBEIDSTAKER_PERSONIDENT).data?.hentPerson?.fullName
                         syfomodiapersonBrukerinfo.dodsdato shouldBe null
                         syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon shouldBe null
                     }
@@ -83,7 +83,7 @@ class PersonBrukerinfoApiSpek : Spek({
 
                         response.status shouldBeEqualTo HttpStatusCode.OK
                         val syfomodiapersonBrukerinfo = response.body<SyfomodiapersonBrukerinfo>()
-                        syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse().data?.hentPerson?.fullName
+                        syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse(ARBEIDSTAKER_DOD).data?.hentPerson?.fullName
                         syfomodiapersonBrukerinfo.dodsdato shouldBeEqualTo LocalDate.now()
                     }
                 }

@@ -47,7 +47,7 @@ class PersonNavnApiSpek : Spek({
                         response.status shouldBeEqualTo HttpStatusCode.OK
                         val fnrMedNavn = response.body<FnrMedNavn>()
                         fnrMedNavn.fnr shouldBeEqualTo ARBEIDSTAKER_PERSONIDENT.value
-                        fnrMedNavn.navn shouldBeEqualTo generatePdlPersonResponse().data?.hentPerson?.fullName
+                        fnrMedNavn.navn shouldBeEqualTo generatePdlPersonResponse(ARBEIDSTAKER_PERSONIDENT).data?.hentPerson?.fullName
                     }
                 }
             }

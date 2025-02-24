@@ -20,6 +20,7 @@ class PdlPersonResponseSpek : Spek({
                     UserConstants.PERSON_NAME_MIDDLE,
                     UserConstants.PERSON_NAME_LAST,
                 ),
+                UserConstants.ARBEIDSTAKER_PERSONIDENT,
                 null,
                 null,
                 null,
@@ -38,6 +39,7 @@ class PdlPersonResponseSpek : Spek({
                     null,
                     UserConstants.PERSON_NAME_LAST,
                 ),
+                UserConstants.ARBEIDSTAKER_PERSONIDENT,
                 null,
                 null,
                 null,
@@ -55,6 +57,7 @@ class PdlPersonResponseSpek : Spek({
                     UserConstants.PERSON_NAME_MIDDLE,
                     UserConstants.PERSON_NAME_LAST,
                 ),
+                UserConstants.ARBEIDSTAKER_PERSONIDENT,
                 null,
                 doedsdato = LocalDate.now(),
                 tilrettelagtKommunikasjon = null,
@@ -71,6 +74,7 @@ class PdlPersonResponseSpek : Spek({
                     UserConstants.PERSON_NAME_MIDDLE,
                     UserConstants.PERSON_NAME_LAST,
                 ),
+                UserConstants.ARBEIDSTAKER_PERSONIDENT,
                 null,
                 doedsdato = null,
                 tilrettelagtKommunikasjon = null,
@@ -83,6 +87,7 @@ class PdlPersonResponseSpek : Spek({
         it("isKode6Or7 is true with ${Gradering.FORTROLIG}") {
             val pdlPersonResponse = generatePdlHentPerson(
                 null,
+                UserConstants.ARBEIDSTAKER_PERSONIDENT,
                 Adressebeskyttelse(gradering = Gradering.FORTROLIG),
                 null,
                 null,
@@ -96,6 +101,7 @@ class PdlPersonResponseSpek : Spek({
         it("isKode6Or7 is true with ${Gradering.STRENGT_FORTROLIG}") {
             val pdlPersonResponse = generatePdlHentPerson(
                 null,
+                UserConstants.ARBEIDSTAKER_PERSONIDENT,
                 Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG),
                 null,
                 null,
@@ -109,6 +115,7 @@ class PdlPersonResponseSpek : Spek({
         it("isKode6Or7 is true with ${Gradering.STRENGT_FORTROLIG_UTLAND}") {
             val pdlPersonResponse = generatePdlHentPerson(
                 null,
+                UserConstants.ARBEIDSTAKER_PERSONIDENT,
                 Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG_UTLAND),
                 null,
                 null,
@@ -122,6 +129,7 @@ class PdlPersonResponseSpek : Spek({
         it("isKode6Or7 returns false with ${Gradering.UGRADERT}") {
             val pdlPersonResponse = generatePdlHentPerson(
                 null,
+                UserConstants.ARBEIDSTAKER_PERSONIDENT,
                 Adressebeskyttelse(gradering = Gradering.UGRADERT),
                 null,
                 null,

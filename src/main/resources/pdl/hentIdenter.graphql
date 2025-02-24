@@ -1,9 +1,0 @@
-query($ident: ID!){
-  hentIdenter(ident: $ident, historikk: false) {
-    identer {
-      ident,
-      historisk,
-      gruppe
-    }
-  }
-}
