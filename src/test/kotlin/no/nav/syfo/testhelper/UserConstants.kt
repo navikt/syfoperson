@@ -5,6 +5,7 @@ import no.nav.syfo.domain.*
 object UserConstants {
     val ARBEIDSTAKER_PERSONIDENT = PersonIdentNumber("12345678912")
     val ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT = PersonIdentNumber("12345678913")
+    val ARBEIDSTAKER_PERSONIDENT_CHANGED = PersonIdentNumber("12345678914")
 
     val ARBEIDSTAKER_VEILEDER_NO_ACCESS = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "1"))
     val ARBEIDSTAKER_ADRESSEBESKYTTET = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "6"))

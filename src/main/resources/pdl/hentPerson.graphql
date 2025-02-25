@@ -11,6 +11,10 @@ query($ident: ID!, $navnHistorikk: Boolean!){
   	    etternavn
   	  }
     }
+    folkeregisteridentifikator(historikk: true) {
+      identifikasjonsnummer
+      status
+    }
     adressebeskyttelse(historikk: false) {
       gradering
     }

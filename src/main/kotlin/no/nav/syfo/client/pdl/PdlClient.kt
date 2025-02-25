@@ -26,79 +26,77 @@ class PdlClient(
     suspend fun hasAdressebeskyttelse(
         callId: String,
         personIdent: PersonIdentNumber,
-    ): Boolean? {
-        val cacheKey = "$CACHE_ADRESSEBESKYTTELSE_PERSON_KEY_PREFIX${personIdent.value}"
-        val cachedValue: Boolean? = valkeyStore.getObject(cacheKey)
-        return if (cachedValue != null) {
-            COUNT_CALL_PDL_ADRESSEBESKYTTELSE_CACHE_HIT.increment()
-            cachedValue
-        } else {
-            COUNT_CALL_PDL_ADRESSEBESKYTTELSE_CACHE_MISS.increment()
-            val hasAdressebeskyttelse = person(callId = callId, personIdentNumber = personIdent)?.hentPerson?.isKode6Or7
-            if (hasAdressebeskyttelse != null) {
-                valkeyStore.setObject(
-                    expireSeconds = CACHE_ADRESSEBESKYTTELSE_PERSON_EXPIRE_SECONDS,
-                    key = cacheKey,
-                    value = hasAdressebeskyttelse,
-                )
-            }
-            hasAdressebeskyttelse
-        }
-    }
+    ) = person(callId = callId, personIdentNumber = personIdent)?.hentPerson?.isKode6Or7
 
     suspend fun person(
         callId: String,
         personIdentNumber: PersonIdentNumber,
     ): PdlHentPerson? {
-        val request = PdlRequest(
-            query = getPdlQuery("/pdl/hentPerson.graphql"),
-            variables = Variables(personIdentNumber.value),
-        )
-        val systemToken = azureAdClient.getSystemToken(
-            scopeClientId = clientId,
-        ) ?: throw RuntimeException("Failed to send request to PDL: No token was found")
-        try {
-            val response: HttpResponse = httpClient.post(baseUrl) {
-                contentType(ContentType.Application.Json)
-                header(HttpHeaders.Authorization, bearerHeader(systemToken.accessToken))
-                header(BEHANDLINGSNUMMER_HEADER_KEY, BEHANDLINGSNUMMER_HEADER_VALUE)
-                header(NAV_CALL_ID_HEADER, callId)
-                setBody(request)
-            }
+        val cacheKey = "$CACHE_HENT_PERSON_KEY_PREFIX${personIdentNumber.value}"
+        val cachedValue: PdlHentPerson? = valkeyStore.getObject(cacheKey)
+        return if (cachedValue != null) {
+            COUNT_CALL_PDL_HENTPERSON_CACHE_HIT.increment()
+            cachedValue
+        } else {
+            val request = PdlRequest(
+                query = getPdlQuery("/pdl/hentPerson.graphql"),
+                variables = Variables(personIdentNumber.value),
+            )
+            val systemToken = azureAdClient.getSystemToken(
+                scopeClientId = clientId,
+            ) ?: throw RuntimeException("Failed to send request to PDL: No token was found")
+            try {
+                val response: HttpResponse = httpClient.post(baseUrl) {
+                    contentType(ContentType.Application.Json)
+                    header(HttpHeaders.Authorization, bearerHeader(systemToken.accessToken))
+                    header(BEHANDLINGSNUMMER_HEADER_KEY, BEHANDLINGSNUMMER_HEADER_VALUE)
+                    header(NAV_CALL_ID_HEADER, callId)
+                    setBody(request)
+                }
 
-            when (response.status) {
-                HttpStatusCode.OK -> {
-                    val pdlResponse = response.body<PdlPersonResponse>()
-                    return if (!pdlResponse.errors.isNullOrEmpty()) {
-                        COUNT_CALL_PDL_PERSON_FAIL.increment()
-                        pdlResponse.errors.forEach {
-                            log.error("Error while requesting person from PersonDataLosningen: ${it.errorMessage()}")
+                when (response.status) {
+                    HttpStatusCode.OK -> {
+                        val pdlResponse = response.body<PdlPersonResponse>()
+                        return if (!pdlResponse.errors.isNullOrEmpty()) {
+                            COUNT_CALL_PDL_PERSON_FAIL.increment()
+                            pdlResponse.errors.forEach {
+                                log.error("Error while requesting person from PersonDataLosningen: ${it.errorMessage()}")
+                            }
+                            null
+                        } else {
+                            COUNT_CALL_PDL_PERSON_SUCCESS.increment()
+                            pdlResponse.data.also { pdlHentPerson ->
+                                if (pdlHentPerson != null && pdlHentPerson.hentPerson != null) {
+                                    valkeyStore.setObject(
+                                        expireSeconds = CACHE_HENT_PERSON_EXPIRE_SECONDS,
+                                        key = cacheKey,
+                                        value = pdlHentPerson,
+                                    )
+                                    COUNT_CALL_PDL_HENTPERSON_CACHE_MISS.increment()
+                                }
+                            }
                         }
-                        null
-                    } else {
-                        COUNT_CALL_PDL_PERSON_SUCCESS.increment()
-                        pdlResponse.data
+                    }
+
+                    else -> {
+                        COUNT_CALL_PDL_PERSON_FAIL.increment()
+                        log.error("Request with url: $baseUrl failed with reponse code ${response.status.value}")
+                        return null
                     }
                 }
-
-                else -> {
-                    COUNT_CALL_PDL_PERSON_FAIL.increment()
-                    log.error("Request with url: $baseUrl failed with reponse code ${response.status.value}")
-                    return null
-                }
+            } catch (e: ClosedReceiveChannelException) {
+                COUNT_CALL_PDL_PERSON_FAIL.increment()
+                throw RuntimeException("Caught ClosedReceiveChannelException in PdlClient.person", e)
+            } catch (e: ResponseException) {
+                COUNT_CALL_PDL_PERSON_FAIL.increment()
+                log.error(
+                    "Error while requesting Person from PersonDataLosningen {}, {}, {}",
+                    StructuredArguments.keyValue("statusCode", e.response.status.value.toString()),
+                    StructuredArguments.keyValue("message", e.message),
+                    callIdArgument(callId),
+                )
+                throw e
             }
-        } catch (e: ClosedReceiveChannelException) {
-            COUNT_CALL_PDL_PERSON_FAIL.increment()
-            throw RuntimeException("Caught ClosedReceiveChannelException in PdlClient.person", e)
-        } catch (e: ResponseException) {
-            COUNT_CALL_PDL_PERSON_FAIL.increment()
-            log.error(
-                "Error while requesting Person from PersonDataLosningen {}, {}, {}",
-                StructuredArguments.keyValue("statusCode", e.response.status.value.toString()),
-                StructuredArguments.keyValue("message", e.message),
-                callIdArgument(callId),
-            )
-            throw e
         }
     }
 
@@ -109,8 +107,8 @@ class PdlClient(
     }
 
     companion object {
-        const val CACHE_ADRESSEBESKYTTELSE_PERSON_KEY_PREFIX = "adressebeskyttelse-person-"
-        const val CACHE_ADRESSEBESKYTTELSE_PERSON_EXPIRE_SECONDS = 12 * 60 * 60L
+        const val CACHE_HENT_PERSON_KEY_PREFIX = "hentperson-"
+        const val CACHE_HENT_PERSON_EXPIRE_SECONDS = 12 * 60 * 60L
 
         private val log = LoggerFactory.getLogger(PdlClient::class.java)
 

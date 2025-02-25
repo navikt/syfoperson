@@ -7,6 +7,7 @@ import io.ktor.server.routing.*
 import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.krr.toSyfomodiapersonKontaktinfo
+import no.nav.syfo.client.pdl.FolkeregisterIdentStatus
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
 import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
@@ -15,6 +16,8 @@ import no.nav.syfo.person.api.domain.*
 import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonBrukerinfo
 import no.nav.syfo.person.skjermingskode.SkjermingskodeService
 import no.nav.syfo.util.*
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 const val apiPersonBasePath = "/syfoperson/api/v2/person"
 
@@ -26,6 +29,8 @@ const val apiPersonKontaktinformasjonPath = "/kontaktinformasjon"
 const val apiPersonNavnPath = "/navn"
 
 const val apiPersonBrukerinfoPath = "/brukerinfo"
+
+private val log: Logger = LoggerFactory.getLogger("no.nav.syfo")
 
 fun Route.registrerPersonApi(
     krrClient: KRRClient,
@@ -190,7 +195,7 @@ fun Route.registrerPersonApi(
             ) {
                 val personIdentNumber = getPersonIdent()?.let { requestedPersonIdent ->
                     PersonIdentNumber(requestedPersonIdent)
-                } ?: throw IllegalArgumentException("No personIdentNumber supplied in header")
+                } ?: throw IllegalArgumentException("No $NAV_PERSONIDENT_HEADER supplied in header")
 
                 val callId = getCallId()
                 val pdlPerson = pdlClient.person(
@@ -198,8 +203,22 @@ fun Route.registrerPersonApi(
                     personIdentNumber = personIdentNumber,
                 )
 
+                val aktivPersonident = pdlPerson?.hentPerson?.folkeregisteridentifikator?.firstOrNull {
+                    it.status == FolkeregisterIdentStatus.I_BRUK
+                }?.let {
+                    PersonIdentNumber(it.identifikasjonsnummer)
+                }
+
+                if (aktivPersonident == null) {
+                    throw RuntimeException("Found no aktiv personident for supplied $NAV_PERSONIDENT_HEADER")
+                }
+                if (aktivPersonident.value != personIdentNumber.value) {
+                    log.warn("Found aktiv personident does not match supplied $NAV_PERSONIDENT_HEADER")
+                }
+
                 pdlPerson?.hentPerson?.let { person ->
                     val response = SyfomodiapersonBrukerinfo(
+                        aktivPersonident = aktivPersonident.value,
                         navn = person.fullName,
                         dodsdato = person.dodsdato,
                         tilrettelagtKommunikasjon = person.hentTilrettelagtKommunikasjon(),

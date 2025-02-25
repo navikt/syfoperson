@@ -5,12 +5,10 @@ import kotlinx.coroutines.runBlocking
 import no.nav.syfo.application.cache.ValkeyStore
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.azuread.AzureAdToken
-import no.nav.syfo.testhelper.ExternalMockEnvironment
+import no.nav.syfo.testhelper.*
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ADRESSEBESKYTTET
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PDL_ERROR
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
-import no.nav.syfo.testhelper.startExternalMocks
-import no.nav.syfo.testhelper.stopExternalMocks
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeNull
 import org.spekframework.spek2.Spek
@@ -51,7 +49,15 @@ class PdlClientSpek : Spek({
 
     describe("${PdlClient::class.java.simpleName} hasAdressebeskyttelse") {
         it("hasAdressebeskyttelse returns true when cached value is true") {
-            every { cacheMock.getObject<Boolean>(any()) } returns true
+            every { cacheMock.getObject<PdlHentPerson>(any()) } returns
+                generatePdlHentPerson(
+                    null,
+                    ARBEIDSTAKER_PERSONIDENT,
+                    Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG),
+                    null,
+                    null,
+                    emptyList()
+                )
 
             runBlocking {
                 pdlClient.hasAdressebeskyttelse(
@@ -59,12 +65,20 @@ class PdlClientSpek : Spek({
                     callId = "callId",
                 ) shouldBeEqualTo true
             }
-            verify(exactly = 1) { cacheMock.getObject<Boolean>(any()) }
-            verify(exactly = 0) { cacheMock.setObject<Boolean>(any(), any(), any()) }
+            verify(exactly = 1) { cacheMock.getObject<PdlHentPerson>(any()) }
+            verify(exactly = 0) { cacheMock.setObject<PdlHentPerson>(any(), any(), any()) }
         }
 
         it("hasAdressebeskyttelse returns false when cached value is false") {
-            every { cacheMock.getObject<Boolean>(any()) } returns false
+            every { cacheMock.getObject<PdlHentPerson>(any()) } returns
+                generatePdlHentPerson(
+                    null,
+                    ARBEIDSTAKER_PERSONIDENT,
+                    Adressebeskyttelse(gradering = Gradering.UGRADERT),
+                    null,
+                    null,
+                    emptyList()
+                )
 
             runBlocking {
                 pdlClient.hasAdressebeskyttelse(
@@ -72,13 +86,13 @@ class PdlClientSpek : Spek({
                     callId = "callId",
                 ) shouldBeEqualTo false
             }
-            verify(exactly = 1) { cacheMock.getObject<Boolean>(any()) }
-            verify(exactly = 0) { cacheMock.setObject<Boolean>(any(), any(), any()) }
+            verify(exactly = 1) { cacheMock.getObject<PdlHentPerson>(any()) }
+            verify(exactly = 0) { cacheMock.setObject<PdlHentPerson>(any(), any(), any()) }
         }
 
         it("hasAdressebeskyttelse returns false and caches value when no cached value and arbeidstaker ikke adressebeskyttet") {
-            every { cacheMock.getObject<Boolean>(any()) } returns null
-            justRun { cacheMock.setObject<Boolean>(any(), any(), any()) }
+            every { cacheMock.getObject<PdlHentPerson>(any()) } returns null
+            justRun { cacheMock.setObject<PdlHentPerson>(any(), any(), any()) }
 
             runBlocking {
                 pdlClient.hasAdressebeskyttelse(
@@ -86,13 +100,13 @@ class PdlClientSpek : Spek({
                     callId = "callId",
                 ) shouldBeEqualTo false
             }
-            verify(exactly = 1) { cacheMock.getObject<Boolean>(any()) }
-            verify(exactly = 1) { cacheMock.setObject<Boolean>(any(), any(), any()) }
+            verify(exactly = 1) { cacheMock.getObject<PdlHentPerson>(any()) }
+            verify(exactly = 1) { cacheMock.setObject<PdlHentPerson>(any(), any(), any()) }
         }
 
         it("hasAdressebeskyttelse returns true and caches value when no cached value and arbeidstaker adressebeskyttet") {
-            every { cacheMock.getObject<Boolean>(any()) } returns null
-            justRun { cacheMock.setObject<Boolean>(any(), any(), any()) }
+            every { cacheMock.getObject<PdlHentPerson>(any()) } returns null
+            justRun { cacheMock.setObject<PdlHentPerson>(any(), any(), any()) }
 
             runBlocking {
                 pdlClient.hasAdressebeskyttelse(
@@ -100,13 +114,13 @@ class PdlClientSpek : Spek({
                     callId = "callId",
                 ) shouldBeEqualTo true
             }
-            verify(exactly = 1) { cacheMock.getObject<Boolean>(any()) }
-            verify(exactly = 1) { cacheMock.setObject<Boolean>(any(), any(), any()) }
+            verify(exactly = 1) { cacheMock.getObject<PdlHentPerson>(any()) }
+            verify(exactly = 1) { cacheMock.setObject<PdlHentPerson>(any(), any(), any()) }
         }
 
         it("hasAdressebeskyttelse returns null and doesnt cache when arbeidstaker returns error from pdl") {
-            every { cacheMock.getObject<Boolean>(any()) } returns null
-            justRun { cacheMock.setObject<Boolean>(any(), any(), any()) }
+            every { cacheMock.getObject<PdlHentPerson>(any()) } returns null
+            justRun { cacheMock.setObject<PdlHentPerson>(any(), any(), any()) }
 
             runBlocking {
                 pdlClient.hasAdressebeskyttelse(
@@ -114,8 +128,8 @@ class PdlClientSpek : Spek({
                     callId = "callId",
                 ).shouldBeNull()
             }
-            verify(exactly = 1) { cacheMock.getObject<Boolean>(any()) }
-            verify(exactly = 0) { cacheMock.setObject<Boolean>(any(), any(), any()) }
+            verify(exactly = 1) { cacheMock.getObject<PdlHentPerson>(any()) }
+            verify(exactly = 0) { cacheMock.setObject<PdlHentPerson>(any(), any(), any()) }
         }
     }
 })
