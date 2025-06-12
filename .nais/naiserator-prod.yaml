@@ -70,6 +70,7 @@ spec:
       runtime: java
     logging:
       destinations:
+        - id: loki
         - id: elastic
   env:
     - name: KRR_CLIENT_ID
