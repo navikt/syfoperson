@@ -6,6 +6,8 @@ data class SyfomodiapersonBrukerinfo(
     val aktivPersonident: String,
     val navn: String? = null,
     val arbeidssituasjon: String = "ARBEIDSTAKER",
+    val kjonn: String?,
+    val fodselsdato: LocalDate?,
     val dodsdato: LocalDate? = null,
     val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon? = null,
     val sikkerhetstiltak: List<Sikkerhetstiltak>,

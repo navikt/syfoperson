@@ -220,6 +220,8 @@ fun Route.registrerPersonApi(
                     val response = SyfomodiapersonBrukerinfo(
                         aktivPersonident = aktivPersonident.value,
                         navn = person.fullName,
+                        kjonn = person.kjonn,
+                        fodselsdato = person.fodselsdato,
                         dodsdato = person.dodsdato,
                         tilrettelagtKommunikasjon = person.hentTilrettelagtKommunikasjon(),
                         sikkerhetstiltak = person.hentSikkerhetstiltak(),

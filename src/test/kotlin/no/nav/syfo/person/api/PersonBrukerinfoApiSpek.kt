@@ -15,6 +15,7 @@ import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VEILEDER_NO_ACCESS
 import no.nav.syfo.util.NAV_PERSONIDENT_HEADER
 import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldNotBe
 import org.amshove.kluent.shouldNotBeEmpty
 import org.spekframework.spek2.Spek
 import org.spekframework.spek2.style.specification.describe
@@ -54,6 +55,8 @@ class PersonBrukerinfoApiSpek : Spek({
                         syfomodiapersonBrukerinfo.aktivPersonident shouldBeEqualTo ARBEIDSTAKER_PERSONIDENT.value
                         syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse(ARBEIDSTAKER_PERSONIDENT).data?.hentPerson?.fullName
                         syfomodiapersonBrukerinfo.dodsdato shouldBe null
+                        syfomodiapersonBrukerinfo.fodselsdato shouldNotBe null
+                        syfomodiapersonBrukerinfo.kjonn shouldBeEqualTo "KVINNE"
                         syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon shouldBe null
                     }
                 }

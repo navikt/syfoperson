@@ -142,6 +142,8 @@ fun generatePdlHentPerson(
             doedsfall = if (doedsdato == null) emptyList() else {
                 listOf(PdlDoedsfall(doedsdato))
             },
+            foedsel = listOf(PdlFoedselsdato(LocalDate.now().minusYears(30))),
+            kjoenn = listOf(PdlKjoenn("KVINNE")),
             tilrettelagtKommunikasjon = listOfNotNull(tilrettelagtKommunikasjon),
             sikkerhetstiltak = sikkerhetstiltak,
         )
