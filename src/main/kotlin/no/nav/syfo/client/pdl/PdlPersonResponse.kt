@@ -98,8 +98,8 @@ data class PdlPerson(
         )
     }
 
-    val kjonn: String? = kjoenn?.firstOrNull()?.kjoenn
-    val fodselsdato: LocalDate? = foedsel?.firstOrNull()?.foedselsdato
+    val kjonn: String? = kjoenn.firstOrNull()?.kjoenn
+    val fodselsdato: LocalDate? = foedsel.firstOrNull()?.foedselsdato
     val dodsdato: LocalDate? = doedsfall?.firstOrNull()?.doedsdato
 
     fun hentPdlKontaktadresse(): PdlKontaktadresse? =
