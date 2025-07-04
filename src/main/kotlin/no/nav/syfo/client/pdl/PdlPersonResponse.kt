@@ -45,8 +45,8 @@ data class PdlPerson(
     val kontaktadresse: List<PdlKontaktadresse>?,
     val oppholdsadresse: List<PdlOppholdsadresse>?,
     val doedsfall: List<PdlDoedsfall>?,
-    val foedsel: List<PdlFoedselsdato>?,
-    val kjoenn: List<PdlKjoenn>?,
+    val foedsel: List<PdlFoedselsdato>,
+    val kjoenn: List<PdlKjoenn>,
     val tilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon>,
     val sikkerhetstiltak: List<PdlSikkerhetstiltak>,
 ) : Serializable {
@@ -134,7 +134,7 @@ data class PdlFoedselsdato(
 ) : Serializable
 
 data class PdlKjoenn(
-    val kjoenn: String?,
+    val kjoenn: String,
 ) : Serializable
 
 data class PdlTilrettelagtKommunikasjon(
