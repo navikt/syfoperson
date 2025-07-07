@@ -45,7 +45,7 @@ data class PdlPerson(
     val kontaktadresse: List<PdlKontaktadresse>?,
     val oppholdsadresse: List<PdlOppholdsadresse>?,
     val doedsfall: List<PdlDoedsfall>?,
-    val foedsel: List<PdlFoedselsdato>,
+    val foedselsdato: List<PdlFoedselsdato>,
     val kjoenn: List<PdlKjoenn>,
     val tilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon>,
     val sikkerhetstiltak: List<PdlSikkerhetstiltak>,
@@ -99,7 +99,8 @@ data class PdlPerson(
     }
 
     val kjonn: String? = kjoenn.firstOrNull()?.kjoenn
-    val fodselsdato: LocalDate? = foedsel.firstOrNull()?.foedselsdato
+    val fodselsdato: LocalDate? = foedselsdato.firstOrNull()?.foedselsdato
+    val fodselaar: Int? = foedselsdato.firstOrNull()?.foedselsaar?.toIntOrNull()
     val dodsdato: LocalDate? = doedsfall?.firstOrNull()?.doedsdato
 
     fun hentPdlKontaktadresse(): PdlKontaktadresse? =
@@ -130,7 +131,8 @@ data class PdlDoedsfall(
 ) : Serializable
 
 data class PdlFoedselsdato(
-    val foedselsdato: LocalDate,
+    val foedselsdato: LocalDate?,
+    val foedselsaar: String?,
 ) : Serializable
 
 data class PdlKjoenn(

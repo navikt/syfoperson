@@ -21,8 +21,9 @@ query($ident: ID!, $navnHistorikk: Boolean!){
     doedsfall {
         doedsdato
     }
-    foedsel {
+    foedselsdato {
         foedselsdato
+        foedselsaar
     }
     kjoenn(historikk: false) {
         kjoenn
