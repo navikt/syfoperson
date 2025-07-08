@@ -222,6 +222,7 @@ fun Route.registrerPersonApi(
                         navn = person.fullName,
                         kjonn = person.kjonn,
                         fodselsdato = person.fodselsdato,
+                        alder = person.getAlder(),
                         dodsdato = person.dodsdato,
                         tilrettelagtKommunikasjon = person.hentTilrettelagtKommunikasjon(),
                         sikkerhetstiltak = person.hentSikkerhetstiltak(),

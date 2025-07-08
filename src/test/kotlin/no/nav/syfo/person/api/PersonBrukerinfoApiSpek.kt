@@ -56,6 +56,7 @@ class PersonBrukerinfoApiSpek : Spek({
                         syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse(ARBEIDSTAKER_PERSONIDENT).data?.hentPerson?.fullName
                         syfomodiapersonBrukerinfo.dodsdato shouldBe null
                         syfomodiapersonBrukerinfo.fodselsdato shouldNotBe null
+                        syfomodiapersonBrukerinfo.alder shouldBeEqualTo 30
                         syfomodiapersonBrukerinfo.kjonn shouldBeEqualTo "KVINNE"
                         syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon shouldBe null
                     }

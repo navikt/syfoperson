@@ -100,7 +100,19 @@ data class PdlPerson(
 
     val kjonn: String? = kjoenn.firstOrNull()?.kjoenn
     val fodselsdato: LocalDate? = foedselsdato.firstOrNull()?.foedselsdato
-    val fodselaar: Int? = foedselsdato.firstOrNull()?.foedselsaar?.toIntOrNull()
+    val fodselaar: Int? = foedselsdato.firstOrNull()?.foedselsaar
+
+    fun getAlder(): Int? {
+        val today = LocalDate.now()
+        return if (fodselsdato != null && today.dayOfYear < fodselsdato.dayOfYear)
+            today.year - fodselsdato.year - 1
+        else if (fodselsdato != null)
+            today.year - fodselsdato.year
+        else if (fodselaar != null)
+            today.year - fodselaar
+        else null
+    }
+
     val dodsdato: LocalDate? = doedsfall?.firstOrNull()?.doedsdato
 
     fun hentPdlKontaktadresse(): PdlKontaktadresse? =
@@ -132,7 +144,7 @@ data class PdlDoedsfall(
 
 data class PdlFoedselsdato(
     val foedselsdato: LocalDate?,
-    val foedselsaar: String?,
+    val foedselsaar: Int?,
 ) : Serializable
 
 data class PdlKjoenn(
