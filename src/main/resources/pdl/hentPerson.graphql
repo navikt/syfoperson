@@ -21,6 +21,13 @@ query($ident: ID!, $navnHistorikk: Boolean!){
     doedsfall {
         doedsdato
     }
+    foedselsdato {
+        foedselsdato
+        foedselsaar
+    }
+    kjoenn(historikk: false) {
+        kjoenn
+    }
     sikkerhetstiltak {
         tiltakstype
         beskrivelse

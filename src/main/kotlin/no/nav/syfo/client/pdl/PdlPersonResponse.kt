@@ -45,6 +45,8 @@ data class PdlPerson(
     val kontaktadresse: List<PdlKontaktadresse>?,
     val oppholdsadresse: List<PdlOppholdsadresse>?,
     val doedsfall: List<PdlDoedsfall>?,
+    val foedselsdato: List<PdlFoedselsdato>,
+    val kjoenn: List<PdlKjoenn>,
     val tilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon>,
     val sikkerhetstiltak: List<PdlSikkerhetstiltak>,
 ) : Serializable {
@@ -96,6 +98,21 @@ data class PdlPerson(
         )
     }
 
+    val kjonn: String? = kjoenn.firstOrNull()?.kjoenn
+    val fodselsdato: LocalDate? = foedselsdato.firstOrNull()?.foedselsdato
+    val fodselsaar: Int? = foedselsdato.firstOrNull()?.foedselsaar
+
+    fun getAlder(): Int? {
+        val today = LocalDate.now()
+        return if (fodselsdato != null && today.dayOfYear < fodselsdato.dayOfYear)
+            today.year - fodselsdato.year - 1
+        else if (fodselsdato != null)
+            today.year - fodselsdato.year
+        else if (fodselsaar != null)
+            today.year - fodselsaar
+        else null
+    }
+
     val dodsdato: LocalDate? = doedsfall?.firstOrNull()?.doedsdato
 
     fun hentPdlKontaktadresse(): PdlKontaktadresse? =
@@ -123,6 +140,15 @@ enum class FolkeregisterIdentStatus {
 
 data class PdlDoedsfall(
     val doedsdato: LocalDate?,
+) : Serializable
+
+data class PdlFoedselsdato(
+    val foedselsdato: LocalDate?,
+    val foedselsaar: Int?,
+) : Serializable
+
+data class PdlKjoenn(
+    val kjoenn: String,
 ) : Serializable
 
 data class PdlTilrettelagtKommunikasjon(
