@@ -89,7 +89,7 @@ class PdlPersonResponseSpek : Spek({
                 pdlPersonNavn = null,
                 personident = UserConstants.ARBEIDSTAKER_PERSONIDENT,
                 adressebeskyttelse = Adressebeskyttelse(gradering = Gradering.FORTROLIG),
-                doedsdato = LocalDate.now(),
+                doedsdato = null,
                 tilrettelagtKommunikasjon = null,
                 sikkerhetstiltak = emptyList(),
             ).copy()
@@ -103,7 +103,7 @@ class PdlPersonResponseSpek : Spek({
                 pdlPersonNavn = null,
                 personident = UserConstants.ARBEIDSTAKER_PERSONIDENT,
                 adressebeskyttelse = Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG),
-                doedsdato = LocalDate.now(),
+                doedsdato = null,
                 tilrettelagtKommunikasjon = null,
                 sikkerhetstiltak = emptyList(),
             ).copy()
@@ -117,7 +117,7 @@ class PdlPersonResponseSpek : Spek({
                 pdlPersonNavn = null,
                 personident = UserConstants.ARBEIDSTAKER_PERSONIDENT,
                 adressebeskyttelse = Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG_UTLAND),
-                doedsdato = LocalDate.now(),
+                doedsdato = null,
                 tilrettelagtKommunikasjon = null,
                 sikkerhetstiltak = emptyList(),
             )
@@ -131,7 +131,7 @@ class PdlPersonResponseSpek : Spek({
                 pdlPersonNavn = null,
                 personident = UserConstants.ARBEIDSTAKER_PERSONIDENT,
                 adressebeskyttelse = Adressebeskyttelse(gradering = Gradering.UGRADERT),
-                doedsdato = LocalDate.now(),
+                doedsdato = null,
                 tilrettelagtKommunikasjon = null,
                 sikkerhetstiltak = emptyList(),
             )
