@@ -8,6 +8,7 @@ import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonBrukerinfo
 import no.nav.syfo.testhelper.*
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOD
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT_CHANGED
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_SIKKERHETSTILTAK
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON
@@ -57,6 +58,27 @@ class PersonBrukerinfoApiSpek : Spek({
                         syfomodiapersonBrukerinfo.dodsdato shouldBe null
                         syfomodiapersonBrukerinfo.fodselsdato shouldNotBe null
                         syfomodiapersonBrukerinfo.alder shouldBeEqualTo 30
+                        syfomodiapersonBrukerinfo.kjonn shouldBeEqualTo "KVINNE"
+                        syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon shouldBe null
+                    }
+                }
+                it("should return OK and correct age if birthday tomorrow") {
+                    testApplication {
+                        val client = setupApiAndClient(externalMockEnvironment)
+                        val response = client.get(url) {
+                            bearerAuth(validToken)
+                            header(NAV_PERSONIDENT_HEADER, ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT.value)
+                        }
+
+                        response.status shouldBeEqualTo HttpStatusCode.OK
+                        val syfomodiapersonBrukerinfo = response.body<SyfomodiapersonBrukerinfo>()
+                        syfomodiapersonBrukerinfo.aktivPersonident shouldBeEqualTo ARBEIDSTAKER_PERSONIDENT.value
+                        syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse(
+                            ARBEIDSTAKER_PERSONIDENT
+                        ).data?.hentPerson?.fullName
+                        syfomodiapersonBrukerinfo.dodsdato shouldBe null
+                        syfomodiapersonBrukerinfo.fodselsdato shouldNotBe null
+                        syfomodiapersonBrukerinfo.alder shouldBeEqualTo 29
                         syfomodiapersonBrukerinfo.kjonn shouldBeEqualTo "KVINNE"
                         syfomodiapersonBrukerinfo.tilrettelagtKommunikasjon shouldBe null
                     }

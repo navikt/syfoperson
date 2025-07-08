@@ -51,12 +51,12 @@ class PdlClientSpek : Spek({
         it("hasAdressebeskyttelse returns true when cached value is true") {
             every { cacheMock.getObject<PdlHentPerson>(any()) } returns
                 generatePdlHentPerson(
-                    null,
-                    ARBEIDSTAKER_PERSONIDENT,
-                    Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG),
-                    null,
-                    null,
-                    emptyList()
+                    pdlPersonNavn = null,
+                    personident = ARBEIDSTAKER_PERSONIDENT,
+                    adressebeskyttelse = Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG),
+                    doedsdato = null,
+                    tilrettelagtKommunikasjon = null,
+                    sikkerhetstiltak = emptyList(),
                 )
 
             runBlocking {
@@ -72,12 +72,12 @@ class PdlClientSpek : Spek({
         it("hasAdressebeskyttelse returns false when cached value is false") {
             every { cacheMock.getObject<PdlHentPerson>(any()) } returns
                 generatePdlHentPerson(
-                    null,
-                    ARBEIDSTAKER_PERSONIDENT,
-                    Adressebeskyttelse(gradering = Gradering.UGRADERT),
-                    null,
-                    null,
-                    emptyList()
+                    pdlPersonNavn = null,
+                    personident = ARBEIDSTAKER_PERSONIDENT,
+                    adressebeskyttelse = Adressebeskyttelse(gradering = Gradering.UGRADERT),
+                    doedsdato = null,
+                    tilrettelagtKommunikasjon = null,
+                    sikkerhetstiltak = emptyList(),
                 )
 
             runBlocking {

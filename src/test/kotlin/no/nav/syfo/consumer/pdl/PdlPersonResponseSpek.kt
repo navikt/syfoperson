@@ -15,16 +15,16 @@ class PdlPersonResponseSpek : Spek({
 
         it("fullName") {
             val pdlPersonResponse = generatePdlHentPerson(
-                PdlPersonNavn(
+                pdlPersonNavn = PdlPersonNavn(
                     UserConstants.PERSON_NAME_FIRST,
                     UserConstants.PERSON_NAME_MIDDLE,
                     UserConstants.PERSON_NAME_LAST,
                 ),
-                UserConstants.ARBEIDSTAKER_PERSONIDENT,
-                null,
-                null,
-                null,
-                emptyList()
+                personident = UserConstants.ARBEIDSTAKER_PERSONIDENT,
+                adressebeskyttelse = null,
+                doedsdato = null,
+                tilrettelagtKommunikasjon = null,
+                sikkerhetstiltak = emptyList(),
             )
             val result = pdlPersonResponse.hentPerson?.fullName
             val expected =
@@ -34,16 +34,16 @@ class PdlPersonResponseSpek : Spek({
 
         it("fullName with no middle name") {
             val pdlPersonResponse = generatePdlHentPerson(
-                PdlPersonNavn(
+                pdlPersonNavn = PdlPersonNavn(
                     UserConstants.PERSON_NAME_FIRST,
                     null,
                     UserConstants.PERSON_NAME_LAST,
                 ),
-                UserConstants.ARBEIDSTAKER_PERSONIDENT,
-                null,
-                null,
-                null,
-                emptyList()
+                personident = UserConstants.ARBEIDSTAKER_PERSONIDENT,
+                adressebeskyttelse = null,
+                doedsdato = null,
+                tilrettelagtKommunikasjon = null,
+                sikkerhetstiltak = emptyList(),
             )
             val result = pdlPersonResponse.hentPerson?.fullName
             val expected = "${UserConstants.PERSON_NAME_FIRST} ${UserConstants.PERSON_NAME_LAST}"
@@ -52,16 +52,16 @@ class PdlPersonResponseSpek : Spek({
 
         it("getDoedsdato when set") {
             val pdlPersonResponse = generatePdlHentPerson(
-                PdlPersonNavn(
+                pdlPersonNavn = PdlPersonNavn(
                     UserConstants.PERSON_NAME_FIRST,
                     UserConstants.PERSON_NAME_MIDDLE,
                     UserConstants.PERSON_NAME_LAST,
                 ),
-                UserConstants.ARBEIDSTAKER_PERSONIDENT,
-                null,
+                personident = UserConstants.ARBEIDSTAKER_PERSONIDENT,
+                adressebeskyttelse = null,
                 doedsdato = LocalDate.now(),
                 tilrettelagtKommunikasjon = null,
-                sikkerhetstiltak = emptyList()
+                sikkerhetstiltak = emptyList(),
             )
             val result = pdlPersonResponse.hentPerson?.dodsdato
             result shouldBeEqualTo LocalDate.now()
@@ -69,16 +69,16 @@ class PdlPersonResponseSpek : Spek({
 
         it("getDoedsdato when not set") {
             val pdlPersonResponse = generatePdlHentPerson(
-                PdlPersonNavn(
+                pdlPersonNavn = PdlPersonNavn(
                     UserConstants.PERSON_NAME_FIRST,
                     UserConstants.PERSON_NAME_MIDDLE,
                     UserConstants.PERSON_NAME_LAST,
                 ),
-                UserConstants.ARBEIDSTAKER_PERSONIDENT,
-                null,
-                doedsdato = null,
+                personident = UserConstants.ARBEIDSTAKER_PERSONIDENT,
+                adressebeskyttelse = null,
+                doedsdato = LocalDate.now(),
                 tilrettelagtKommunikasjon = null,
-                sikkerhetstiltak = emptyList()
+                sikkerhetstiltak = emptyList(),
             )
             val result = pdlPersonResponse.hentPerson?.dodsdato
             result shouldBe null
@@ -86,12 +86,12 @@ class PdlPersonResponseSpek : Spek({
 
         it("isKode6Or7 is true with ${Gradering.FORTROLIG}") {
             val pdlPersonResponse = generatePdlHentPerson(
-                null,
-                UserConstants.ARBEIDSTAKER_PERSONIDENT,
-                Adressebeskyttelse(gradering = Gradering.FORTROLIG),
-                null,
-                null,
-                emptyList()
+                pdlPersonNavn = null,
+                personident = UserConstants.ARBEIDSTAKER_PERSONIDENT,
+                adressebeskyttelse = Adressebeskyttelse(gradering = Gradering.FORTROLIG),
+                doedsdato = LocalDate.now(),
+                tilrettelagtKommunikasjon = null,
+                sikkerhetstiltak = emptyList(),
             ).copy()
             val result = pdlPersonResponse.hentPerson?.isKode6Or7
             val expected = true
@@ -100,12 +100,12 @@ class PdlPersonResponseSpek : Spek({
 
         it("isKode6Or7 is true with ${Gradering.STRENGT_FORTROLIG}") {
             val pdlPersonResponse = generatePdlHentPerson(
-                null,
-                UserConstants.ARBEIDSTAKER_PERSONIDENT,
-                Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG),
-                null,
-                null,
-                emptyList()
+                pdlPersonNavn = null,
+                personident = UserConstants.ARBEIDSTAKER_PERSONIDENT,
+                adressebeskyttelse = Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG),
+                doedsdato = LocalDate.now(),
+                tilrettelagtKommunikasjon = null,
+                sikkerhetstiltak = emptyList(),
             ).copy()
             val result = pdlPersonResponse.hentPerson?.isKode6Or7
             val expected = true
@@ -114,12 +114,12 @@ class PdlPersonResponseSpek : Spek({
 
         it("isKode6Or7 is true with ${Gradering.STRENGT_FORTROLIG_UTLAND}") {
             val pdlPersonResponse = generatePdlHentPerson(
-                null,
-                UserConstants.ARBEIDSTAKER_PERSONIDENT,
-                Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG_UTLAND),
-                null,
-                null,
-                emptyList()
+                pdlPersonNavn = null,
+                personident = UserConstants.ARBEIDSTAKER_PERSONIDENT,
+                adressebeskyttelse = Adressebeskyttelse(gradering = Gradering.STRENGT_FORTROLIG_UTLAND),
+                doedsdato = LocalDate.now(),
+                tilrettelagtKommunikasjon = null,
+                sikkerhetstiltak = emptyList(),
             )
             val result = pdlPersonResponse.hentPerson?.isKode6Or7
             val expected = true
@@ -128,12 +128,12 @@ class PdlPersonResponseSpek : Spek({
 
         it("isKode6Or7 returns false with ${Gradering.UGRADERT}") {
             val pdlPersonResponse = generatePdlHentPerson(
-                null,
-                UserConstants.ARBEIDSTAKER_PERSONIDENT,
-                Adressebeskyttelse(gradering = Gradering.UGRADERT),
-                null,
-                null,
-                emptyList()
+                pdlPersonNavn = null,
+                personident = UserConstants.ARBEIDSTAKER_PERSONIDENT,
+                adressebeskyttelse = Adressebeskyttelse(gradering = Gradering.UGRADERT),
+                doedsdato = LocalDate.now(),
+                tilrettelagtKommunikasjon = null,
+                sikkerhetstiltak = emptyList(),
             )
             val result = pdlPersonResponse.hentPerson?.isKode6Or7
             val expected = false

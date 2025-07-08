@@ -75,6 +75,7 @@ fun generatePdlOppholdsadresse(): PdlOppholdsadresse {
 fun generatePdlPersonResponse(
     personident: PersonIdentNumber,
     gradering: Gradering? = null,
+    foedselsdato: LocalDate = LocalDate.now().minusYears(30),
     doedsdato: LocalDate? = null,
     tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
     sikkerhetstiltak: PdlSikkerhetstiltak? = null,
@@ -84,6 +85,7 @@ fun generatePdlPersonResponse(
         pdlPersonNavn = generatePdlPersonNavn(),
         personident = personident,
         adressebeskyttelse = generateAdressebeskyttelse(gradering = gradering),
+        foedselsdato = foedselsdato,
         doedsdato = doedsdato,
         tilrettelagtKommunikasjon = tilrettelagtKommunikasjon,
         sikkerhetstiltak = if (sikkerhetstiltak == null) emptyList() else {
@@ -115,6 +117,7 @@ fun generatePdlHentPerson(
     pdlPersonNavn: PdlPersonNavn?,
     personident: PersonIdentNumber? = UserConstants.ARBEIDSTAKER_PERSONIDENT,
     adressebeskyttelse: Adressebeskyttelse? = null,
+    foedselsdato: LocalDate = LocalDate.now().minusYears(30),
     doedsdato: LocalDate? = null,
     tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
     sikkerhetstiltak: List<PdlSikkerhetstiltak>,
@@ -142,7 +145,7 @@ fun generatePdlHentPerson(
             doedsfall = if (doedsdato == null) emptyList() else {
                 listOf(PdlDoedsfall(doedsdato))
             },
-            foedselsdato = listOf(PdlFoedselsdato(foedselsdato = LocalDate.now().minusYears(30), foedselsaar = 1995)),
+            foedselsdato = listOf(PdlFoedselsdato(foedselsdato = foedselsdato, foedselsaar = foedselsdato.year)),
             kjoenn = listOf(PdlKjoenn("KVINNE")),
             tilrettelagtKommunikasjon = listOfNotNull(tilrettelagtKommunikasjon),
             sikkerhetstiltak = sikkerhetstiltak,
