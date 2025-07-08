@@ -72,9 +72,9 @@ class PersonBrukerinfoApiSpek : Spek({
 
                         response.status shouldBeEqualTo HttpStatusCode.OK
                         val syfomodiapersonBrukerinfo = response.body<SyfomodiapersonBrukerinfo>()
-                        syfomodiapersonBrukerinfo.aktivPersonident shouldBeEqualTo ARBEIDSTAKER_PERSONIDENT.value
+                        syfomodiapersonBrukerinfo.aktivPersonident shouldBeEqualTo ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT.value
                         syfomodiapersonBrukerinfo.navn shouldBeEqualTo generatePdlPersonResponse(
-                            ARBEIDSTAKER_PERSONIDENT
+                            ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT
                         ).data?.hentPerson?.fullName
                         syfomodiapersonBrukerinfo.dodsdato shouldBe null
                         syfomodiapersonBrukerinfo.fodselsdato shouldNotBe null

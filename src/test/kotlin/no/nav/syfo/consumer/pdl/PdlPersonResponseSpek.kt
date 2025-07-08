@@ -76,7 +76,7 @@ class PdlPersonResponseSpek : Spek({
                 ),
                 personident = UserConstants.ARBEIDSTAKER_PERSONIDENT,
                 adressebeskyttelse = null,
-                doedsdato = LocalDate.now(),
+                doedsdato = null,
                 tilrettelagtKommunikasjon = null,
                 sikkerhetstiltak = emptyList(),
             )
