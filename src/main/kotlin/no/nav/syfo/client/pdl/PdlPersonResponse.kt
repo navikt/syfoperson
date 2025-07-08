@@ -100,7 +100,7 @@ data class PdlPerson(
 
     val kjonn: String? = kjoenn.firstOrNull()?.kjoenn
     val fodselsdato: LocalDate? = foedselsdato.firstOrNull()?.foedselsdato
-    val fodselaar: Int? = foedselsdato.firstOrNull()?.foedselsaar
+    val fodselsaar: Int? = foedselsdato.firstOrNull()?.foedselsaar
 
     fun getAlder(): Int? {
         val today = LocalDate.now()
@@ -108,8 +108,8 @@ data class PdlPerson(
             today.year - fodselsdato.year - 1
         else if (fodselsdato != null)
             today.year - fodselsdato.year
-        else if (fodselaar != null)
-            today.year - fodselaar
+        else if (fodselsaar != null)
+            today.year - fodselsaar
         else null
     }
 
