@@ -3,19 +3,19 @@ version = "1.0.0"
 
 val jacksonDataTypeVersion = "2.19.1"
 val jedisVersion = "5.2.0"
-val ktorVersion = "3.2.0"
+val ktorVersion = "3.2.1"
 val kluentVersion = "1.73"
 val logbackVersion = "1.5.18"
 val logstashEncoderVersion = "8.1"
 val mockkVersion = "1.14.4"
-val nimbusJoseJwtVersion = "10.3"
+val nimbusJoseJwtVersion = "10.3.1"
 val micrometerRegistryVersion = "1.12.13"
 val redisEmbeddedVersion = "0.7.3"
 val spekVersion = "2.0.19"
 
 plugins {
     kotlin("jvm") version "2.2.0"
-    id("com.gradleup.shadow") version "8.3.7"
+    id("com.gradleup.shadow") version "8.3.8"
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
 }
 
