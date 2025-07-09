@@ -9,7 +9,7 @@ val logbackVersion = "1.5.18"
 val logstashEncoderVersion = "8.1"
 val mockkVersion = "1.14.4"
 val nimbusJoseJwtVersion = "10.3.1"
-val micrometerRegistryVersion = "1.15.1"
+val micrometerRegistryVersion = "1.12.13"
 val redisEmbeddedVersion = "0.7.3"
 val spekVersion = "2.0.19"
 
