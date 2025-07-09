@@ -227,6 +227,9 @@ fun Route.registrerPersonApi(
                         tilrettelagtKommunikasjon = person.hentTilrettelagtKommunikasjon(),
                         sikkerhetstiltak = person.hentSikkerhetstiltak(),
                     )
+                    if (response.alder == null) {
+                        log.warn("Alder is null for person")
+                    }
                     call.respond(response)
                 } ?: call.respond(HttpStatusCode.InternalServerError)
             }
