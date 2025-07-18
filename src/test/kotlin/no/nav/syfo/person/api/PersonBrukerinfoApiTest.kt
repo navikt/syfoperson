@@ -28,6 +28,11 @@ import java.time.LocalDate
 class PersonBrukerinfoApiTest {
 
     private val externalMockEnvironment = ExternalMockEnvironment()
+    private val url = "$apiPersonBasePath$apiPersonBrukerinfoPath"
+    private val validToken = generateJWT(
+        audience = externalMockEnvironment.environment.azureAppClientId,
+        issuer = externalMockEnvironment.wellKnownInternalAzureAD.issuer,
+    )
 
     @BeforeEach
     fun beforeEach() {
@@ -38,12 +43,6 @@ class PersonBrukerinfoApiTest {
     fun afterEach() {
         externalMockEnvironment.stopExternalMocks()
     }
-
-    private val url = "$apiPersonBasePath$apiPersonBrukerinfoPath"
-    private val validToken = generateJWT(
-        audience = externalMockEnvironment.environment.azureAppClientId,
-        issuer = externalMockEnvironment.wellKnownInternalAzureAD.issuer,
-    )
 
     @Nested
     @DisplayName("Happy path")

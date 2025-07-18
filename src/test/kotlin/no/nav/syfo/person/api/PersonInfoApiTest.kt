@@ -24,6 +24,11 @@ import kotlin.test.assertEquals
 class PersonInfoApiTest {
 
     private val externalMockEnvironment = ExternalMockEnvironment()
+    private val url = "$apiPersonBasePath$apiPersonInfoPath"
+    private val validToken = generateJWT(
+        audience = externalMockEnvironment.environment.azureAppClientId,
+        issuer = externalMockEnvironment.wellKnownInternalAzureAD.issuer,
+    )
 
     @BeforeEach
     fun beforeEach() {
@@ -34,12 +39,6 @@ class PersonInfoApiTest {
     fun afterEach() {
         externalMockEnvironment.stopExternalMocks()
     }
-
-    private val url = "$apiPersonBasePath$apiPersonInfoPath"
-    private val validToken = generateJWT(
-        audience = externalMockEnvironment.environment.azureAppClientId,
-        issuer = externalMockEnvironment.wellKnownInternalAzureAD.issuer,
-    )
 
     @Nested
     @DisplayName("Happy path")

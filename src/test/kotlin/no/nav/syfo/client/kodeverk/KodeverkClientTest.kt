@@ -19,7 +19,6 @@ class KodeverkClientTest {
     private val externalMockEnvironment = ExternalMockEnvironment()
     private val valkeyStore = mockk<ValkeyStore>(relaxed = true)
     private val azureAdClient = mockk<AzureAdClient>()
-
     private val kodeverkClient = KodeverkClient(
         azureAdClient = azureAdClient,
         valkeyStore = valkeyStore,
@@ -27,6 +26,7 @@ class KodeverkClientTest {
         clientId = externalMockEnvironment.environment.kodeverkClientId,
         httpClient = externalMockEnvironment.mockHttpClient,
     )
+    private val callId = "callId"
 
     @BeforeEach
     fun beforeEach() {
@@ -44,8 +44,6 @@ class KodeverkClientTest {
     fun afterEach() {
         externalMockEnvironment.stopExternalMocks()
     }
-
-    private val callId = "callId"
 
     @Test
     fun `returns cached value`() {
