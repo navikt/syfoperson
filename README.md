@@ -16,9 +16,8 @@ The information retrieved by Syfoperson is available for frontend applications w
 
 ##### Test Libraries:
 
-* Kluent
 * Mockk
-* Spek
+* JUnit
 
 #### Requirements
 
