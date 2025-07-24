@@ -6,9 +6,9 @@ import no.nav.syfo.client.pdl.PdlPersonNavn
 import no.nav.syfo.testhelper.UserConstants
 import no.nav.syfo.testhelper.generatePdlHentPerson
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import java.time.LocalDate
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
 
 class PdlPersonResponseTest {
 

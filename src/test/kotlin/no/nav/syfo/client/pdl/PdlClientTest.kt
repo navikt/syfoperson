@@ -14,9 +14,9 @@ import no.nav.syfo.testhelper.startExternalMocks
 import no.nav.syfo.testhelper.stopExternalMocks
 import org.junit.jupiter.api.*
 import java.time.LocalDateTime
-import kotlin.test.assertFalse
-import kotlin.test.assertNull
-import kotlin.test.assertTrue
+import org.junit.jupiter.api.Assertions.assertFalse
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 
 class PdlClientTest {
 
