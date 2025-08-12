@@ -3,14 +3,14 @@ import com.adarshr.gradle.testlogger.theme.ThemeType
 group = "no.nav.syfo"
 version = "1.0.0"
 
-val jacksonDataTypeVersion = "2.19.1"
+val jacksonDataTypeVersion = "2.19.2"
 val jedisVersion = "5.2.0"
-val ktorVersion = "3.2.1"
+val ktorVersion = "3.2.3"
 val logbackVersion = "1.5.18"
 val logstashEncoderVersion = "8.1"
-val mockkVersion = "1.14.4"
-val nimbusJoseJwtVersion = "10.3.1"
-val micrometerRegistryVersion = "1.12.13"
+val mockkVersion = "1.14.5"
+val nimbusJoseJwtVersion = "10.4.1"
+val micrometerRegistryVersion = "1.15.3"
 val redisEmbeddedVersion = "0.7.3"
 
 plugins {
