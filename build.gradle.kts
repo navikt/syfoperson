@@ -8,9 +8,9 @@ val jedisVersion = "5.2.0"
 val ktorVersion = "3.3.3"
 val logbackVersion = "1.5.21"
 val logstashEncoderVersion = "9.0"
-val mockkVersion = "1.14.6"
+val mockkVersion = "1.14.7"
 val nimbusJoseJwtVersion = "10.6"
-val micrometerRegistryVersion = "1.12.13"
+val micrometerRegistryVersion = "1.16.0"
 val redisEmbeddedVersion = "0.7.3"
 
 plugins {
