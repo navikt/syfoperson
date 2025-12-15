@@ -6,11 +6,11 @@ version = "1.0.0"
 val jacksonDataTypeVersion = "2.20.1"
 val jedisVersion = "7.1.0"
 val ktorVersion = "3.3.3"
-val logbackVersion = "1.5.21"
+val logbackVersion = "1.5.22"
 val logstashEncoderVersion = "9.0"
 val mockkVersion = "1.14.7"
 val nimbusJoseJwtVersion = "10.6"
-val micrometerRegistryVersion = "1.12.13"
+val micrometerRegistryVersion = "1.16.1"
 val redisEmbeddedVersion = "0.7.3"
 
 plugins {
