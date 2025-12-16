@@ -10,11 +10,11 @@ val logbackVersion = "1.5.22"
 val logstashEncoderVersion = "9.0"
 val mockkVersion = "1.14.7"
 val nimbusJoseJwtVersion = "10.6"
-val micrometerRegistryVersion = "1.12.13"
+val micrometerRegistryVersion = "1.16.1"
 val redisEmbeddedVersion = "0.7.3"
 
 plugins {
-    kotlin("jvm") version "2.2.21"
+    kotlin("jvm") version "2.3.0"
     id("com.gradleup.shadow") version "8.3.8"
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
     id("com.adarshr.test-logger") version "4.0.0"
