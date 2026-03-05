@@ -10,7 +10,7 @@ val logbackVersion = "1.5.26"
 val logstashEncoderVersion = "9.0"
 val mockkVersion = "1.14.9"
 val nimbusJoseJwtVersion = "10.7"
-val micrometerRegistryVersion = "1.16.2"
+val micrometerRegistryVersion = "1.12.13"
 val redisEmbeddedVersion = "0.7.3"
 
 plugins {
