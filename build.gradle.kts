@@ -3,18 +3,19 @@ import com.adarshr.gradle.testlogger.theme.ThemeType
 group = "no.nav.syfo"
 version = "1.0.0"
 
-val jacksonDataTypeVersion = "2.20.1"
+val jacksonDataTypeVersion = "2.21.1"
+val jacksonDatabindVersion = "3.1.0"
 val jedisVersion = "7.1.0"
-val ktorVersion = "3.3.3"
-val logbackVersion = "1.5.22"
+val ktorVersion = "3.4.1"
+val logbackVersion = "1.5.32"
 val logstashEncoderVersion = "9.0"
-val mockkVersion = "1.14.7"
-val nimbusJoseJwtVersion = "10.6"
-val micrometerRegistryVersion = "1.12.13"
+val mockkVersion = "1.14.9"
+val nimbusJoseJwtVersion = "10.8"
+val micrometerRegistryVersion = "1.16.3"
 val redisEmbeddedVersion = "0.7.3"
 
 plugins {
-    kotlin("jvm") version "2.2.21"
+    kotlin("jvm") version "2.3.10"
     id("com.gradleup.shadow") version "8.3.8"
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
     id("com.adarshr.test-logger") version "4.0.0"
@@ -52,6 +53,7 @@ dependencies {
 
     // (De-)serialization
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonDataTypeVersion")
+    implementation("tools.jackson.core:jackson-databind:$jacksonDatabindVersion")
 
     testImplementation("com.nimbusds:nimbus-jose-jwt:$nimbusJoseJwtVersion")
     testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
