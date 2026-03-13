@@ -75,7 +75,7 @@ fun generatePdlOppholdsadresse(): PdlOppholdsadresse {
 fun generatePdlPersonResponse(
     personident: PersonIdentNumber,
     gradering: Gradering? = null,
-    foedselsdato: LocalDate = LocalDate.now().minusYears(30),
+    foedselsdato: LocalDate = LocalDate.now().minusYears(30).minusDays(1),
     doedsdato: LocalDate? = null,
     tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
     sikkerhetstiltak: PdlSikkerhetstiltak? = null,
@@ -117,7 +117,7 @@ fun generatePdlHentPerson(
     pdlPersonNavn: PdlPersonNavn?,
     personident: PersonIdentNumber? = UserConstants.ARBEIDSTAKER_PERSONIDENT,
     adressebeskyttelse: Adressebeskyttelse? = null,
-    foedselsdato: LocalDate = LocalDate.now().minusYears(30),
+    foedselsdato: LocalDate = LocalDate.now().minusYears(30).minusDays(1),
     doedsdato: LocalDate? = null,
     tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
     sikkerhetstiltak: List<PdlSikkerhetstiltak>,
