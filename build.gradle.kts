@@ -12,7 +12,6 @@ val logstashEncoderVersion = "9.0"
 val mockkVersion = "1.14.9"
 val nimbusJoseJwtVersion = "10.9"
 val micrometerRegistryVersion = "1.16.4"
-val redisEmbeddedVersion = "0.7.3"
 
 plugins {
     kotlin("jvm") version "2.3.10"
@@ -49,7 +48,6 @@ dependencies {
 
     // Cache
     implementation("redis.clients:jedis:$jedisVersion")
-    testImplementation("it.ozimov:embedded-redis:$redisEmbeddedVersion")
 
     // (De-)serialization
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonDataTypeVersion")
