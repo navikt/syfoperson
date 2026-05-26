@@ -15,5 +15,5 @@ jobs:
       security-events: write
     uses: navikt/isworkflows/.github/workflows/codeql.yml@master
     with:
-      languages: "[ 'java' ]"
+      languages: "[ 'java-kotlin' ]"
     secrets: inherit
