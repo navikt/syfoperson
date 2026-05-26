@@ -4,25 +4,26 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
+import io.mockk.clearAllMocks
+import io.mockk.every
+import no.nav.syfo.client.azuread.AzureAdToken
+import no.nav.syfo.client.pdl.PdlHentPerson
 import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonBrukerinfo
 import no.nav.syfo.testhelper.*
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOD
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
-import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT_CHANGED
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_SIKKERHETSTILTAK
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VEILEDER_NO_ACCESS
 import no.nav.syfo.util.NAV_PERSONIDENT_HEADER
 import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertNull
-import org.junit.jupiter.api.Assertions.assertTrue
 import java.time.LocalDate
 
 class PersonBrukerinfoApiTest {
@@ -33,15 +34,17 @@ class PersonBrukerinfoApiTest {
         audience = externalMockEnvironment.environment.azureAppClientId,
         issuer = externalMockEnvironment.wellKnownInternalAzureAD.issuer,
     )
+    private val valkeyMock = externalMockEnvironment.valkeyStore
 
     @BeforeEach
     fun beforeEach() {
-        externalMockEnvironment.startExternalMocks()
+        every { valkeyMock.getObject<AzureAdToken?>(key = any()) } returns null
+        every { valkeyMock.getObject<PdlHentPerson?>(key = any()) } returns null
     }
 
     @AfterEach
     fun afterEach() {
-        externalMockEnvironment.stopExternalMocks()
+        clearAllMocks()
     }
 
     @Nested

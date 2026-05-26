@@ -4,15 +4,11 @@ import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import no.nav.syfo.application.cache.ValkeyStore
 import no.nav.syfo.client.azuread.AzureAdClient
-import no.nav.syfo.client.azuread.AzureAdToken
 import no.nav.syfo.testhelper.ExternalMockEnvironment
-import no.nav.syfo.testhelper.startExternalMocks
-import no.nav.syfo.testhelper.stopExternalMocks
-import org.junit.jupiter.api.AfterEach
+import no.nav.syfo.testhelper.mock.mockedAzureAdToken
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.LocalDateTime
-import org.junit.jupiter.api.Assertions.assertEquals
 
 class KodeverkClientTest {
 
@@ -32,17 +28,8 @@ class KodeverkClientTest {
     fun beforeEach() {
         coEvery {
             azureAdClient.getSystemToken(any())
-        } returns AzureAdToken(
-            accessToken = "token",
-            expires = LocalDateTime.now().plusDays(1)
-        )
-        externalMockEnvironment.startExternalMocks()
+        } returns mockedAzureAdToken
         clearMocks(valkeyStore)
-    }
-
-    @AfterEach
-    fun afterEach() {
-        externalMockEnvironment.stopExternalMocks()
     }
 
     @Test

@@ -4,6 +4,10 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
+import io.mockk.clearAllMocks
+import io.mockk.every
+import no.nav.syfo.client.azuread.AzureAdToken
+import no.nav.syfo.client.pdl.PdlHentPerson
 import no.nav.syfo.testhelper.*
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VEILEDER_NO_ACCESS
@@ -20,15 +24,18 @@ class PersonEgenansattApiTest {
         audience = externalMockEnvironment.environment.azureAppClientId,
         issuer = externalMockEnvironment.wellKnownInternalAzureAD.issuer,
     )
+    private val valkeyMock = externalMockEnvironment.valkeyStore
 
     @BeforeEach
     fun beforeEach() {
-        externalMockEnvironment.startExternalMocks()
+        every { valkeyMock.getObject<AzureAdToken?>(key = any()) } returns null
+        every { valkeyMock.getObject<PdlHentPerson?>(key = any()) } returns null
+        every { valkeyMock.getObject<Boolean?>(key = any()) } returns null
     }
 
     @AfterEach
     fun afterEach() {
-        externalMockEnvironment.stopExternalMocks()
+        clearAllMocks()
     }
 
     @Nested

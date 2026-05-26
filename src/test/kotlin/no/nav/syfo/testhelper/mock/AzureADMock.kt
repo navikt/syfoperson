@@ -3,8 +3,17 @@ package no.nav.syfo.testhelper.mock
 import io.ktor.client.engine.mock.*
 import io.ktor.client.request.*
 import no.nav.syfo.client.azuread.AzureAdTokenResponse
+import no.nav.syfo.client.azuread.toAzureAdToken
 import no.nav.syfo.client.wellknown.WellKnown
 import java.nio.file.Paths
+
+private val mockAzureAdTokenResponse = AzureAdTokenResponse(
+    access_token = "token",
+    expires_in = 3600,
+    token_type = "type",
+)
+
+val mockedAzureAdToken = mockAzureAdTokenResponse.toAzureAdToken()
 
 fun wellKnownInternalAzureAD(): WellKnown {
     val path = "src/test/resources/jwkset.json"
@@ -15,10 +24,4 @@ fun wellKnownInternalAzureAD(): WellKnown {
     )
 }
 
-fun MockRequestHandleScope.azureAdMockResponse(): HttpResponseData = respond(
-    AzureAdTokenResponse(
-        access_token = "token",
-        expires_in = 3600,
-        token_type = "type",
-    )
-)
+fun MockRequestHandleScope.azureAdMockResponse(): HttpResponseData = respond(mockAzureAdTokenResponse)
