@@ -4,6 +4,7 @@ import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import no.nav.syfo.client.aareg.AaregClient
 import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.krr.toSyfomodiapersonKontaktinfo
@@ -39,6 +40,7 @@ fun Route.registrerPersonApi(
     skjermedePersonerPipClient: SkjermedePersonerPipClient,
     veilederTilgangskontrollClient: VeilederTilgangskontrollClient,
     kodeverkClient: KodeverkClient,
+    aaregClient: AaregClient,
 ) {
     route(apiPersonBasePath) {
         post(apiPersonInfoPath) {
@@ -185,6 +187,28 @@ fun Route.registrerPersonApi(
                     token = token,
                 ).toSyfomodiapersonKontaktinfo()
                 call.respond(response)
+            }
+        }
+
+        get("/arbeidsforhold") {
+            personRequestHandler(
+                resource = "/arbeidsforhold",
+                veilederTilgangskontrollClient = veilederTilgangskontrollClient,
+            ) {
+                val personident = getPersonIdent()?.let { requestedPersonident ->
+                    PersonIdentNumber(requestedPersonident)
+                } ?: throw IllegalArgumentException("No personIdentNumber supplied in header")
+
+                val callId = getCallId()
+                val token = getBearerHeader()
+                    ?: throw IllegalArgumentException("No Authorization header supplied")
+
+                val arbeidsforhold = aaregClient.getArbeidsforhold(
+                    personident = personident,
+                    token = token,
+                    callId = callId,
+                )
+                call.respond(ArbeidsforholdPersonDTO.fromArbeidsforhold(personident, arbeidsforhold))
             }
         }
 

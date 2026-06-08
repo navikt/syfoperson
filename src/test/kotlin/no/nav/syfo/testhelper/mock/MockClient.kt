@@ -19,6 +19,7 @@ fun getMockHttpClient(env: Environment) = HttpClient(MockEngine) {
                 requestUrl.startsWith("/${env.pdlUrl}") -> pdlMockResponse(request)
                 requestUrl.startsWith("/${env.krrUrl}") -> krrMockResponse(request)
                 requestUrl.startsWith("/${env.kodeverkUrl}") -> kodeverkMockResponse(request)
+                requestUrl.startsWith("/${env.aaregUrl}") -> aaregMockResponse(request)
 
                 else -> error("Unhandled ${request.url.encodedPath}")
             }
