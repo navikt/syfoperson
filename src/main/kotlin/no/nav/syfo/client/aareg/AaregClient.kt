@@ -23,6 +23,19 @@ class AaregClient(
 
     private val arbeidsforholdUrl: String = "$baseUrl$AAREG_ARBEIDSFORHOLD_PATH"
 
+    /**
+     * Henter arbeidsforhold for en person fra Aareg (Arbeidsgiver- og arbeidstakerregisteret).
+     * Resultatene caches i Valkey i 12 timer for å redusere antall kall til Aareg.
+     *
+     * Veileder trenger tilgang til AD-gruppen `0000-GA-Aa-register-Lese` for å kunne gjøre oppslaget.
+     *
+     * @param personident Fødselsnummeret til personen det gjøres oppslag på.
+     * @param token OBO-token for den innloggede veilederen, brukes til å hente et nytt OBO-token mot Aareg.
+     * @param callId Unik ID for den innkommende forespørselen, brukes for logging og sporing.
+     * @return Liste over [ArbeidsforholdResponse] for personen. Returnerer en tom liste dersom personen ikke ble funnet (404).
+     * @throws ResponseException Dersom Aareg returnerer 403 Forbidden eller en annen feilkode.
+     * @throws RuntimeException Dersom OBO-token ikke kan hentes.
+     */
     suspend fun getArbeidsforhold(
         personident: PersonIdentNumber,
         token: String,
@@ -60,19 +73,33 @@ class AaregClient(
                 )
                 response
             } catch (e: ResponseException) {
-                if (e.response.status == HttpStatusCode.NotFound) {
-                    emptyList()
-                } else {
-                    log.error(
-                        """
-                           Error while requesting response from Aareg:
-                           status: ${e.response.status.value}
-                           callId: $callId
-                           message: ${e.message}
-                        """.trimIndent()
-                    )
-                    COUNT_CALL_AAREG_ARBEIDSFORHOLD_FAIL.increment()
-                    throw e
+                when (e.response.status) {
+                    HttpStatusCode.NotFound -> {
+                        emptyList()
+                    }
+                    HttpStatusCode.Forbidden -> {
+                        log.warn(
+                            """
+                               Access denied while requesting response from Aareg:
+                               status: ${e.response.status.value}
+                               callId: $callId
+                               message: ${e.message}
+                            """.trimIndent()
+                        )
+                        throw e
+                    }
+                    else -> {
+                        log.error(
+                            """
+                               Error while requesting response from Aareg:
+                               status: ${e.response.status.value}
+                               callId: $callId
+                               message: ${e.message}
+                            """.trimIndent()
+                        )
+                        COUNT_CALL_AAREG_ARBEIDSFORHOLD_FAIL.increment()
+                        throw e
+                    }
                 }
             }
         }

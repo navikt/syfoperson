@@ -31,7 +31,6 @@ suspend fun MockRequestHandleScope.aaregMockResponse(request: HttpRequestData): 
 
 fun generateArbeidsforholdResponse(): ArbeidsforholdResponse =
     ArbeidsforholdResponse(
-        id = "123",
         navArbeidsforholdId = 1234567,
         opprettet = LocalDateTime.of(2020, 1, 1, 10, 0, 0),
         sistBekreftet = LocalDateTime.of(2024, 1, 1, 10, 0, 0),
@@ -70,7 +69,6 @@ fun generateArbeidsforholdResponse(): ArbeidsforholdResponse =
 
 private fun generateArbeidsforholdSeveralYrkerResponse(): ArbeidsforholdResponse =
     ArbeidsforholdResponse(
-        id = "123",
         navArbeidsforholdId = 1234567,
         opprettet = LocalDateTime.of(2020, 1, 1, 10, 0, 0),
         sistBekreftet = LocalDateTime.of(2024, 1, 1, 10, 0, 0),
