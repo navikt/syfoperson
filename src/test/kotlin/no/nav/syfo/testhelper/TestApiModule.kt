@@ -14,4 +14,5 @@ fun Application.testApiModule(
     skjermedePersonerPipClient = externalMockEnvironment.skjermedePersonerPipClient,
     kodeverkClient = externalMockEnvironment.kodeverkClient,
     veilederTilgangskontrollClient = externalMockEnvironment.veilederTilgangskontrollClient,
+    aaregClient = externalMockEnvironment.aaregClient,
 )

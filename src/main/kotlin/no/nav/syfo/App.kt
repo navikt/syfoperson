@@ -9,6 +9,7 @@ import no.nav.syfo.application.ApplicationState
 import no.nav.syfo.application.Environment
 import no.nav.syfo.application.api.apiModule
 import no.nav.syfo.application.cache.ValkeyStore
+import no.nav.syfo.client.aareg.AaregClient
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
@@ -80,6 +81,13 @@ fun main() {
         clientId = environment.kodeverkClientId,
     )
 
+    val aaregClient = AaregClient(
+        azureAdClient = azureAdClient,
+        valkeyStore = cache,
+        baseUrl = environment.aaregUrl,
+        clientId = environment.aaregClientId,
+    )
+
     val applicationEngineEnvironment = applicationEnvironment {
         log = LoggerFactory.getLogger("ktor.application")
         config = HoconApplicationConfig(ConfigFactory.load())
@@ -108,6 +116,7 @@ fun main() {
                 skjermedePersonerPipClient = skjermedePersonerPipClient,
                 kodeverkClient = kodeverkClient,
                 veilederTilgangskontrollClient = veilederTilgangskontrollClient,
+                aaregClient = aaregClient,
             )
             monitor.subscribe(ApplicationStarted) { application ->
                 applicationState.ready = true

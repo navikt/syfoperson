@@ -3,6 +3,7 @@ package no.nav.syfo.testhelper
 import io.mockk.mockk
 import no.nav.syfo.application.ApplicationState
 import no.nav.syfo.application.cache.ValkeyStore
+import no.nav.syfo.client.aareg.AaregClient
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
@@ -59,6 +60,14 @@ class ExternalMockEnvironment {
         valkeyStore = valkeyStore,
         baseUrl = environment.kodeverkUrl,
         clientId = environment.kodeverkClientId,
+        httpClient = mockHttpClient,
+    )
+
+    val aaregClient = AaregClient(
+        azureAdClient = azureAdClient,
+        valkeyStore = valkeyStore,
+        baseUrl = environment.aaregUrl,
+        clientId = environment.aaregClientId,
         httpClient = mockHttpClient,
     )
 

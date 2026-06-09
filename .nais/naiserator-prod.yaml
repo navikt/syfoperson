@@ -45,6 +45,7 @@ spec:
     outbound:
       external:
         - host: "pdl-api.prod-fss-pub.nais.io"
+        - host: "aareg-services.prod-fss-pub.nais.io"
       rules:
         - application: istilgangskontroll
         - application: digdir-krr-proxy
@@ -93,3 +94,7 @@ spec:
       value: "prod-gcp.team-rocket.kodeverk-api"
     - name: KODEVERK_URL
       value: "http://kodeverk-api.team-rocket"
+    - name: AAREG_CLIENT_ID
+      value: "prod-fss.arbeidsforhold.aareg-services-nais"
+    - name: AAREG_URL
+      value: "https://aareg-services.prod-fss-pub.nais.io"

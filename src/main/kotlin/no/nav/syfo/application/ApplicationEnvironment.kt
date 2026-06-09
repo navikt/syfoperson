@@ -23,6 +23,10 @@ data class Environment(
 
     val kodeverkClientId: String = getEnvVar("KODEVERK_CLIENT_ID"),
     val kodeverkUrl: String = getEnvVar("KODEVERK_URL"),
+
+    val aaregClientId: String = getEnvVar("AAREG_CLIENT_ID"),
+    val aaregUrl: String = getEnvVar("AAREG_URL"),
+
     val valkeyConfig: ValkeyConfig = ValkeyConfig(
         valkeyUri = URI(getEnvVar("VALKEY_URI_CACHE")),
         valkeyDB = 23, // se https://github.com/navikt/istilgangskontroll/blob/master/README.md
