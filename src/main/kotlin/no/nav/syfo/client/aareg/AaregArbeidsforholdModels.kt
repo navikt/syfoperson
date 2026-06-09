@@ -12,7 +12,6 @@ data class ArbeidsforholdRequest(
 
 // Sitat: "Dersom noen har flere yrker samtidig på samme underenhet vil de komme i 2 forskjellige arbeidsforhold. Det er fullt lovlig å bytte yrke underveis på samme arbeidsforhold"
 data class ArbeidsforholdResponse(
-    val id: String,
     val navArbeidsforholdId: Int,
     val opprettet: LocalDateTime,
     val sistBekreftet: LocalDateTime,
