@@ -28,7 +28,7 @@ data class ArbeidsforholdPersonDTO(
                         type = arbeidsforhold.type.beskrivelse,
                         ansettelseStart = arbeidsforhold.ansettelsesperiode.startdato,
                         ansettelseSlutt = arbeidsforhold.ansettelsesperiode.sluttdato,
-                        ansettelsesform = gjeldendeAnsettelsesdetalj.ansettelsesform.beskrivelse,
+                        ansettelsesform = gjeldendeAnsettelsesdetalj.ansettelsesform?.beskrivelse,
                         yrke = gjeldendeAnsettelsesdetalj.yrke.beskrivelse,
                         stillingsprosent = gjeldendeAnsettelsesdetalj.avtaltStillingsprosent.toInt().toString()
                     )
@@ -45,7 +45,7 @@ data class ArbeidsforholdDTO(
     val type: String, // "Ordinært arbeidsforhold"
     val ansettelseStart: LocalDate,
     val ansettelseSlutt: LocalDate?,
-    val ansettelsesform: String, // Fast ansettelse
+    val ansettelsesform: String?, // Fast ansettelse
     val yrke: String,
     val stillingsprosent: String,
 )

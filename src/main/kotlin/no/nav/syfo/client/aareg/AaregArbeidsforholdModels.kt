@@ -57,7 +57,7 @@ data class Ansettelsesperiode(
 
 // "På bakrommet har vi 1 ansettelsesdetalj pr måned - disse squashes på vei ut slik at dere får en liste hvor de er gyldig fra/til - hvor den siste er gyldig til null"
 data class Ansettelsesdetalj(
-    val ansettelsesform: Kode,
+    val ansettelsesform: Kode?,
     val yrke: Kode,
     val antallTimerPrUke: Double,
     val avtaltStillingsprosent: Double,
