@@ -9,6 +9,7 @@ object UserConstants {
 
     val ARBEIDSTAKER_AAREG_NOT_FOUND = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "3"))
     val ARBEIDSTAKER_AAREG_SEVERAL_ARBEIDSFORHOLD = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "0"))
+    val ARBEIDSTAKER_AAREG_PERSON_ARBEIDSSTED = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "4"))
     val ARBEIDSTAKER_VEILEDER_NO_ACCESS = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "1"))
     val ARBEIDSTAKER_ADRESSEBESKYTTET = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "6"))
     val ARBEIDSTAKER_DOD = PersonIdentNumber(ARBEIDSTAKER_PERSONIDENT.value.replace("2", "7"))

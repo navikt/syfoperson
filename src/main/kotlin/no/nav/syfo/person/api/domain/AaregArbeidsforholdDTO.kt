@@ -16,7 +16,11 @@ data class ArbeidsforholdPersonDTO(
         fun fromArbeidsforhold(personident: PersonIdentNumber, allArbeidsforholdResponse: List<ArbeidsforholdResponse>) =
             ArbeidsforholdPersonDTO(
                 personident = personident.value,
-                arbeidsforhold = allArbeidsforholdResponse.map { arbeidsforhold ->
+                arbeidsforhold = allArbeidsforholdResponse
+                    .filter { arbeidsforhold ->
+                        arbeidsforhold.arbeidssted.identer.any { it.type == IdentType.ORGANISASJONSNUMMER }
+                    }
+                    .map { arbeidsforhold ->
                     val gjeldendeAnsettelsesdetalj = arbeidsforhold.ansettelsesdetaljer.gjeldendeAnsettelsesdetalj()
                     ArbeidsforholdDTO(
                         navArbeidsforholdId = arbeidsforhold.navArbeidsforholdId,
