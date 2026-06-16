@@ -13,16 +13,23 @@ data class ArbeidsforholdPersonDTO(
     val arbeidsforhold: List<ArbeidsforholdDTO>,
 ) {
     companion object {
-        fun fromArbeidsforhold(personident: PersonIdentNumber, allArbeidsforholdResponse: List<ArbeidsforholdResponse>) =
-            ArbeidsforholdPersonDTO(
-                personident = personident.value,
-                arbeidsforhold = allArbeidsforholdResponse.map { arbeidsforhold ->
+        fun fromArbeidsforhold(
+            personident: PersonIdentNumber,
+            allArbeidsforholdResponse: List<ArbeidsforholdResponse>,
+        ) = ArbeidsforholdPersonDTO(
+            personident = personident.value,
+            arbeidsforhold =
+            allArbeidsforholdResponse
+                .filter { arbeidsforhold ->
+                    arbeidsforhold.arbeidssted.identer.any { it.type == IdentType.ORGANISASJONSNUMMER }
+                }.map { arbeidsforhold ->
                     val gjeldendeAnsettelsesdetalj = arbeidsforhold.ansettelsesdetaljer.gjeldendeAnsettelsesdetalj()
                     ArbeidsforholdDTO(
                         navArbeidsforholdId = arbeidsforhold.navArbeidsforholdId,
                         opprettet = arbeidsforhold.opprettet,
                         sistBekreftet = arbeidsforhold.sistBekreftet,
-                        orgnummer = arbeidsforhold.arbeidssted.identer
+                        orgnummer =
+                        arbeidsforhold.arbeidssted.identer
                             .first { it.type == IdentType.ORGANISASJONSNUMMER }
                             .ident,
                         type = arbeidsforhold.type.beskrivelse,
@@ -30,10 +37,10 @@ data class ArbeidsforholdPersonDTO(
                         ansettelseSlutt = arbeidsforhold.ansettelsesperiode.sluttdato,
                         ansettelsesform = gjeldendeAnsettelsesdetalj.ansettelsesform?.beskrivelse,
                         yrke = gjeldendeAnsettelsesdetalj.yrke.beskrivelse,
-                        stillingsprosent = gjeldendeAnsettelsesdetalj.avtaltStillingsprosent.toInt().toString()
+                        stillingsprosent = gjeldendeAnsettelsesdetalj.avtaltStillingsprosent.toInt().toString(),
                     )
-                }
-            )
+                },
+        )
     }
 }
 

@@ -10,6 +10,7 @@ import no.nav.syfo.client.aareg.ArbeidsforholdResponse
 import no.nav.syfo.client.azuread.AzureAdToken
 import no.nav.syfo.person.api.domain.ArbeidsforholdPersonDTO
 import no.nav.syfo.testhelper.ExternalMockEnvironment
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_AAREG_PERSON_ARBEIDSSTED
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_AAREG_SEVERAL_ARBEIDSFORHOLD
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
@@ -110,6 +111,25 @@ class PersonArbeidsforholdApiTest {
                 assertEquals(2, arbeidsforhold.size)
                 assertEquals("912345678", arbeidsforhold.first().orgnummer)
                 assertEquals("912345699", arbeidsforhold.last().orgnummer)
+            }
+        }
+
+        @Test
+        fun `should filter out arbeidsforhold with Person-type arbeidssted`() {
+            testApplication {
+                val client = setupApiAndClient(externalMockEnvironment)
+                val response = client.get(url) {
+                    bearerAuth(validToken)
+                    header(NAV_PERSONIDENT_HEADER, ARBEIDSTAKER_AAREG_PERSON_ARBEIDSSTED.value)
+                }
+
+                assertEquals(HttpStatusCode.OK, response.status)
+                val arbeidsforholdPerson = response.body<ArbeidsforholdPersonDTO>()
+                val arbeidsforhold = arbeidsforholdPerson.arbeidsforhold
+
+                assertEquals(ARBEIDSTAKER_AAREG_PERSON_ARBEIDSSTED.value, arbeidsforholdPerson.personident)
+                assertEquals(1, arbeidsforhold.size)
+                assertEquals("912345678", arbeidsforhold.first().orgnummer)
             }
         }
     }
