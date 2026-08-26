@@ -53,6 +53,8 @@ spec:
           namespace: team-rocket
         - application: skjermede-personer-pip
           namespace: nom
+        - application: api-intern
+          namespace: aap
   azure:
     application:
       allowAllUsers: true
@@ -97,3 +99,7 @@ spec:
       value: "dev-fss.arbeidsforhold.aareg-services-nais"
     - name: AAREG_URL
       value: "https://aareg-services-q2.dev-fss-pub.nais.io"
+    - name: AAP_API_INTERN_CLIENT_ID
+      value: "dev-gcp.aap.api-intern"
+    - name: AAP_API_INTERN_URL
+      value: "http://api-intern.aap"

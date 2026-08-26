@@ -27,6 +27,9 @@ data class Environment(
     val aaregClientId: String = getEnvVar("AAREG_CLIENT_ID"),
     val aaregUrl: String = getEnvVar("AAREG_URL"),
 
+    val aapApiInternClientId: String = getEnvVar("AAP_API_INTERN_CLIENT_ID"),
+    val aapApiInternUrl: String = getEnvVar("AAP_API_INTERN_URL"),
+
     val valkeyConfig: ValkeyConfig = ValkeyConfig(
         valkeyUri = URI(getEnvVar("VALKEY_URI_CACHE")),
         valkeyDB = 23, // se https://github.com/navikt/istilgangskontroll/blob/master/README.md

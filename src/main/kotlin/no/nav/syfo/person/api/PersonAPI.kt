@@ -4,7 +4,10 @@ import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import no.nav.syfo.person.api.domain.AapRequest
+import no.nav.syfo.person.api.domain.AapStatusDTO
 import no.nav.syfo.client.aareg.AaregClient
+import no.nav.syfo.client.aap.AapClient
 import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.krr.toSyfomodiapersonKontaktinfo
@@ -41,6 +44,7 @@ fun Route.registrerPersonApi(
     veilederTilgangskontrollClient: VeilederTilgangskontrollClient,
     kodeverkClient: KodeverkClient,
     aaregClient: AaregClient,
+    aapClient: AapClient,
 ) {
     route(apiPersonBasePath) {
         post(apiPersonInfoPath) {
@@ -256,6 +260,37 @@ fun Route.registrerPersonApi(
                     }
                     call.respond(response)
                 } ?: call.respond(HttpStatusCode.InternalServerError)
+            }
+        }
+
+        post("/aap-saker") {
+            try {
+                val request = call.receive<AapRequest>()
+                val personident = PersonIdentNumber(request.personident)
+                val callId = getCallId()
+                val token = getBearerHeader()
+                    ?: throw IllegalArgumentException("No Authorization header supplied")
+
+                val hasAccess = veilederTilgangskontrollClient.hasAccess(
+                    callId = callId,
+                    personIdentNumber = personident,
+                    token = token,
+                )
+                if (!hasAccess) {
+                    throw ForbiddenAccessException()
+                }
+
+                val saker = aapClient.getSaker(
+                    personident = personident,
+                    token = token,
+                    callId = callId,
+                )
+                call.respond(AapStatusDTO.fromSaker(saker))
+            } catch (ex: Exception) {
+                handleApiError(
+                    ex = ex,
+                    resource = "POST /aap-saker",
+                )
             }
         }
     }
