@@ -5,6 +5,8 @@ import no.nav.syfo.client.aap.AapPeriode
 import no.nav.syfo.client.aap.AapSak
 import no.nav.syfo.client.aap.AapSakerResponse
 import no.nav.syfo.client.aap.AapVedtak
+import no.nav.syfo.util.isAfterOrEqual
+import no.nav.syfo.util.isBeforeOrEqual
 
 data class AapRequest(
     val personident: String,
@@ -85,12 +87,10 @@ data class AapPeriodeDTO(
     }
 }
 
-private fun AapPeriode.erAktiv(today: LocalDate): Boolean {
-    val fraOgMedDato = fraOgMedDato
-    return fraOgMedDato != null &&
-        !fraOgMedDato.isAfter(today) &&
-        (tilOgMedDato == null || !tilOgMedDato.isBefore(today))
-}
+private fun AapPeriode.erAktiv(today: LocalDate): Boolean =
+    this.fraOgMedDato != null &&
+        this.fraOgMedDato.isBeforeOrEqual(today) &&
+        (tilOgMedDato == null || tilOgMedDato.isAfterOrEqual(today))
 
 private const val KILDE_KELVIN = "KELVIN"
 private const val STATUS_SOKNAD_UNDER_BEHANDLING = "SOKNAD_UNDER_BEHANDLING"
