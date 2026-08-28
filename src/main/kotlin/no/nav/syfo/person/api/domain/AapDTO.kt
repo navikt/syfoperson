@@ -5,6 +5,8 @@ import no.nav.syfo.client.aap.AapPeriode
 import no.nav.syfo.client.aap.AapSak
 import no.nav.syfo.client.aap.AapSakerResponse
 import no.nav.syfo.client.aap.AapVedtak
+import no.nav.syfo.client.aap.Kilde
+import no.nav.syfo.client.aap.AapSoknadStatus
 import no.nav.syfo.util.isAfterOrEqual
 import no.nav.syfo.util.isBeforeOrEqual
 
@@ -12,7 +14,7 @@ data class AapRequest(
     val personident: String,
 )
 
-data class AapStatusDTO(
+data class AapSakerDTO(
     val soknader: List<AapSoknadDTO>,
     val vedtak: List<AapVedtakDTO>,
 ) {
@@ -20,9 +22,9 @@ data class AapStatusDTO(
         fun fromSaker(
             response: AapSakerResponse,
             today: LocalDate = LocalDate.now(),
-        ): AapStatusDTO = AapStatusDTO(
+        ): AapSakerDTO = AapSakerDTO(
             soknader = response.saker
-                .filter { it.kilde == KILDE_KELVIN }
+                .filter { it.kilde == Kilde.KELVIN }
                 .map { AapSoknadDTO.fromSak(it) },
             vedtak = response.saker.flatMap { sak ->
                 sak.vedtak.map { vedtak ->
@@ -40,7 +42,7 @@ data class AapStatusDTO(
 data class AapSoknadDTO(
     val sakid: String,
     val soknadsdatoer: List<LocalDate>,
-    val statuskode: String,
+    val statuskode: AapSoknadStatus,
     val erAktiv: Boolean,
 ) {
     companion object {
@@ -48,14 +50,14 @@ data class AapSoknadDTO(
             sakid = sak.sakid,
             soknadsdatoer = sak.soknadsdatoer,
             statuskode = sak.statuskode,
-            erAktiv = sak.statuskode == STATUS_SOKNAD_UNDER_BEHANDLING,
+            erAktiv = sak.statuskode == AapSoknadStatus.SOKNAD_UNDER_BEHANDLING,
         )
     }
 }
 
 data class AapVedtakDTO(
     val sakid: String,
-    val kilde: String,
+    val kilde: Kilde,
     val vedtaksdato: LocalDate,
     val perioder: List<AapPeriodeDTO>,
     val erAktivt: Boolean,
@@ -91,6 +93,3 @@ private fun AapPeriode.erAktiv(today: LocalDate): Boolean =
     this.fraOgMedDato != null &&
         this.fraOgMedDato.isBeforeOrEqual(today) &&
         (tilOgMedDato == null || tilOgMedDato.isAfterOrEqual(today))
-
-private const val KILDE_KELVIN = "KELVIN"
-private const val STATUS_SOKNAD_UNDER_BEHANDLING = "SOKNAD_UNDER_BEHANDLING"

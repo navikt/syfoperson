@@ -12,16 +12,10 @@ data class AapSakerResponse(
 
 data class AapSak(
     val sakid: String,
-    /**
-     * Arena: AVSLU, FORDE, GODKJ, INNST, IVERK, KONT, MOTAT, OPPRE, REGIS, UKJENT.
-     * Kelvin: OPPRETTET, UTREDES, LØPENDE, AVSLUTTET, SOKNAD_UNDER_BEHANDLING,
-     * REVURDERING_UNDER_BEHANDLING, FERDIGBEHANDLET.
-     */
-    val statuskode: String,
+    val statuskode: AapSoknadStatus,
     val soknadsdatoer: List<LocalDate> = emptyList(),
     val vedtak: List<AapVedtak>,
-    /** Possible values: ARENA, KELVIN. */
-    val kilde: String,
+    val kilde: Kilde,
 )
 
 data class AapVedtak(
@@ -33,3 +27,33 @@ data class AapPeriode(
     val fraOgMedDato: LocalDate?,
     val tilOgMedDato: LocalDate?,
 )
+
+enum class Kilde {
+    ARENA,
+    KELVIN
+}
+
+enum class AapSoknadStatus {
+    // Arena, ikke interessante for oss
+    AVSLU,
+    FORDE,
+    GODKJ,
+    INNST,
+    IVERK,
+    KONT,
+    MOTAT,
+    OPPRE,
+    REGIS,
+    UKJENT,
+
+    // Disse skal bort fra Kelvin
+    OPPRETTET,
+    UTREDES,
+    LØPENDE,
+    AVSLUTTET,
+
+    // Disse kommer fra Kelvin og brukes i de nye sakene
+    SOKNAD_UNDER_BEHANDLING,
+    REVURDERING_UNDER_BEHANDLING,
+    FERDIGBEHANDLET,
+}

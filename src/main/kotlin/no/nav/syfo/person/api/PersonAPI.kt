@@ -5,7 +5,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import no.nav.syfo.person.api.domain.AapRequest
-import no.nav.syfo.person.api.domain.AapStatusDTO
+import no.nav.syfo.person.api.domain.AapSakerDTO
 import no.nav.syfo.client.aareg.AaregClient
 import no.nav.syfo.client.aap.AapClient
 import no.nav.syfo.client.kodeverk.KodeverkClient
@@ -263,7 +263,7 @@ fun Route.registrerPersonApi(
             }
         }
 
-        post("/aap-saker") {
+        post("/aap-saker/query") {
             try {
                 val request = call.receive<AapRequest>()
                 val personident = PersonIdentNumber(request.personident)
@@ -285,11 +285,11 @@ fun Route.registrerPersonApi(
                     token = token,
                     callId = callId,
                 )
-                call.respond(AapStatusDTO.fromSaker(saker))
+                call.respond(AapSakerDTO.fromSaker(saker))
             } catch (ex: Exception) {
                 handleApiError(
                     ex = ex,
-                    resource = "POST /aap-saker",
+                    resource = "POST /aap-saker/query",
                 )
             }
         }

@@ -14,10 +14,12 @@ import java.time.LocalDate
 import no.nav.syfo.client.aap.AapPeriode
 import no.nav.syfo.client.aap.AapSak
 import no.nav.syfo.client.aap.AapSakerResponse
+import no.nav.syfo.client.aap.AapSoknadStatus
 import no.nav.syfo.client.aap.AapVedtak
+import no.nav.syfo.client.aap.Kilde
 import no.nav.syfo.client.azuread.AzureAdToken
 import no.nav.syfo.person.api.domain.AapRequest
-import no.nav.syfo.person.api.domain.AapStatusDTO
+import no.nav.syfo.person.api.domain.AapSakerDTO
 import no.nav.syfo.testhelper.ExternalMockEnvironment
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VEILEDER_NO_ACCESS
@@ -32,7 +34,7 @@ import org.junit.jupiter.api.Test
 
 class PersonAapSakerTest {
     private val externalMockEnvironment = ExternalMockEnvironment()
-    private val url = "$apiPersonBasePath/aap-saker"
+    private val url = "$apiPersonBasePath/aap-saker/query"
     private val validToken = generateJWT(
         audience = externalMockEnvironment.environment.azureAppClientId,
         issuer = externalMockEnvironment.wellKnownInternalAzureAD.issuer,
@@ -61,7 +63,7 @@ class PersonAapSakerTest {
             }
 
             assertEquals(HttpStatusCode.OK, response.status)
-            val body = response.body<AapStatusDTO>()
+            val body = response.body<AapSakerDTO>()
             assertEquals(1, body.soknader.size)
             assertEquals(true, body.soknader.first().erAktiv)
             assertEquals(1, body.vedtak.size)
@@ -116,7 +118,7 @@ class PersonAapSakerTest {
             saker = listOf(
                 AapSak(
                     sakid = "kelvin-sak-1",
-                    statuskode = "SOKNAD_UNDER_BEHANDLING",
+                    statuskode = AapSoknadStatus.SOKNAD_UNDER_BEHANDLING,
                     soknadsdatoer = listOf(today.minusMonths(1)),
                     vedtak = listOf(
                         generateVedtak(
@@ -125,22 +127,22 @@ class PersonAapSakerTest {
                             tom = null,
                         )
                     ),
-                    kilde = "KELVIN",
+                    kilde = Kilde.KELVIN,
                 )
             )
         )
 
-        val result = AapStatusDTO.fromSaker(response, today)
+        val result = AapSakerDTO.fromSaker(response, today)
 
         assertEquals(1, result.soknader.size)
         assertEquals("kelvin-sak-1", result.soknader.first().sakid)
         assertEquals(listOf(today.minusMonths(1)), result.soknader.first().soknadsdatoer)
-        assertEquals("SOKNAD_UNDER_BEHANDLING", result.soknader.first().statuskode)
+        assertEquals(AapSoknadStatus.SOKNAD_UNDER_BEHANDLING, result.soknader.first().statuskode)
         assertTrue(result.soknader.first().erAktiv)
 
         assertEquals(1, result.vedtak.size)
         assertEquals("kelvin-sak-1", result.vedtak.first().sakid)
-        assertEquals("KELVIN", result.vedtak.first().kilde)
+        assertEquals(Kilde.KELVIN, result.vedtak.first().kilde)
         assertEquals(today.minusMonths(2), result.vedtak.first().vedtaksdato)
         assertEquals(today.minusDays(1), result.vedtak.first().perioder.first().fraOgMedDato)
         assertEquals(null, result.vedtak.first().perioder.first().tilOgMedDato)
@@ -153,7 +155,7 @@ class PersonAapSakerTest {
             saker = listOf(
                 AapSak(
                     sakid = "arena-sak-1",
-                    statuskode = "AVSLU",
+                    statuskode = AapSoknadStatus.AVSLU,
                     soknadsdatoer = emptyList(),
                     vedtak = listOf(
                         generateVedtak(
@@ -162,26 +164,26 @@ class PersonAapSakerTest {
                             tom = today.plusMonths(1),
                         )
                     ),
-                    kilde = "ARENA",
+                    kilde = Kilde.ARENA,
                 ),
                 AapSak(
                     sakid = "kelvin-sak-1",
-                    statuskode = "FERDIGBEHANDLET",
+                    statuskode = AapSoknadStatus.FERDIGBEHANDLET,
                     soknadsdatoer = listOf(today.minusMonths(6).minusDays(1)),
                     vedtak = emptyList(),
-                    kilde = "KELVIN",
+                    kilde = Kilde.KELVIN,
                 ),
             )
         )
 
-        val result = AapStatusDTO.fromSaker(response, today)
+        val result = AapSakerDTO.fromSaker(response, today)
 
         assertEquals(1, result.soknader.size)
         assertEquals("kelvin-sak-1", result.soknader.first().sakid)
         assertFalse(result.soknader.first().erAktiv)
         assertEquals(1, result.vedtak.size)
         assertEquals("arena-sak-1", result.vedtak.first().sakid)
-        assertEquals("ARENA", result.vedtak.first().kilde)
+        assertEquals(Kilde.ARENA, result.vedtak.first().kilde)
         assertFalse(result.vedtak.first().erAktivt)
     }
 
@@ -191,7 +193,7 @@ class PersonAapSakerTest {
             saker = listOf(
                 AapSak(
                     sakid = "arena-sak-1",
-                    statuskode = "IVERK",
+                    statuskode = AapSoknadStatus.IVERK,
                     soknadsdatoer = emptyList(),
                     vedtak = listOf(
                         generateVedtak(
@@ -200,12 +202,12 @@ class PersonAapSakerTest {
                             tom = today.plusMonths(1),
                         )
                     ),
-                    kilde = "ARENA",
+                    kilde = Kilde.ARENA,
                 )
             )
         )
 
-        assertFalse(AapStatusDTO.fromSaker(response, today).vedtak.first().erAktivt)
+        assertFalse(AapSakerDTO.fromSaker(response, today).vedtak.first().erAktivt)
     }
 
     private fun generateVedtak(

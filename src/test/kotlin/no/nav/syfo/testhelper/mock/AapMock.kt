@@ -10,7 +10,9 @@ import no.nav.syfo.client.aap.AapPeriode
 import no.nav.syfo.client.aap.AapSak
 import no.nav.syfo.client.aap.AapSakerRequest
 import no.nav.syfo.client.aap.AapSakerResponse
+import no.nav.syfo.client.aap.AapSoknadStatus
 import no.nav.syfo.client.aap.AapVedtak
+import no.nav.syfo.client.aap.Kilde
 
 suspend fun MockRequestHandleScope.aapMockResponse(request: HttpRequestData): HttpResponseData {
     val personident = request.receiveBody<AapSakerRequest>().personidentifikator
@@ -28,7 +30,7 @@ suspend fun MockRequestHandleScope.aapMockResponse(request: HttpRequestData): Ht
             saker = listOf(
                 AapSak(
                     sakid = "kelvin-sak-1",
-                    statuskode = "SOKNAD_UNDER_BEHANDLING",
+                    statuskode = AapSoknadStatus.SOKNAD_UNDER_BEHANDLING,
                     soknadsdatoer = listOf(today.minusMonths(1)),
                     vedtak = listOf(
                         AapVedtak(
@@ -41,7 +43,7 @@ suspend fun MockRequestHandleScope.aapMockResponse(request: HttpRequestData): Ht
                             ),
                         )
                     ),
-                    kilde = "KELVIN",
+                    kilde = Kilde.KELVIN,
                 )
             ),
         )
