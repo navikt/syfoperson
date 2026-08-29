@@ -10,6 +10,7 @@ import no.nav.syfo.application.api.authentication.JwtIssuerType
 import no.nav.syfo.application.api.authentication.installJwtAuthentication
 import no.nav.syfo.application.metric.api.registerMetricApi
 import no.nav.syfo.client.aareg.AaregClient
+import no.nav.syfo.client.aap.AapClient
 import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.pdl.PdlClient
@@ -29,6 +30,7 @@ fun Application.apiModule(
     kodeverkClient: KodeverkClient,
     veilederTilgangskontrollClient: VeilederTilgangskontrollClient,
     aaregClient: AaregClient,
+    aapClient: AapClient,
 ) {
     installMetrics()
     installCallId()
@@ -63,6 +65,7 @@ fun Application.apiModule(
                 veilederTilgangskontrollClient = veilederTilgangskontrollClient,
                 kodeverkClient = kodeverkClient,
                 aaregClient = aaregClient,
+                aapClient = aapClient,
             )
         }
     }

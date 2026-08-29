@@ -54,6 +54,8 @@ spec:
           namespace: nom
         - application: kodeverk-api
           namespace: team-rocket
+        - application: api-intern
+          namespace: aap
   azure:
     application:
       allowAllUsers: true
@@ -98,3 +100,7 @@ spec:
       value: "prod-fss.arbeidsforhold.aareg-services-nais"
     - name: AAREG_URL
       value: "https://aareg-services.prod-fss-pub.nais.io"
+    - name: AAP_API_INTERN_CLIENT_ID
+      value: "prod-gcp.aap.api-intern"
+    - name: AAP_API_INTERN_URL
+      value: "http://api-intern.aap"

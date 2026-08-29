@@ -10,6 +10,7 @@ import no.nav.syfo.application.Environment
 import no.nav.syfo.application.api.apiModule
 import no.nav.syfo.application.cache.ValkeyStore
 import no.nav.syfo.client.aareg.AaregClient
+import no.nav.syfo.client.aap.AapClient
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
@@ -87,6 +88,12 @@ fun main() {
         baseUrl = environment.aaregUrl,
         clientId = environment.aaregClientId,
     )
+    val aapClient = AapClient(
+        azureAdClient = azureAdClient,
+        valkeyStore = cache,
+        baseUrl = environment.aapApiInternUrl,
+        clientId = environment.aapApiInternClientId,
+    )
 
     val applicationEngineEnvironment = applicationEnvironment {
         log = LoggerFactory.getLogger("ktor.application")
@@ -117,6 +124,7 @@ fun main() {
                 kodeverkClient = kodeverkClient,
                 veilederTilgangskontrollClient = veilederTilgangskontrollClient,
                 aaregClient = aaregClient,
+                aapClient = aapClient,
             )
             monitor.subscribe(ApplicationStarted) { application ->
                 applicationState.ready = true

@@ -15,4 +15,5 @@ fun Application.testApiModule(
     kodeverkClient = externalMockEnvironment.kodeverkClient,
     veilederTilgangskontrollClient = externalMockEnvironment.veilederTilgangskontrollClient,
     aaregClient = externalMockEnvironment.aaregClient,
+    aapClient = externalMockEnvironment.aapClient,
 )
