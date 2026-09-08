@@ -72,11 +72,14 @@ data class AapVedtakDTO(
             kilde = sak.kilde,
             vedtaksdato = vedtak.vedtaksdato,
             perioder = vedtak.perioder.map { AapPeriodeDTO.fromPeriode(it) },
-            erAktivt = vedtak.perioder.any { it.erAktiv(today) },
+            erAktivt = vedtak.perioder
+                .filter { it.tilOgMedDato != null } // Se https://nav-it.slack.com/archives/C0312J501GX/p1788870062686759?thread_ts=1740730504.702299&cid=C0312J501GX
+                .any { it.erAktiv(today) },
         )
     }
 }
 
+// Det er kun Arena som har null-verdier for disse, Kelvin har alltid fraOgMedDato og tilOgMedDato.
 data class AapPeriodeDTO(
     val fraOgMedDato: LocalDate?,
     val tilOgMedDato: LocalDate?,
@@ -91,5 +94,6 @@ data class AapPeriodeDTO(
 
 private fun AapPeriode.erAktiv(today: LocalDate): Boolean =
     this.fraOgMedDato != null &&
+        this.tilOgMedDato != null &&
         this.fraOgMedDato.isBeforeOrEqual(today) &&
-        (tilOgMedDato == null || tilOgMedDato.isAfterOrEqual(today))
+        this.tilOgMedDato.isAfterOrEqual(today)
