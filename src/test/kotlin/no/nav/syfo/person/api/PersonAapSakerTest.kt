@@ -124,7 +124,7 @@ class PersonAapSakerTest {
                         generateVedtak(
                             vedtaksdato = today.minusMonths(2),
                             fom = today.minusDays(1),
-                            tom = null,
+                            tom = today.plusMonths(1),
                         )
                     ),
                     kilde = Kilde.KELVIN,
@@ -145,8 +145,34 @@ class PersonAapSakerTest {
         assertEquals(Kilde.KELVIN, result.vedtak.first().kilde)
         assertEquals(today.minusMonths(2), result.vedtak.first().vedtaksdato)
         assertEquals(today.minusDays(1), result.vedtak.first().perioder.first().fraOgMedDato)
-        assertEquals(null, result.vedtak.first().perioder.first().tilOgMedDato)
+        assertEquals(today.plusMonths(1), result.vedtak.first().perioder.first().tilOgMedDato)
         assertTrue(result.vedtak.first().erAktivt)
+    }
+
+    @Test
+    fun `does not treat period without end date as active`() {
+        val response = AapSakerResponse(
+            saker = listOf(
+                AapSak(
+                    sakid = "kelvin-sak-1",
+                    statuskode = AapSoknadStatus.IVERK,
+                    soknadsdatoer = emptyList(),
+                    vedtak = listOf(
+                        generateVedtak(
+                            vedtaksdato = today.minusMonths(2),
+                            fom = today.minusDays(1),
+                            tom = null,
+                        )
+                    ),
+                    kilde = Kilde.KELVIN,
+                )
+            )
+        )
+
+        val result = AapSakerDTO.fromSaker(response, today)
+
+        assertEquals(null, result.vedtak.first().perioder.first().tilOgMedDato)
+        assertFalse(result.vedtak.first().erAktivt)
     }
 
     @Test
