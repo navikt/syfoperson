@@ -11,6 +11,7 @@ import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_SIKKERHETSTILTAK
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VERGEMAL
 import java.time.LocalDate
 
 suspend fun MockRequestHandleScope.pdlMockResponse(request: HttpRequestData): HttpResponseData {
@@ -23,6 +24,9 @@ suspend fun MockRequestHandleScope.pdlMockResponse(request: HttpRequestData): Ht
         )
 
         ARBEIDSTAKER_SIKKERHETSTILTAK.value -> respond(generatePdlPersonResponse(ARBEIDSTAKER_SIKKERHETSTILTAK, sikkerhetstiltak = generatePdlSikkerhetsiltak()))
+        ARBEIDSTAKER_VERGEMAL.value -> respond(
+            generatePdlPersonResponse(ARBEIDSTAKER_VERGEMAL, vergemalEllerFremtidsfullmakt = generatePdlVergemalEllerFremtidsfullmakt())
+        )
         ARBEIDSTAKER_PDL_ERROR.value -> respond(generatePdlPersonResponseError())
         ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT.value -> respond(
             generatePdlPersonResponse(

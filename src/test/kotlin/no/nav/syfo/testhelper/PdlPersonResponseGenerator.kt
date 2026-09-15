@@ -79,6 +79,7 @@ fun generatePdlPersonResponse(
     doedsdato: LocalDate? = null,
     tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
     sikkerhetstiltak: PdlSikkerhetstiltak? = null,
+    vergemalEllerFremtidsfullmakt: PdlVergemalEllerFremtidsfullmakt? = null,
 ) = PdlPersonResponse(
     errors = null,
     data = generatePdlHentPerson(
@@ -90,6 +91,9 @@ fun generatePdlPersonResponse(
         tilrettelagtKommunikasjon = tilrettelagtKommunikasjon,
         sikkerhetstiltak = if (sikkerhetstiltak == null) emptyList() else {
             listOf(sikkerhetstiltak)
+        },
+        vergemalEllerFremtidsfullmakt = if (vergemalEllerFremtidsfullmakt == null) emptyList() else {
+            listOf(vergemalEllerFremtidsfullmakt)
         },
     )
 )
@@ -121,6 +125,7 @@ fun generatePdlHentPerson(
     doedsdato: LocalDate? = null,
     tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
     sikkerhetstiltak: List<PdlSikkerhetstiltak>,
+    vergemalEllerFremtidsfullmakt: List<PdlVergemalEllerFremtidsfullmakt> = emptyList(),
 ): PdlHentPerson {
     return PdlHentPerson(
         hentPerson = PdlPerson(
@@ -149,6 +154,7 @@ fun generatePdlHentPerson(
             kjoenn = listOf(PdlKjoenn("KVINNE")),
             tilrettelagtKommunikasjon = listOfNotNull(tilrettelagtKommunikasjon),
             sikkerhetstiltak = sikkerhetstiltak,
+            vergemaalEllerFremtidsfullmakt = vergemalEllerFremtidsfullmakt,
         )
     )
 }
@@ -164,4 +170,10 @@ fun generatePdlSikkerhetsiltak(): PdlSikkerhetstiltak = PdlSikkerhetstiltak(
     beskrivelse = "Fysisk utestengelse",
     gyldigFraOgMed = LocalDate.now().minusWeeks(1),
     gyldigTilOgMed = LocalDate.now().plusWeeks(3),
+)
+
+fun generatePdlVergemalEllerFremtidsfullmakt(
+    type: String = "voksen",
+): PdlVergemalEllerFremtidsfullmakt = PdlVergemalEllerFremtidsfullmakt(
+    type = type,
 )

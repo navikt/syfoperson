@@ -42,6 +42,9 @@ query($ident: ID!, $navnHistorikk: Boolean!){
             spraak
         }
     }
+    vergemaalEllerFremtidsfullmakt {
+        type
+    }
     bostedsadresse(historikk: false) {
       angittFlyttedato
       gyldigFraOgMed

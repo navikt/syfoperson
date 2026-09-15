@@ -3,6 +3,8 @@ package no.nav.syfo.client.pdl
 import no.nav.syfo.person.api.domain.syfomodiaperson.Sikkerhetstiltak
 import no.nav.syfo.person.api.domain.syfomodiaperson.Sprak
 import no.nav.syfo.person.api.domain.syfomodiaperson.TilrettelagtKommunikasjon
+import no.nav.syfo.person.api.domain.syfomodiaperson.Vergemal
+import no.nav.syfo.person.api.domain.syfomodiaperson.Vergemaltype
 import no.nav.syfo.util.lowerCapitalize
 import java.io.Serializable
 import java.time.LocalDate
@@ -49,6 +51,7 @@ data class PdlPerson(
     val kjoenn: List<PdlKjoenn>,
     val tilrettelagtKommunikasjon: List<PdlTilrettelagtKommunikasjon>,
     val sikkerhetstiltak: List<PdlSikkerhetstiltak>,
+    val vergemaalEllerFremtidsfullmakt: List<PdlVergemalEllerFremtidsfullmakt>?,
 ) : Serializable {
 
     val fullName: String? =
@@ -97,6 +100,16 @@ data class PdlPerson(
             gyldigTom = it.gyldigTilOgMed
         )
     }
+
+    fun hentVergemal(): List<Vergemal> = vergemaalEllerFremtidsfullmakt?.map {
+        Vergemal(type = Vergemaltype.fromPdlValue(it.type))
+    }?.filterNot {
+        listOf(
+            Vergemaltype.UKJENT,
+            Vergemaltype.FORVALTNING_UTENFOR_VERGEMAL,
+            Vergemaltype.STADFESTET_FREMTIDSFULLMAKT
+        ).contains(it.type)
+    } ?: emptyList()
 
     val kjonn: String? = kjoenn.firstOrNull()?.kjoenn
     val fodselsdato: LocalDate? = foedselsdato.firstOrNull()?.foedselsdato
@@ -175,6 +188,10 @@ enum class SikkerhetstiltaksType {
     TFUS,
     TOAN,
 }
+
+data class PdlVergemalEllerFremtidsfullmakt(
+    val type: String?,
+) : Serializable
 
 data class Adressebeskyttelse(
     val gradering: Gradering,

@@ -5,6 +5,7 @@ import no.nav.syfo.client.pdl.Gradering
 import no.nav.syfo.client.pdl.PdlPersonNavn
 import no.nav.syfo.testhelper.UserConstants
 import no.nav.syfo.testhelper.generatePdlHentPerson
+import no.nav.syfo.testhelper.generatePdlVergemalEllerFremtidsfullmakt
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
@@ -145,5 +146,27 @@ class PdlPersonResponseTest {
         val result = pdlPersonResponse.hentPerson?.isKode6Or7
         val expected = false
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun `vergemal filters out UKJENT, FORVALTNING_UTENFOR_VERGEMAL, STADFESTET_FREMTIDSFULLMAKT`() {
+        val pdlPersonResponse = generatePdlHentPerson(
+            pdlPersonNavn = null,
+            personident = UserConstants.ARBEIDSTAKER_PERSONIDENT,
+            adressebeskyttelse = null,
+            doedsdato = null,
+            tilrettelagtKommunikasjon = null,
+            sikkerhetstiltak = emptyList(),
+            vergemalEllerFremtidsfullmakt = listOf(
+                generatePdlVergemalEllerFremtidsfullmakt(type = "ukjent"),
+                generatePdlVergemalEllerFremtidsfullmakt(type = "forvaltningUtenforVergemaal"),
+                generatePdlVergemalEllerFremtidsfullmakt(type = "stadfestetFremtidsfullmakt"),
+                generatePdlVergemalEllerFremtidsfullmakt(type = "voksen"),
+            )
+        )
+        val result = pdlPersonResponse.hentPerson?.hentVergemal()
+        val expectedSize = 1
+        assertEquals(expectedSize, result?.size)
+        assertEquals("VOKSEN", result?.firstOrNull()?.type?.name)
     }
 }
