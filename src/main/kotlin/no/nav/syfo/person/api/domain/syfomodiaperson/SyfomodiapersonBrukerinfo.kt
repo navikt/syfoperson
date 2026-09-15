@@ -12,4 +12,5 @@ data class SyfomodiapersonBrukerinfo(
     val dodsdato: LocalDate? = null,
     val tilrettelagtKommunikasjon: TilrettelagtKommunikasjon? = null,
     val sikkerhetstiltak: List<Sikkerhetstiltak>,
+    val vergemal: List<Vergemal> = emptyList(),
 )

@@ -9,6 +9,7 @@ import io.mockk.every
 import no.nav.syfo.client.azuread.AzureAdToken
 import no.nav.syfo.client.pdl.PdlHentPerson
 import no.nav.syfo.person.api.domain.syfomodiaperson.SyfomodiapersonBrukerinfo
+import no.nav.syfo.person.api.domain.syfomodiaperson.Vergemaltype
 import no.nav.syfo.testhelper.*
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_DOD
@@ -17,6 +18,7 @@ import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT_CHANGED
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_SIKKERHETSTILTAK
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VEILEDER_NO_ACCESS
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VERGEMAL
 import no.nav.syfo.util.NAV_PERSONIDENT_HEADER
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
@@ -175,6 +177,22 @@ class PersonBrukerinfoApiTest {
                 assertEquals(expectedSikkerhetstiltak.beskrivelse, sikkerhetstiltak.beskrivelse)
                 assertEquals(expectedSikkerhetstiltak.gyldigFraOgMed, sikkerhetstiltak.gyldigFom)
                 assertEquals(expectedSikkerhetstiltak.gyldigTilOgMed, sikkerhetstiltak.gyldigTom)
+            }
+        }
+
+        @Test
+        fun `includes vergemal`() {
+            testApplication {
+                val client = setupApiAndClient(externalMockEnvironment)
+                val response = client.get(url) {
+                    bearerAuth(validToken)
+                    header(NAV_PERSONIDENT_HEADER, ARBEIDSTAKER_VERGEMAL.value)
+                }
+
+                assertEquals(HttpStatusCode.OK, response.status)
+                val brukerinfo = response.body<SyfomodiapersonBrukerinfo>()
+                assertTrue(brukerinfo.vergemal.isNotEmpty())
+                assertEquals(Vergemaltype.VOKSEN, brukerinfo.vergemal.first().type)
             }
         }
     }

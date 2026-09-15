@@ -254,6 +254,7 @@ fun Route.registrerPersonApi(
                         dodsdato = person.dodsdato,
                         tilrettelagtKommunikasjon = person.hentTilrettelagtKommunikasjon(),
                         sikkerhetstiltak = person.hentSikkerhetstiltak(),
+                        vergemal = person.hentVergemal(),
                     )
                     if (response.alder == null) {
                         log.warn("Alder is null for person")
