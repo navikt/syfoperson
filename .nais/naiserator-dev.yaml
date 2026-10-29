@@ -44,6 +44,7 @@ spec:
         - application: syfooversikt
     outbound:
       external:
+        - host: "data.ssb.no"
         - host: "pdl-api.dev-fss-pub.nais.io"
         - host: "kodeverk-api.nav.no"
         - host: "aareg-services-q2.dev-fss-pub.nais.io"

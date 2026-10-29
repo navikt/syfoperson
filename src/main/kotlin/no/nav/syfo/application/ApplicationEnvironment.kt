@@ -30,6 +30,8 @@ data class Environment(
     val aapApiInternClientId: String = getEnvVar("AAP_API_INTERN_CLIENT_ID"),
     val aapApiInternUrl: String = getEnvVar("AAP_API_INTERN_URL"),
 
+    val ssbUrl: String = getEnvVar("SSB_URL", "https://data.ssb.no/api/klass/v1"),
+
     val valkeyConfig: ValkeyConfig = ValkeyConfig(
         valkeyUri = URI(getEnvVar("VALKEY_URI_CACHE")),
         valkeyDB = 23, // se https://github.com/navikt/istilgangskontroll/blob/master/README.md
