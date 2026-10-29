@@ -15,10 +15,13 @@ import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
+import no.nav.syfo.client.ssb.SsbClient
 import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
 import no.nav.syfo.client.wellknown.WellKnown
 import no.nav.syfo.person.api.registrerPersonApi
 import no.nav.syfo.person.skjermingskode.SkjermingskodeService
+import no.nav.syfo.naeringskode.NaeringskodeService
+import no.nav.syfo.naeringskode.api.registrerNaeringskodeApi
 
 fun Application.apiModule(
     applicationState: ApplicationState,
@@ -31,6 +34,7 @@ fun Application.apiModule(
     veilederTilgangskontrollClient: VeilederTilgangskontrollClient,
     aaregClient: AaregClient,
     aapClient: AapClient,
+    ssbClient: SsbClient,
 ) {
     installMetrics()
     installCallId()
@@ -57,6 +61,7 @@ fun Application.apiModule(
         )
         registerMetricApi()
         authenticate(JwtIssuerType.INTERNAL_AZUREAD.name) {
+            registrerNaeringskodeApi(NaeringskodeService(ssbClient))
             registrerPersonApi(
                 krrClient = krrClient,
                 pdlClient = pdlClient,

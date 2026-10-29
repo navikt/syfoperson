@@ -16,6 +16,7 @@ import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
+import no.nav.syfo.client.ssb.SsbClient
 import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
 import no.nav.syfo.client.wellknown.getWellKnown
 import org.slf4j.LoggerFactory
@@ -94,6 +95,10 @@ fun main() {
         baseUrl = environment.aapApiInternUrl,
         clientId = environment.aapApiInternClientId,
     )
+    val ssbClient = SsbClient(
+        valkeyStore = cache,
+        baseUrl = environment.ssbUrl,
+    )
 
     val applicationEngineEnvironment = applicationEnvironment {
         log = LoggerFactory.getLogger("ktor.application")
@@ -125,6 +130,7 @@ fun main() {
                 veilederTilgangskontrollClient = veilederTilgangskontrollClient,
                 aaregClient = aaregClient,
                 aapClient = aapClient,
+                ssbClient = ssbClient,
             )
             monitor.subscribe(ApplicationStarted) { application ->
                 applicationState.ready = true

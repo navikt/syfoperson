@@ -10,6 +10,7 @@ import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
+import no.nav.syfo.client.ssb.SsbClient
 import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
 import no.nav.syfo.testhelper.mock.*
 
@@ -20,6 +21,7 @@ class ExternalMockEnvironment {
     val mockHttpClient = getMockHttpClient(env = environment)
 
     val valkeyStore = mockk<ValkeyStore>(relaxed = true)
+    val ssbClient = mockk<SsbClient>()
 
     val azureAdClient = AzureAdClient(
         azureAppClientId = environment.azureAppClientId,

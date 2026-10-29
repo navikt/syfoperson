@@ -44,6 +44,7 @@ spec:
         - application: syfooversikt
     outbound:
       external:
+        - host: "data.ssb.no"
         - host: "pdl-api.prod-fss-pub.nais.io"
         - host: "aareg-services.prod-fss-pub.nais.io"
       rules:
