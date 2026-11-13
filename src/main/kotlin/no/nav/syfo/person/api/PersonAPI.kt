@@ -14,6 +14,7 @@ import no.nav.syfo.client.krr.toSyfomodiapersonKontaktinfo
 import no.nav.syfo.client.pdl.FolkeregisterIdentStatus
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
+import no.nav.syfo.client.tiltakshistorikk.TiltakshistorikkClient
 import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
 import no.nav.syfo.domain.PersonIdentNumber
 import no.nav.syfo.person.api.domain.*
@@ -45,6 +46,7 @@ fun Route.registrerPersonApi(
     kodeverkClient: KodeverkClient,
     aaregClient: AaregClient,
     aapClient: AapClient,
+    tiltakshistorikkClient: TiltakshistorikkClient,
 ) {
     route(apiPersonBasePath) {
         post(apiPersonInfoPath) {
@@ -291,6 +293,44 @@ fun Route.registrerPersonApi(
                 handleApiError(
                     ex = ex,
                     resource = "POST /aap-saker/query",
+                )
+            }
+        }
+
+        post("/tiltak/query") {
+            try {
+                val request = call.receive<TiltakRequestDTO>()
+                val personident = PersonIdentNumber(request.personident)
+                val callId = getCallId()
+                val token = getBearerHeader()
+                    ?: throw IllegalArgumentException("No Authorization header supplied")
+
+                val hasAccess = veilederTilgangskontrollClient.hasAccess(
+                    callId = callId,
+                    personIdentNumber = personident,
+                    token = token,
+                )
+                if (!hasAccess) {
+                    throw ForbiddenAccessException()
+                }
+
+                val folkeregisteridenter = pdlClient.person(
+                    callId = callId,
+                    personIdentNumber = personident,
+                )?.hentPerson?.folkeregisteridentifikator
+                    ?: throw RuntimeException("Found no person in PDL for supplied personident")
+                val identer = (folkeregisteridenter.map { PersonIdentNumber(it.identifikasjonsnummer) } + personident)
+                    .distinctBy { it.value }
+
+                val historikk = tiltakshistorikkClient.getHistorikk(
+                    identer = identer,
+                    callId = callId,
+                )
+                call.respond(TiltakResponseDTO.fromHistorikk(historikk))
+            } catch (ex: Exception) {
+                handleApiError(
+                    ex = ex,
+                    resource = "POST /tiltak/query",
                 )
             }
         }

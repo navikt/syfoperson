@@ -11,6 +11,8 @@ import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_SIKKERHETSTILTAK
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILRETTELAGT_KOMMUNIKASJON
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILTAK_HISTORISK_PERSONIDENT
+import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_TILTAK_MED_HISTORISK_PERSONIDENT
 import no.nav.syfo.testhelper.UserConstants.ARBEIDSTAKER_VERGEMAL
 import java.time.LocalDate
 
@@ -32,6 +34,12 @@ suspend fun MockRequestHandleScope.pdlMockResponse(request: HttpRequestData): Ht
             generatePdlPersonResponse(
                 personident = ARBEIDSTAKER_ALTERNATIVE_PERSONIDENT,
                 foedselsdato = LocalDate.now().minusYears(30).plusDays(1),
+            )
+        )
+        ARBEIDSTAKER_TILTAK_MED_HISTORISK_PERSONIDENT.value -> respond(
+            generatePdlPersonResponse(
+                personident = ARBEIDSTAKER_TILTAK_MED_HISTORISK_PERSONIDENT,
+                historiskePersonidenter = listOf(ARBEIDSTAKER_TILTAK_HISTORISK_PERSONIDENT),
             )
         )
         else -> respond(generatePdlPersonResponse(ARBEIDSTAKER_PERSONIDENT))

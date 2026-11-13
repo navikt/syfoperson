@@ -30,6 +30,9 @@ data class Environment(
     val aapApiInternClientId: String = getEnvVar("AAP_API_INTERN_CLIENT_ID"),
     val aapApiInternUrl: String = getEnvVar("AAP_API_INTERN_URL"),
 
+    val tiltakshistorikkClientId: String = getEnvVar("TILTAKSHISTORIKK_CLIENT_ID"),
+    val tiltakshistorikkUrl: String = getEnvVar("TILTAKSHISTORIKK_URL"),
+
     val ssbUrl: String = getEnvVar("SSB_URL", "https://data.ssb.no/api/klass/v1"),
 
     val valkeyConfig: ValkeyConfig = ValkeyConfig(

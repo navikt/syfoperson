@@ -56,6 +56,8 @@ spec:
           namespace: nom
         - application: api-intern
           namespace: aap
+        - application: tiltakshistorikk
+          namespace: team-mulighetsrommet
   azure:
     application:
       allowAllUsers: true
@@ -104,3 +106,7 @@ spec:
       value: "dev-gcp.aap.api-intern"
     - name: AAP_API_INTERN_URL
       value: "http://api-intern.aap"
+    - name: TILTAKSHISTORIKK_CLIENT_ID
+      value: "dev-gcp.team-mulighetsrommet.tiltakshistorikk"
+    - name: TILTAKSHISTORIKK_URL
+      value: "http://tiltakshistorikk.team-mulighetsrommet"
