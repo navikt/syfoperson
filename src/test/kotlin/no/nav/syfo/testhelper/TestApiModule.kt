@@ -16,5 +16,6 @@ fun Application.testApiModule(
     veilederTilgangskontrollClient = externalMockEnvironment.veilederTilgangskontrollClient,
     aaregClient = externalMockEnvironment.aaregClient,
     aapClient = externalMockEnvironment.aapClient,
+    tiltakshistorikkClient = externalMockEnvironment.tiltakshistorikkClient,
     ssbClient = externalMockEnvironment.ssbClient,
 )

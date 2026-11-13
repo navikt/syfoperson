@@ -11,6 +11,8 @@ import no.nav.syfo.application.api.apiModule
 import no.nav.syfo.application.cache.ValkeyStore
 import no.nav.syfo.client.aareg.AaregClient
 import no.nav.syfo.client.aap.AapClient
+import no.nav.syfo.client.tiltakshistorikk.TiltakshistorikkClient
+import no.nav.syfo.person.personident.PersonidentService
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
@@ -95,6 +97,13 @@ fun main() {
         baseUrl = environment.aapApiInternUrl,
         clientId = environment.aapApiInternClientId,
     )
+    val tiltakshistorikkClient = TiltakshistorikkClient(
+        azureAdClient = azureAdClient,
+        valkeyStore = cache,
+        personidentService = PersonidentService(pdlClient = pdlClient),
+        baseUrl = environment.tiltakshistorikkUrl,
+        clientId = environment.tiltakshistorikkClientId,
+    )
     val ssbClient = SsbClient(
         valkeyStore = cache,
         baseUrl = environment.ssbUrl,
@@ -130,6 +139,7 @@ fun main() {
                 veilederTilgangskontrollClient = veilederTilgangskontrollClient,
                 aaregClient = aaregClient,
                 aapClient = aapClient,
+                tiltakshistorikkClient = tiltakshistorikkClient,
                 ssbClient = ssbClient,
             )
             monitor.subscribe(ApplicationStarted) { application ->
