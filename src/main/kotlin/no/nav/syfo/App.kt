@@ -12,6 +12,7 @@ import no.nav.syfo.application.cache.ValkeyStore
 import no.nav.syfo.client.aareg.AaregClient
 import no.nav.syfo.client.aap.AapClient
 import no.nav.syfo.client.tiltakshistorikk.TiltakshistorikkClient
+import no.nav.syfo.person.personident.PersonidentService
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
@@ -99,6 +100,7 @@ fun main() {
     val tiltakshistorikkClient = TiltakshistorikkClient(
         azureAdClient = azureAdClient,
         valkeyStore = cache,
+        personidentService = PersonidentService(pdlClient = pdlClient),
         baseUrl = environment.tiltakshistorikkUrl,
         clientId = environment.tiltakshistorikkClientId,
     )

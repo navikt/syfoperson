@@ -314,16 +314,8 @@ fun Route.registrerPersonApi(
                     throw ForbiddenAccessException()
                 }
 
-                val folkeregisteridenter = pdlClient.person(
-                    callId = callId,
-                    personIdentNumber = personident,
-                )?.hentPerson?.folkeregisteridentifikator
-                    ?: throw RuntimeException("Found no person in PDL for supplied personident")
-                val identer = (folkeregisteridenter.map { PersonIdentNumber(it.identifikasjonsnummer) } + personident)
-                    .distinctBy { it.value }
-
                 val historikk = tiltakshistorikkClient.getHistorikk(
-                    identer = identer,
+                    personident = personident,
                     callId = callId,
                 )
                 call.respond(TiltakResponseDTO.fromHistorikk(historikk))

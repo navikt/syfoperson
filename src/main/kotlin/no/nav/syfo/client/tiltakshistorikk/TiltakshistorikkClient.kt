@@ -15,6 +15,7 @@ import no.nav.syfo.application.cache.ValkeyStore
 import no.nav.syfo.client.azuread.AzureAdClient
 import no.nav.syfo.client.httpClientDefault
 import no.nav.syfo.domain.PersonIdentNumber
+import no.nav.syfo.person.personident.PersonidentService
 import no.nav.syfo.util.NAV_CALL_ID_HEADER
 import no.nav.syfo.util.bearerHeader
 import no.nav.syfo.util.configuredJacksonMapper
@@ -23,6 +24,7 @@ import org.slf4j.LoggerFactory
 class TiltakshistorikkClient(
     private val azureAdClient: AzureAdClient,
     private val valkeyStore: ValkeyStore,
+    private val personidentService: PersonidentService,
     baseUrl: String,
     private val clientId: String,
     private val httpClient: HttpClient = httpClientDefault(),
@@ -30,11 +32,10 @@ class TiltakshistorikkClient(
     private val historikkUrl = "$baseUrl$TILTAKSHISTORIKK_PATH"
 
     suspend fun getHistorikk(
-        identer: List<PersonIdentNumber>,
+        personident: PersonIdentNumber,
         callId: String,
     ): TiltakshistorikkResponse {
-        val identValues = identer.map { it.value }.distinct().sorted()
-        val cacheKey = "$CACHE_KEY_PREFIX-${identValues.joinToString(",")}"
+        val cacheKey = "$CACHE_KEY_PREFIX-${personident.value}"
         val cachedResponse = valkeyStore.getObject<TiltakshistorikkResponse>(cacheKey)
 
         if (cachedResponse != null) {
@@ -42,6 +43,12 @@ class TiltakshistorikkClient(
             return cachedResponse
         }
         COUNT_CALL_TILTAKSHISTORIKK_CACHE_MISS.increment()
+
+        // Tiltakshistorikken er lagret per ident, så vi må sende med historiske identer for å få komplett historikk
+        val identer = personidentService.getFolkeregisteridenter(
+            personident = personident,
+            callId = callId,
+        )
 
         val systemToken = azureAdClient.getSystemToken(
             scopeClientId = clientId,
@@ -54,7 +61,7 @@ class TiltakshistorikkClient(
                 header(NAV_CALL_ID_HEADER, callId)
                 accept(ContentType.Application.Json)
                 contentType(ContentType.Application.Json)
-                setBody(TiltakshistorikkRequest(identer = identValues))
+                setBody(TiltakshistorikkRequest(identer = identer.map { it.value }))
             }.body<TiltakshistorikkRawResponse>()
 
             val response = TiltakshistorikkResponse(
@@ -96,6 +103,6 @@ class TiltakshistorikkClient(
 
         const val TILTAKSHISTORIKK_PATH = "/api/v1/historikk"
         const val CACHE_KEY_PREFIX = "TILTAKSHISTORIKK"
-        const val CACHE_EXPIRE_SECONDS = 60 * 60L // 1 hour
+        const val CACHE_EXPIRE_SECONDS = 12 * 60 * 60L // 12 hours
     }
 }
