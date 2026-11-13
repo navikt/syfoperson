@@ -26,7 +26,6 @@ data class TiltakResponseDTO(
 
 data class TiltakDTO(
     val id: String,
-    val tittel: String,
     val tiltakskode: String,
     val tiltakstypeNavn: String,
     val startDato: LocalDate?,
@@ -35,7 +34,6 @@ data class TiltakDTO(
     companion object {
         fun fromDeltakelse(deltakelse: TiltakshistorikkDeltakelse): TiltakDTO = TiltakDTO(
             id = deltakelse.id,
-            tittel = deltakelse.tittel,
             tiltakskode = deltakelse.tiltakstype.tiltakskode,
             tiltakstypeNavn = deltakelse.tiltakstype.navn,
             startDato = deltakelse.startDato,

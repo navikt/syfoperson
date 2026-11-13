@@ -29,14 +29,12 @@ data class TiltakshistorikkResponse(
 )
 sealed interface TiltakshistorikkDeltakelse {
     val id: String
-    val tittel: String
     val tiltakstype: Tiltakstype
     val startDato: LocalDate?
     val sluttDato: LocalDate?
 
     data class ArenaDeltakelse(
         override val id: String,
-        override val tittel: String,
         override val tiltakstype: Tiltakstype,
         override val startDato: LocalDate?,
         override val sluttDato: LocalDate?,
@@ -45,7 +43,6 @@ sealed interface TiltakshistorikkDeltakelse {
 
     data class TeamKometDeltakelse(
         override val id: String,
-        override val tittel: String,
         override val tiltakstype: Tiltakstype,
         override val startDato: LocalDate?,
         override val sluttDato: LocalDate?,
@@ -54,7 +51,6 @@ sealed interface TiltakshistorikkDeltakelse {
 
     data class TeamTiltakAvtale(
         override val id: String,
-        override val tittel: String,
         override val tiltakstype: Tiltakstype,
         override val startDato: LocalDate?,
         override val sluttDato: LocalDate?,

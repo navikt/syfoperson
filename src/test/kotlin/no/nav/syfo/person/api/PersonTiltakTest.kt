@@ -78,7 +78,6 @@ class PersonTiltakTest {
                 body.tiltak.map { it.id }.toSet(),
             )
             val teamKomet = body.tiltak.first { it.id == TILTAK_TEAM_KOMET_AKTIV_ID }
-            assertEquals("Oppfølging hos Arrangør AS", teamKomet.tittel)
             assertEquals(TILTAK_UKJENT_TILTAKSKODE, teamKomet.tiltakskode)
             assertEquals("Oppfølging", teamKomet.tiltakstypeNavn)
             assertNull(body.tiltak.first { it.id == TILTAK_TEAM_TILTAK_AKTIV_ID }.sluttDato)
@@ -227,7 +226,6 @@ class PersonTiltakTest {
     private fun arenaDeltakelse(id: String, status: String, sluttDato: LocalDate?) =
         TiltakshistorikkDeltakelse.ArenaDeltakelse(
             id = id,
-            tittel = "Arena-tiltak",
             tiltakstype = Tiltakstype(tiltakskode = "ARBRRHDAG", navn = "Arbeidsrettet rehabilitering"),
             startDato = today.minusMonths(1),
             sluttDato = sluttDato,
@@ -237,7 +235,6 @@ class PersonTiltakTest {
     private fun teamKometDeltakelse(id: String, status: String, sluttDato: LocalDate?) =
         TiltakshistorikkDeltakelse.TeamKometDeltakelse(
             id = id,
-            tittel = "Oppfølging hos Arrangør AS",
             tiltakstype = Tiltakstype(tiltakskode = "OPPFOLGING", navn = "Oppfølging"),
             startDato = today.minusMonths(1),
             sluttDato = sluttDato,
@@ -247,7 +244,6 @@ class PersonTiltakTest {
     private fun teamTiltakAvtale(id: String, status: String, sluttDato: LocalDate?) =
         TiltakshistorikkDeltakelse.TeamTiltakAvtale(
             id = id,
-            tittel = "Arbeidstrening hos Arbeidsgiver AS",
             tiltakstype = Tiltakstype(tiltakskode = "ARBEIDSTRENING", navn = "Arbeidstrening"),
             startDato = today.minusMonths(1),
             sluttDato = sluttDato,
