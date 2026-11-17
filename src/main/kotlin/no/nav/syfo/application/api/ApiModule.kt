@@ -11,6 +11,7 @@ import no.nav.syfo.application.api.authentication.installJwtAuthentication
 import no.nav.syfo.application.metric.api.registerMetricApi
 import no.nav.syfo.client.aareg.AaregClient
 import no.nav.syfo.client.aap.AapClient
+import no.nav.syfo.client.tiltakshistorikk.TiltakshistorikkClient
 import no.nav.syfo.client.kodeverk.KodeverkClient
 import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.pdl.PdlClient
@@ -34,6 +35,7 @@ fun Application.apiModule(
     veilederTilgangskontrollClient: VeilederTilgangskontrollClient,
     aaregClient: AaregClient,
     aapClient: AapClient,
+    tiltakshistorikkClient: TiltakshistorikkClient,
     ssbClient: SsbClient,
 ) {
     installMetrics()
@@ -71,6 +73,7 @@ fun Application.apiModule(
                 kodeverkClient = kodeverkClient,
                 aaregClient = aaregClient,
                 aapClient = aapClient,
+                tiltakshistorikkClient = tiltakshistorikkClient,
             )
         }
     }

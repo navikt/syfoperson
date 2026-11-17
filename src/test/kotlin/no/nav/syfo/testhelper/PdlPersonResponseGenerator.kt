@@ -80,6 +80,7 @@ fun generatePdlPersonResponse(
     tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
     sikkerhetstiltak: PdlSikkerhetstiltak? = null,
     vergemalEllerFremtidsfullmakt: PdlVergemalEllerFremtidsfullmakt? = null,
+    historiskePersonidenter: List<PersonIdentNumber> = emptyList(),
 ) = PdlPersonResponse(
     errors = null,
     data = generatePdlHentPerson(
@@ -95,6 +96,7 @@ fun generatePdlPersonResponse(
         vergemalEllerFremtidsfullmakt = if (vergemalEllerFremtidsfullmakt == null) emptyList() else {
             listOf(vergemalEllerFremtidsfullmakt)
         },
+        historiskePersonidenter = historiskePersonidenter,
     )
 )
 
@@ -126,6 +128,7 @@ fun generatePdlHentPerson(
     tilrettelagtKommunikasjon: PdlTilrettelagtKommunikasjon? = null,
     sikkerhetstiltak: List<PdlSikkerhetstiltak>,
     vergemalEllerFremtidsfullmakt: List<PdlVergemalEllerFremtidsfullmakt> = emptyList(),
+    historiskePersonidenter: List<PersonIdentNumber> = emptyList(),
 ): PdlHentPerson {
     return PdlHentPerson(
         hentPerson = PdlPerson(
@@ -134,7 +137,12 @@ fun generatePdlHentPerson(
             ),
             folkeregisteridentifikator = listOf(
                 generateFolkeregisteridentifikator(personident!!),
-            ),
+            ) + historiskePersonidenter.map {
+                FolkeregisterIdentifikator(
+                    identifikasjonsnummer = it.value,
+                    status = FolkeregisterIdentStatus.OPPHOERT,
+                )
+            },
             adressebeskyttelse = listOf(
                 adressebeskyttelse ?: generateAdressebeskyttelse()
             ),

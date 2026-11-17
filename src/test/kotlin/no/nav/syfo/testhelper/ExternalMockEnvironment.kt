@@ -11,6 +11,8 @@ import no.nav.syfo.client.krr.KRRClient
 import no.nav.syfo.client.pdl.PdlClient
 import no.nav.syfo.client.skjermedepersonerpip.SkjermedePersonerPipClient
 import no.nav.syfo.client.ssb.SsbClient
+import no.nav.syfo.client.tiltakshistorikk.TiltakshistorikkClient
+import no.nav.syfo.person.personident.PersonidentService
 import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
 import no.nav.syfo.testhelper.mock.*
 
@@ -78,6 +80,14 @@ class ExternalMockEnvironment {
         valkeyStore = valkeyStore,
         baseUrl = environment.aapApiInternUrl,
         clientId = environment.aapApiInternClientId,
+        httpClient = mockHttpClient,
+    )
+    val tiltakshistorikkClient = TiltakshistorikkClient(
+        azureAdClient = azureAdClient,
+        valkeyStore = valkeyStore,
+        personidentService = PersonidentService(pdlClient = pdlClient),
+        baseUrl = environment.tiltakshistorikkUrl,
+        clientId = environment.tiltakshistorikkClientId,
         httpClient = mockHttpClient,
     )
 
