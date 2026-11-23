@@ -9,6 +9,7 @@ import no.nav.syfo.client.veiledertilgang.VeilederTilgangskontrollClient
 import no.nav.syfo.domain.PersonIdentNumber
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.util.concurrent.CancellationException
 
 private val log: Logger = LoggerFactory.getLogger("no.nav.syfo")
 
@@ -69,6 +70,9 @@ suspend fun RoutingContext.handleApiError(
 ) {
     val callId = getCallId()
     val responseStatus: HttpStatusCode = when (ex) {
+        is CancellationException -> {
+            throw ex
+        }
         is ResponseException -> {
             ex.response.status
         }
