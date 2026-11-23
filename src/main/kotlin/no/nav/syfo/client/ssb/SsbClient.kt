@@ -11,6 +11,8 @@ import no.nav.syfo.application.cache.ValkeyStore
 import no.nav.syfo.client.httpClientDefault
 import no.nav.syfo.naringskode.Naringskode
 import no.nav.syfo.naringskode.NaringskodeStandard
+import no.nav.syfo.sektorkode.Sektorkode
+import no.nav.syfo.sektorkode.SektorkodeStandard
 
 class SsbClient(
     private val valkeyStore: ValkeyStore,
@@ -18,6 +20,7 @@ class SsbClient(
     private val httpClient: HttpClient = httpClientDefault(),
 ) {
     private val cacheLocksByStandard = NaringskodeStandard.entries.associateWith { Mutex() }
+    private val cacheLocksBySektorStandard = SektorkodeStandard.entries.associateWith { Mutex() }
 
     suspend fun getNaringskoder(standard: NaringskodeStandard): List<Naringskode> {
         val cacheKey = "ssb:naringskoder:${standard.year}"
@@ -52,6 +55,72 @@ class SsbClient(
             )
             naringskoder
         }
+    }
+
+    suspend fun getSektorkoder(standard: SektorkodeStandard): List<Sektorkode> {
+        try {
+            val cacheKey = "ssb:sektorkoder:${standard.year}"
+            val cached = valkeyStore.getListObject<Sektorkode>(cacheKey)
+            if (cached != null) {
+                return cached
+            }
+
+            return cacheLocksBySektorStandard.getValue(standard).withLock {
+                val cachedAfterLock = valkeyStore.getListObject<Sektorkode>(cacheKey)
+                if (cachedAfterLock != null) {
+                    return@withLock cachedAfterLock
+                }
+
+                val response = httpClient.get("$baseUrl/versions/${standard.ssbVersion}") {
+                    parameter("language", "nb")
+                    accept(ContentType.Application.Json)
+                }
+                check(response.status == HttpStatusCode.OK) { "Unexpected SSB status: ${response.status}" }
+                val version = response.body<SsbVersion>()
+                require(version.id == standard.ssbVersion) { "Unexpected SSB classification version" }
+                val sektorkoder = validateSektorkoder(
+                    version.classificationItems.map { item ->
+                        Sektorkode(
+                            code = item.code.trim(),
+                            name = item.name.trim(),
+                            parentCode = item.parentCode?.trim()?.ifEmpty { null },
+                            level = item.level,
+                        )
+                    },
+                    standard,
+                )
+                valkeyStore.setObject(
+                    expireSeconds = 60 * 60 * 24L,
+                    key = cacheKey,
+                    value = sektorkoder,
+                )
+                sektorkoder
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            throw SsbException("Failed to fetch sektorkoder for ${standard.year}", e)
+        }
+    }
+
+    private fun validateSektorkoder(
+        sektorkoder: List<Sektorkode>,
+        standard: SektorkodeStandard,
+    ): List<Sektorkode> {
+        require(sektorkoder.isNotEmpty()) { "Empty SSB hierarchy" }
+        val byCode = sektorkoder.associateBy { it.code }
+        require(byCode.size == sektorkoder.size) { "Duplicate SSB codes" }
+        sektorkoder.forEach { sektorkode ->
+            require(sektorkode.code.isNotBlank() && sektorkode.name.isNotBlank()) { "Blank SSB code or name" }
+            require(sektorkode.level in 1..standard.levels) { "Invalid SSB level" }
+            require((sektorkode.level == 1) == (sektorkode.parentCode == null)) { "Invalid SSB parent code" }
+            sektorkode.parentCode?.let { parentCode ->
+                val parent = requireNotNull(byCode[parentCode]) { "Incomplete SSB hierarchy" }
+                // Strictly decreasing levels also rule out cycles.
+                require(parent.level == sektorkode.level - 1) { "Invalid SSB parent level" }
+            }
+        }
+        return sektorkoder
     }
 
     private fun toNaringskoder(version: SsbVersion, standard: NaringskodeStandard): List<Naringskode> {

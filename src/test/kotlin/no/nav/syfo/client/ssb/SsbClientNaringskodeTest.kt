@@ -18,7 +18,7 @@ import no.nav.syfo.util.configuredJacksonMapper
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-class SsbClientTest {
+class SsbClientNaringskodeTest {
     private val cache = mutableMapOf<String, String>()
     private val mapper = configuredJacksonMapper()
     private val valkeyStore = mockk<ValkeyStore>(relaxed = true).also { store ->
