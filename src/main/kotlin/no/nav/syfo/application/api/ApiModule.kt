@@ -23,6 +23,8 @@ import no.nav.syfo.person.api.registrerPersonApi
 import no.nav.syfo.person.skjermingskode.SkjermingskodeService
 import no.nav.syfo.naringskode.NaringskodeService
 import no.nav.syfo.naringskode.api.registrerNaringskodeApi
+import no.nav.syfo.sektorkode.SektorkodeService
+import no.nav.syfo.sektorkode.api.registrerSektorkodeApi
 
 fun Application.apiModule(
     applicationState: ApplicationState,
@@ -64,6 +66,7 @@ fun Application.apiModule(
         registerMetricApi()
         authenticate(JwtIssuerType.INTERNAL_AZUREAD.name) {
             registrerNaringskodeApi(NaringskodeService(ssbClient))
+            registrerSektorkodeApi(SektorkodeService(ssbClient))
             registrerPersonApi(
                 krrClient = krrClient,
                 pdlClient = pdlClient,
