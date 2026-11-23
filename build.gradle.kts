@@ -3,15 +3,15 @@ import com.adarshr.gradle.testlogger.theme.ThemeType
 group = "no.nav.syfo"
 version = "1.0.0"
 
-val jacksonDataTypeVersion = "2.22.4"
-val jacksonDatabindVersion = "3.2.4"
+val jacksonDataTypeVersion = "2.23.0"
+val jacksonDatabindVersion = "3.3.0"
 val jedisVersion = "7.5.3"
 val ktorVersion = "3.6.1"
-val logbackVersion = "1.6.6"
+val logbackVersion = "1.6.8"
 val logstashEncoderVersion = "9.0"
-val mockkVersion = "1.14.11"
+val mockkVersion = "1.14.12"
 val nimbusJoseJwtVersion = "10.10"
-val micrometerRegistryVersion = "1.17.2"
+val micrometerRegistryVersion = "1.18.0"
 
 plugins {
     kotlin("jvm") version "2.4.21"
